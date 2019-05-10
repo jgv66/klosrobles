@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title style="text-align: center">Los Robles</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="dark">
+
+  <ion-img src="/assets/logos_TH-01.png"></ion-img>
+  <ion-img src="/assets/logos_SG-02.png"></ion-img>
+
+  <ion-grid>
+
+    <ion-row>
+      <ion-col>
+        <ion-list inset="true" lines="none">
+          <ion-item>
+            <ion-icon slot='start' name='mail' color='dark'></ion-icon>
+            <ion-input type="text" [(ngModel)]="email" clearInput="true"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot='start' name='key' color='dark'></ion-icon>
+            <ion-input type="password" [(ngModel)]="clave" clearInput="true"></ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row class="botones">
+      <ion-col>
+        <ion-button fill="clear" expand="full" (click)="login()" >Ingresar</ion-button>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+  <div class="imgkinetik">
+      <img src="assets/logo-kinetik.png" >
+  </div> 
+
+</ion-content>

@@ -1,0 +1,55 @@
+ion-grid {
+    font-size: 80%;
+}
+
+.header-in {
+    font-size: 100%;
+}
+
+.header {
+    background-color: burlywood;
+    width: auto;
+}
+
+.keven {
+    background-color: #e7c6a6;
+ }
+
+.kodd {
+    background-color: #fff4ea;
+}
+
+.izq {
+    text-align: left;
+}
+
+.der {
+    text-align: right;
+    font-style: italic;
+}
+
+.zen {
+    text-align: center;
+    font-style: italic;
+}
+
+.grafica {
+    display:block;
+    margin:auto;
+    width: 900px; 
+    height: 500px;
+}
+
+.chart-container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+
+    .chart {
+        max-width: 350px;
+        height: 260px;
+        width: 50%;
+        max-width: 50%;
+        min-width: 300px;
+    }
+}

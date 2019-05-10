@@ -3,6 +3,7 @@
 
 /** Ionic CSS Variables **/
 :root {
+
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
@@ -74,4 +75,31 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  /** kinetik zebra **/
+  --ion-color-keven: #ffefe0;
+  --ion-color-kodd: #fff4ea;
+
 }
+
+.ion-color-keven {
+  --ion-color-base: var(--ion-color-keven) !important;
+  --ion-color-base-rgb: var(--ion-color-keven-rgb) !important;
+  --ion-color-contrast: var(--ion-color-keven-contrast) !important;
+  --ion-color-contrast-rgb: var(--ion-color-keven-contrast-rgb) !important;
+  --ion-color-shade: var(--ion-color-keven-shade) !important;
+  --ion-color-tint: var(--ion-color-keven-tint) !important;
+}
+
+.ion-color-kodd {
+  --ion-color-base: var(--ion-color-kodd) !important;
+  --ion-color-base-rgb: var(--ion-color-kodd-rgb) !important;
+  --ion-color-contrast: var(--ion-color-kodd-contrast) !important;
+  --ion-color-contrast-rgb: var(--ion-color-kodd-contrast-rgb) !important;
+  --ion-color-shade: var(--ion-color-kodd-shade) !important;
+  --ion-color-tint: var(--ion-color-kodd-tint) !important;
+}
+
+.button-md {
+  text-transform: none!important;
+}  

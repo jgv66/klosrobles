@@ -1,0 +1,17 @@
+<app-header titulo="Reportes Disponibles"></app-header>
+
+<ion-content  color="dark">
+
+    <ion-list lines="none">
+
+        <ion-item   *ngFor="let reporte of reportes"
+                    [routerLink]="reporte.redirectTo"
+                    color="dark" 
+                    detail >
+            <ion-icon slot="start" [name]="reporte.icono"></ion-icon>
+            <ion-label>{{ reporte.nombre }}</ion-label>
+        </ion-item>
+
+    </ion-list>
+
+</ion-content>
