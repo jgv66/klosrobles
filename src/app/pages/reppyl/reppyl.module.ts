@@ -8,6 +8,8 @@ import { IonicModule } from '@ionic/angular';
 import { ReppylPage } from './reppyl.page';
 import { ComponentsModule } from '../../components/components.module';
 import { PeriodosComponent } from '../../components/periodos/periodos.component';
+import { NotasPage } from '../notas/notas.page';
+import { NotasPageModule } from '../notas/notas.module';
 
 const routes: Routes = [
   {
@@ -17,13 +19,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  entryComponents: [ PeriodosComponent ],
+  entryComponents: [ PeriodosComponent, NotasPage ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    ComponentsModule
+    ComponentsModule,
+    NotasPageModule
   ],
   declarations: [ReppylPage]
 })

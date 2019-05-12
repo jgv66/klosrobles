@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DatosService } from '../../services/datos.service';
 import { FuncionesService } from '../../services/funciones.service';
-import { PopoverController } from '@ionic/angular';
+import { PopoverController, ModalController } from '@ionic/angular';
 import { PeriodosComponent } from 'src/app/components/periodos/periodos.component';
+import { NotasPage } from '../notas/notas.page';
 
 declare var google;
 
@@ -14,7 +15,6 @@ declare var google;
 export class ReppylPage implements OnInit {
 
   empresa   = '01';
-  usuario   = [];
   hoy       = new Date();
   mes       = this.hoy.getMonth();
   periodo   = this.hoy.getFullYear();
@@ -29,26 +29,17 @@ export class ReppylPage implements OnInit {
   sumas     = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   // barra superior
   millon    = false;
+  hayNotas  = undefined;
 
   constructor(private datos: DatosService,
               private funciones: FuncionesService,
-              private popoverCtrl: PopoverController  ) {
+              private popoverCtrl: PopoverController,
+              private modalCtrl: ModalController ) {
     this.nombreMes = this.funciones.nombreMes( this.mes );
   }
 
   ngOnInit() {
     this.cargaMarcas();
-  }
-
-  async usrdata() {
-    const usr = await this.datos.readDatoLocal( 'KRLR_usuario' )
-        .then( data =>  { try {
-                            this.usuario = data;
-                          } catch (error) {
-                            this.usuario = [];
-                          }
-                        },
-               error => { console.log(error); } );
   }
 
   cargaMarcas() {
@@ -217,9 +208,15 @@ export class ReppylPage implements OnInit {
   }
 
   OnOff( fila ) {
-    //
     fila.show = !fila.show;
-    //
+  }
+
+  OnOffTotal() {
+    let i = 0;
+    this.rows.forEach(element => {
+      this.rows[i].show = !this.rows[i].show;
+      ++i;
+    });
   }
 
   millones() {
@@ -318,20 +315,39 @@ export class ReppylPage implements OnInit {
     const popover = await this.popoverCtrl.create({
         component: PeriodosComponent,
         event,
-        mode: 'ios',
-        // backdropDismiss: false
+        mode: 'ios'
     });
-
     await popover.present();
 
     const { data } = await popover.onWillDismiss();
-    
+
     if ( data !== undefined ) {
       this.mes = data.mes ;
       this.nombreMes = this.funciones.nombreMes( this.mes );
+      this.millon    = false;
       this.cargaMarcas();
+      this.hayNotas = 5;
     }
 
   }
+
+  async notas( event ) {
+    const modal = await this.modalCtrl.create({
+        component: NotasPage,
+        componentProps: { periodo: this.periodo,
+                          mes:     this.mes,
+                          empresa: this.empresa },
+        mode: 'ios'
+    });
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if ( data !== undefined ) {
+      // console.log(data);
+    }
+
+  }
+
 
 }

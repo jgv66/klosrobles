@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DatosService } from '../../services/datos.service';
 
 @Component({
   selector: 'app-menu',
@@ -8,13 +9,27 @@ import { Router } from '@angular/router';
 })
 export class MenuPage implements OnInit {
 
+  usuario;
   reportes: Reportes[] = [
-    { icono: 'pulse', redirectTo: '/reppyl', nombre: 'Resumen P&L Clientes Acumulado' },
+    { icono: 'pulse',   redirectTo: '/reppyl',    nombre: 'Resumen P&L Clientes Acumulado (Marcas)' },
   ];
 
-  constructor( private router: Router ) { }
+  constructor( private router: Router,
+               private datos: DatosService ) { }
 
   ngOnInit() {
+    this.usrdata();
+  }
+
+  async usrdata() {
+    const usr = await this.datos.readDatoLocal( 'KRLR_usuario' )
+        .then( data =>  { try {
+                            this.usuario = data;
+                          } catch (error) {
+                            this.usuario = [];
+                          }
+                        },
+               error => { console.log(error); } );
   }
 
   onClick( item ) {

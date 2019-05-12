@@ -1,0 +1,33 @@
+
+        location /losrobles  {
+            try_files $uri$args $uri$args/ @losrobles;
+    	    access_log /var/log/nginx/api.losrobles.access.log;
+            error_log /var/log/nginx/api.losrobles.error.log;
+        }
+
+        location @losrobles {
+                include /etc/nginx/mime.types;
+
+                if ($request_method = OPTIONS) {
+                   add_header Access-Control-Allow-Origin $http_origin;
+                   add_header Access-Control-Allow-Methods "GET, POST, DELETE, PUT, OPTIONS";
+                   add_header Access-Control-Allow-Headers "Authorization, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin, x-uuid, X-JWT-Token, X-JWT-RefreshToken";
+                   add_header Access-Control-Allow-Credentials "true";
+                   add_header Content-Length 0;
+                   add_header Content-Type text/plain;
+                   return 204;
+                }
+
+		rewrite ^/losrobles(.*) $1 break;
+                proxy_pass http://127.0.0.1:8119;
+		# proxy_request_buffering off;
+		proxy_buffering on;
+		# proxy_redirect off;
+
+                proxy_http_version 1.1;
+		proxy_set_header Access-Control-Allow-Origin $http_origin;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                proxy_set_header Host $host;
+        }
+

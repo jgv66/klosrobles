@@ -17,8 +17,18 @@ import { environment } from '../environments/environment';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports:   [ BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicStorageModule.forRoot(), ComponentsModule, ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }) ],
-  providers: [ StatusBar, SplashScreen,  DatosService, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy } ],
+  imports:   [BrowserModule,
+              IonicModule.forRoot(),
+              AppRoutingModule,
+              HttpClientModule,
+              IonicStorageModule.forRoot(),
+              ComponentsModule,
+              ServiceWorkerModule.register('ngsw-worker.js',
+              { enabled: environment.production }) ],
+  providers: [StatusBar,
+              SplashScreen,
+              DatosService,
+              { provide: RouteReuseStrategy, useClass: IonicRouteStrategy } ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule {}
