@@ -18,7 +18,7 @@ export class NotasPage implements OnInit {
   editando  = undefined;
   titulo    = '';
   contenido = '';
-  usuario   = [];
+  usuario: any = [];
 
   constructor( private modalCtrl: ModalController,
                private funciones: FuncionesService,

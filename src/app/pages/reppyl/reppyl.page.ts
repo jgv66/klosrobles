@@ -331,7 +331,7 @@ export class ReppylPage implements OnInit {
 
   }
 
-  async notas( event ) {
+  async notas() {
     const modal = await this.modalCtrl.create({
         component: NotasPage,
         componentProps: { periodo: this.periodo,

@@ -13,21 +13,24 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComponentsModule } from './components/components.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent ],
   entryComponents: [],
-  imports:   [BrowserModule,
+  imports:  [ BrowserModule,
               IonicModule.forRoot(),
               AppRoutingModule,
               HttpClientModule,
               IonicStorageModule.forRoot(),
               ComponentsModule,
               ServiceWorkerModule.register('ngsw-worker.js',
-              { enabled: environment.production }) ],
+              { enabled: environment.production })
+            ],
   providers: [StatusBar,
               SplashScreen,
               DatosService,
+              UniqueDeviceID,
               { provide: RouteReuseStrategy, useClass: IonicRouteStrategy } ],
   bootstrap: [ AppComponent ]
 })

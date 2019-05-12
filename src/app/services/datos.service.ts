@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { tap } from 'rxjs/operators';
+import { environment, SERVER_URL, PORT_URL } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DatosService {
+export class DatosService implements OnInit {
 
   cualquierDato: any;
   xDato: any;
@@ -16,12 +17,21 @@ export class DatosService {
   params: any;
 
   // puerto: LOS ROBLES
-  url    = 'http://23.239.29.171';  /* servidor linode */
-  puerto = ':3080';                  /* puerto: LOSROBLES */
+  url    = '';  /* servidor linode:  http://23.239.29.171 */
+  puerto = '';  /* puerto: ':3080'  com dos puntos por delante... estoy flojo */
 
-  constructor (private loadingCtrl: LoadingController,
+  constructor( private loadingCtrl: LoadingController,
                private http: HttpClient,
                private dataLocal: Storage ) {
+    // console.log( environment.mensaje );
+    // console.log(environment.production);
+    // console.log(SERVER_URL);
+    this.url    = SERVER_URL;
+    this.puerto = PORT_URL;
+  }
+
+  ngOnInit() {
+
   }
 
   async showLoading() {
