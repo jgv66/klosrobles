@@ -12,7 +12,8 @@
     <ion-buttons slot="end">
 
         <ion-button (click)="notas()">            
-            <ion-icon slot="icon-only" name="notifications"><ion-badge color='primary' >{{ hayNotas }}</ion-badge></ion-icon>
+          <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>       
+          <ion-icon slot="icon-only" name="notifications"></ion-icon>
         </ion-button>
 
         <ion-button (click)="periodos( $event )"> <ion-icon slot="icon-only" name="calendar"></ion-icon></ion-button>
@@ -22,7 +23,6 @@
   </ion-toolbar>
 
 </ion-header> 
-
 
 <ion-content padding>
 

@@ -30,6 +30,7 @@ export class ReppylPage implements OnInit {
   // barra superior
   millon    = false;
   hayNotas  = undefined;
+  nNotas    = 0;
 
   constructor(private datos: DatosService,
               private funciones: FuncionesService,
@@ -40,6 +41,7 @@ export class ReppylPage implements OnInit {
 
   ngOnInit() {
     this.cargaMarcas();
+    this.cuantasNotas();
   }
 
   cargaMarcas() {
@@ -325,10 +327,23 @@ export class ReppylPage implements OnInit {
       this.mes = data.mes ;
       this.nombreMes = this.funciones.nombreMes( this.mes );
       this.millon    = false;
+      //
       this.cargaMarcas();
-      this.hayNotas = 5;
+      this.cuantasNotas();
+      //
     }
 
+  }
+
+  cuantasNotas() {
+    return this.datos.postDataSPSilent( { sp:      '/ws_pylnotascuenta',
+                                          periodo: this.periodo.toString(),
+                                          mes:     this.mes.toString() } )
+      .subscribe( data => {
+          const rs = data['datos'];
+          this.nNotas   = ( rs[0].notas ) ? rs[0].notas : 0 ;
+          this.hayNotas = ( rs[0].notas ) ? true : undefined;
+      });
   }
 
   async notas() {
