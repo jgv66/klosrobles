@@ -11,7 +11,7 @@ export class MenuPage implements OnInit {
 
   usuario;
   reportes: Reportes[] = [
-    { icono: 'pulse',   redirectTo: '/reppyl',    nombre: 'Resumen P&L Clientes Acumulado (Marcas)' },
+    { icono: 'pulse',   redirectTo: '/reppyl',    nombre: 'Profit & Loss Statement Accumulated' },
   ];
 
   constructor( private router: Router,

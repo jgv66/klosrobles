@@ -4,6 +4,7 @@ import { FuncionesService } from '../../services/funciones.service';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { PeriodosComponent } from 'src/app/components/periodos/periodos.component';
 import { NotasPage } from '../notas/notas.page';
+import { VistasPage } from 'src/app/components/vistas/vistas.page';
 
 declare var google;
 
@@ -21,16 +22,15 @@ export class ReppylPage implements OnInit {
   meses     = [];
   nombreMes = '';
   //
-  config    = {};
-  columns   = [];
   rows      = [];
   marcas    = [];
   // sumas
   sumas     = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  sumasp    = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   // barra superior
-  millon    = false;
   hayNotas  = undefined;
   nNotas    = 0;
+  vista     = 'F';  // fraccion de millon
 
   constructor(private datos: DatosService,
               private funciones: FuncionesService,
@@ -49,21 +49,9 @@ export class ReppylPage implements OnInit {
                                     periodo: this.periodo.toString(),
                                     mes:     this.mes.toString() } )
       .subscribe( data => {
+        // console.log(data);
           const rs = data['datos'];
           this.marcas = rs;
-          // tslint:disable-next-line: prefer-for-of
-          for ( let i = 0; i < this.marcas.length; i++ ) {
-              //
-              this.marcas[i].vta_neta          = this.marcas[i].vta_neta          / 1000000 ;
-              this.marcas[i].costo_operacional = this.marcas[i].costo_operacional / 1000000 ;
-              this.marcas[i].rebaja_de_precios = this.marcas[i].rebaja_de_precios / 1000000 ;
-              this.marcas[i].margen_bruto      = this.marcas[i].margen_bruto      / 1000000 ;
-              this.marcas[i].gasto_promotores  = this.marcas[i].gasto_promotores  / 1000000 ;
-              this.marcas[i].cross_docking     = this.marcas[i].cross_docking     / 1000000 ;
-              this.marcas[i].convenio_variable = this.marcas[i].convenio_variable / 1000000 ;
-              this.marcas[i].convenio_fijo     = this.marcas[i].convenio_fijo     / 1000000 ;
-              this.marcas[i].contribucion      = this.marcas[i].contribucion      / 1000000 ;
-          }
           this.cargaDatos();
       });
   }
@@ -74,57 +62,9 @@ export class ReppylPage implements OnInit {
                               periodo: this.periodo.toString(),
                               mes:     this.mes.toString() } )
       .subscribe( data => {
-            const rs = data['datos'];
-            this.sumas = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-            //
-            this.columns = [];
-            this.rows    = rs;
-            // tslint:disable-next-line: prefer-for-of
-            for (let i = 0; i < this.rows.length; i++) {
-              // totales
-              this.sumas[0] += this.rows[i].vta_neta         ;
-              this.sumas[1] += this.rows[i].costo_operacional;
-              this.sumas[2] += this.rows[i].rebaja_de_precios;
-              this.sumas[3] += this.rows[i].margen_bruto     ;
-              this.sumas[4] += this.rows[i].gasto_promotores ;
-              this.sumas[5] += this.rows[i].cross_docking    ;
-              this.sumas[6] += this.rows[i].convenio_variable;
-              this.sumas[7] += this.rows[i].convenio_fijo    ;
-              this.sumas[8] += this.rows[i].contribucion     ;
-              // datos
-              this.rows[i].vta_neta          = this.rows[i].vta_neta          / 1000000 ;
-              this.rows[i].costo_operacional = this.rows[i].costo_operacional / 1000000 ;
-              this.rows[i].rebaja_de_precios = this.rows[i].rebaja_de_precios / 1000000 ;
-              this.rows[i].margen_bruto      = this.rows[i].margen_bruto      / 1000000 ;
-              this.rows[i].gasto_promotores  = this.rows[i].gasto_promotores  / 1000000 ;
-              this.rows[i].cross_docking     = this.rows[i].cross_docking     / 1000000 ;
-              this.rows[i].convenio_variable = this.rows[i].convenio_variable / 1000000 ;
-              this.rows[i].convenio_fijo     = this.rows[i].convenio_fijo     / 1000000 ;
-              this.rows[i].contribucion      = this.rows[i].contribucion      / 1000000 ;
-              // agregar las marcas
-              this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
-            }
-            //
-            this.sumas[0] = this.sumas[0] / 1000000;
-            this.sumas[1] = this.sumas[1] / 1000000;
-            this.sumas[2] = this.sumas[2] / 1000000;
-            this.sumas[3] = this.sumas[3] / 1000000;
-            this.sumas[4] = this.sumas[4] / 1000000;
-            this.sumas[5] = this.sumas[5] / 1000000;
-            this.sumas[6] = this.sumas[6] / 1000000;
-            this.sumas[7] = this.sumas[7] / 1000000;
-            this.sumas[8] = this.sumas[8] / 1000000;
-            //
-            this.columns = [ { name: 'Cliente'          },
-                             { name: 'Vta. Neta'        },
-                             { name: 'Costo Operacional'},
-                             { name: 'Rebaja de Precios'},
-                             { name: 'Margen Bruto'     },
-                             { name: 'Gto. Promotores'  },
-                             { name: 'Cross-Docking'    },
-                             { name: 'Convenio Variable'},
-                             { name: 'Convenio Fijo'    },
-                             { name: 'Contribucion'     } ];
+            const rs  = data['datos'];
+            this.rows = rs;
+            this.tranData();  /* cambia el formatode los datos */
             // -------------------------------------------------------------- grafica contribucion
             const eje = [];
             this.rows.forEach( element => {
@@ -140,7 +80,7 @@ export class ReppylPage implements OnInit {
             PieContribucion.addRows( eje );
             // Instantiate and draw our chart, passing in some options.
             const PieContrib1 = new google.visualization.PieChart(document.getElementById('pieChart1'));
-            const options   = { title:  'Contribución',
+            const options   = { title:  'Contribución Total',
                                 width:  '100%',
                                 height: '100%',
                                 chartArea: { left:    '10',
@@ -167,7 +107,7 @@ export class ReppylPage implements OnInit {
             PieMargenBruto.addRows( ejem );
             // Instantiate and draw our chart, passing in some options.
             const PieMargenB = new google.visualization.PieChart(document.getElementById('pieChart2'));
-            const optionsmb   = { title:  'Margen Bruto',
+            const optionsmb   = { title:  'Margen Bruto Total',
                                 width:  '100%',
                                 height: '100%',
                                 chartArea: { left:    '10',
@@ -194,7 +134,7 @@ export class ReppylPage implements OnInit {
             PieVentas.addRows( ejev );
             // Instantiate and draw our chart, passing in some options.
             const PieVentas1 = new google.visualization.PieChart(document.getElementById('pieChart3'));
-            const optionsv  = { title:  'Rebajas',
+            const optionsv  = { title:  'Rebajas Total',
                                 width:  '100%',
                                 height: '100%',
                                 chartArea: { left:    '10',
@@ -221,98 +161,6 @@ export class ReppylPage implements OnInit {
     });
   }
 
-  millones() {
-    //
-    if ( this.millon === false ) {
-      // marcas
-      // tslint:disable-next-line: prefer-for-of
-      for ( let i = 0; i < this.marcas.length; i++ ) {
-        //
-        this.marcas[i].vta_neta          = this.marcas[i].vta_neta          * 1000000 ;
-        this.marcas[i].costo_operacional = this.marcas[i].costo_operacional * 1000000 ;
-        this.marcas[i].rebaja_de_precios = this.marcas[i].rebaja_de_precios * 1000000 ;
-        this.marcas[i].margen_bruto      = this.marcas[i].margen_bruto      * 1000000 ;
-        this.marcas[i].gasto_promotores  = this.marcas[i].gasto_promotores  * 1000000 ;
-        this.marcas[i].cross_docking     = this.marcas[i].cross_docking     * 1000000 ;
-        this.marcas[i].convenio_variable = this.marcas[i].convenio_variable * 1000000 ;
-        this.marcas[i].convenio_fijo     = this.marcas[i].convenio_fijo     * 1000000 ;
-        this.marcas[i].contribucion      = this.marcas[i].contribucion      * 1000000 ;
-      }
-      // filas
-      // tslint:disable-next-line: prefer-for-of
-      for (let i = 0; i < this.rows.length; i++) {
-        // datos
-        this.rows[i].vta_neta          = this.rows[i].vta_neta          * 1000000 ;
-        this.rows[i].costo_operacional = this.rows[i].costo_operacional * 1000000 ;
-        this.rows[i].rebaja_de_precios = this.rows[i].rebaja_de_precios * 1000000 ;
-        this.rows[i].margen_bruto      = this.rows[i].margen_bruto      * 1000000 ;
-        this.rows[i].gasto_promotores  = this.rows[i].gasto_promotores  * 1000000 ;
-        this.rows[i].cross_docking     = this.rows[i].cross_docking     * 1000000 ;
-        this.rows[i].convenio_variable = this.rows[i].convenio_variable * 1000000 ;
-        this.rows[i].convenio_fijo     = this.rows[i].convenio_fijo     * 1000000 ;
-        this.rows[i].contribucion      = this.rows[i].contribucion      * 1000000 ;
-        // agregar las marcas
-        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
-      }
-      // sumas
-      this.sumas[0] = this.sumas[0] * 1000000;
-      this.sumas[1] = this.sumas[1] * 1000000;
-      this.sumas[2] = this.sumas[2] * 1000000;
-      this.sumas[3] = this.sumas[3] * 1000000;
-      this.sumas[4] = this.sumas[4] * 1000000;
-      this.sumas[5] = this.sumas[5] * 1000000;
-      this.sumas[6] = this.sumas[6] * 1000000;
-      this.sumas[7] = this.sumas[7] * 1000000;
-      this.sumas[8] = this.sumas[8] * 1000000;
-      //
-    } else {
-      // marcas
-      // tslint:disable-next-line: prefer-for-of
-      for ( let i = 0; i < this.marcas.length; i++ ) {
-        //
-        this.marcas[i].vta_neta          = this.marcas[i].vta_neta          / 1000000 ;
-        this.marcas[i].costo_operacional = this.marcas[i].costo_operacional / 1000000 ;
-        this.marcas[i].rebaja_de_precios = this.marcas[i].rebaja_de_precios / 1000000 ;
-        this.marcas[i].margen_bruto      = this.marcas[i].margen_bruto      / 1000000 ;
-        this.marcas[i].gasto_promotores  = this.marcas[i].gasto_promotores  / 1000000 ;
-        this.marcas[i].cross_docking     = this.marcas[i].cross_docking     / 1000000 ;
-        this.marcas[i].convenio_variable = this.marcas[i].convenio_variable / 1000000 ;
-        this.marcas[i].convenio_fijo     = this.marcas[i].convenio_fijo     / 1000000 ;
-        this.marcas[i].contribucion      = this.marcas[i].contribucion      / 1000000 ;
-      }
-      // filas
-      // tslint:disable-next-line: prefer-for-of
-      for (let i = 0; i < this.rows.length; i++) {
-        // datos
-        this.rows[i].vta_neta          = this.rows[i].vta_neta          / 1000000 ;
-        this.rows[i].costo_operacional = this.rows[i].costo_operacional / 1000000 ;
-        this.rows[i].rebaja_de_precios = this.rows[i].rebaja_de_precios / 1000000 ;
-        this.rows[i].margen_bruto      = this.rows[i].margen_bruto      / 1000000 ;
-        this.rows[i].gasto_promotores  = this.rows[i].gasto_promotores  / 1000000 ;
-        this.rows[i].cross_docking     = this.rows[i].cross_docking     / 1000000 ;
-        this.rows[i].convenio_variable = this.rows[i].convenio_variable / 1000000 ;
-        this.rows[i].convenio_fijo     = this.rows[i].convenio_fijo     / 1000000 ;
-        this.rows[i].contribucion      = this.rows[i].contribucion      / 1000000 ;
-        // agregar las marcas
-        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
-      }
-      // sumas
-      this.sumas[0] = this.sumas[0] / 1000000;
-      this.sumas[1] = this.sumas[1] / 1000000;
-      this.sumas[2] = this.sumas[2] / 1000000;
-      this.sumas[3] = this.sumas[3] / 1000000;
-      this.sumas[4] = this.sumas[4] / 1000000;
-      this.sumas[5] = this.sumas[5] / 1000000;
-      this.sumas[6] = this.sumas[6] / 1000000;
-      this.sumas[7] = this.sumas[7] / 1000000;
-      this.sumas[8] = this.sumas[8] / 1000000;
-      //
-    }
-    //
-    this.millon = !this.millon;
-    //
-  }
-
   async periodos( event ) {
     const popover = await this.popoverCtrl.create({
         component: PeriodosComponent,
@@ -332,7 +180,6 @@ export class ReppylPage implements OnInit {
       this.cuantasNotas();
       //
     }
-
   }
 
   cuantasNotas() {
@@ -359,10 +206,278 @@ export class ReppylPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if ( data !== undefined ) {
-      // console.log(data);
+      this.cuantasNotas();
     }
-
   }
 
+  async vistas( event ) {
+    const popover = await this.popoverCtrl.create({
+        component: VistasPage,
+        event,
+        mode: 'ios'
+    });
+    await popover.present();
+
+    const { data } = await popover.onWillDismiss();
+
+    if ( data !== undefined ) {
+      this.vista  = data.vista ;
+      console.log( this.vista );
+      this.tranData();
+      //
+    }
+  }
+
+  tranData() {
+    if ( this.vista === 'F' ) {
+      //
+      this.sumas = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      // tslint:disable-next-line: prefer-for-of
+      for ( let i = 0; i < this.marcas.length; i++ ) {
+          //
+          this.marcas[i].x_vta_neta          = this.marcas[i].vta_neta          / 1000000 ;
+          this.marcas[i].x_costo_operacional = this.marcas[i].costo_operacional / 1000000 ;
+          this.marcas[i].x_rebaja_de_precios = this.marcas[i].rebaja_de_precios / 1000000 ;
+          this.marcas[i].x_margen_bruto      = this.marcas[i].margen_bruto      / 1000000 ;
+          this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores  / 1000000 ;
+          this.marcas[i].x_cross_docking     = this.marcas[i].cross_docking     / 1000000 ;
+          this.marcas[i].x_convenio_variable = this.marcas[i].convenio_variable / 1000000 ;
+          this.marcas[i].x_convenio_fijo     = this.marcas[i].convenio_fijo     / 1000000 ;
+          this.marcas[i].x_contribucion      = this.marcas[i].contribucion      / 1000000 ;
+      }
+      // tslint:disable-next-line: prefer-for-of
+      for (let i = 0; i < this.rows.length; i++) {
+        // totales
+        this.sumas[0] += this.rows[i].vta_neta         ;
+        this.sumas[1] += this.rows[i].costo_operacional;
+        this.sumas[2] += this.rows[i].rebaja_de_precios;
+        this.sumas[3] += this.rows[i].margen_bruto     ;
+        this.sumas[4] += this.rows[i].gasto_promotores ;
+        this.sumas[5] += this.rows[i].cross_docking    ;
+        this.sumas[6] += this.rows[i].convenio_variable;
+        this.sumas[7] += this.rows[i].convenio_fijo    ;
+        this.sumas[8] += this.rows[i].contribucion     ;
+        // datos
+        this.rows[i].x_vta_neta          = this.rows[i].vta_neta          / 1000000 ;
+        this.rows[i].x_costo_operacional = this.rows[i].costo_operacional / 1000000 ;
+        this.rows[i].x_rebaja_de_precios = this.rows[i].rebaja_de_precios / 1000000 ;
+        this.rows[i].x_margen_bruto      = this.rows[i].margen_bruto      / 1000000 ;
+        this.rows[i].x_gasto_promotores  = this.rows[i].gasto_promotores  / 1000000 ;
+        this.rows[i].x_cross_docking     = this.rows[i].cross_docking     / 1000000 ;
+        this.rows[i].x_convenio_variable = this.rows[i].convenio_variable / 1000000 ;
+        this.rows[i].x_convenio_fijo     = this.rows[i].convenio_fijo     / 1000000 ;
+        this.rows[i].x_contribucion      = this.rows[i].contribucion      / 1000000 ;
+        // agregar las marcas
+        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
+      }
+      //
+      this.sumas[0] = this.sumas[0] / 1000000;
+      this.sumas[1] = this.sumas[1] / 1000000;
+      this.sumas[2] = this.sumas[2] / 1000000;
+      this.sumas[3] = this.sumas[3] / 1000000;
+      this.sumas[4] = this.sumas[4] / 1000000;
+      this.sumas[5] = this.sumas[5] / 1000000;
+      this.sumas[6] = this.sumas[6] / 1000000;
+      this.sumas[7] = this.sumas[7] / 1000000;
+      this.sumas[8] = this.sumas[8] / 1000000;
+      //
+    } else if ( this.vista === 'M' ) {
+      //
+      this.sumas = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      // tslint:disable-next-line: prefer-for-of
+      for ( let i = 0; i < this.marcas.length; i++ ) {
+        //
+        this.marcas[i].x_vta_neta          = this.marcas[i].vta_neta           ;
+        this.marcas[i].x_costo_operacional = this.marcas[i].costo_operacional  ;
+        this.marcas[i].x_rebaja_de_precios = this.marcas[i].rebaja_de_precios  ;
+        this.marcas[i].x_margen_bruto      = this.marcas[i].margen_bruto       ;
+        this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores   ;
+        this.marcas[i].x_cross_docking     = this.marcas[i].cross_docking      ;
+        this.marcas[i].x_convenio_variable = this.marcas[i].convenio_variable  ;
+        this.marcas[i].x_convenio_fijo     = this.marcas[i].convenio_fijo      ;
+        this.marcas[i].x_contribucion      = this.marcas[i].contribucion       ;
+      }
+      // tslint:disable-next-line: prefer-for-of
+      for (let i = 0; i < this.rows.length; i++) {
+        // totales
+        this.sumas[0] += this.rows[i].vta_neta         ;
+        this.sumas[1] += this.rows[i].costo_operacional;
+        this.sumas[2] += this.rows[i].rebaja_de_precios;
+        this.sumas[3] += this.rows[i].margen_bruto     ;
+        this.sumas[4] += this.rows[i].gasto_promotores ;
+        this.sumas[5] += this.rows[i].cross_docking    ;
+        this.sumas[6] += this.rows[i].convenio_variable;
+        this.sumas[7] += this.rows[i].convenio_fijo    ;
+        this.sumas[8] += this.rows[i].contribucion     ;
+        // datos
+        this.rows[i].x_vta_neta          = this.rows[i].vta_neta          ;
+        this.rows[i].x_costo_operacional = this.rows[i].costo_operacional ;
+        this.rows[i].x_rebaja_de_precios = this.rows[i].rebaja_de_precios ;
+        this.rows[i].x_margen_bruto      = this.rows[i].margen_bruto      ;
+        this.rows[i].x_gasto_promotores  = this.rows[i].gasto_promotores  ;
+        this.rows[i].x_cross_docking     = this.rows[i].cross_docking     ;
+        this.rows[i].x_convenio_variable = this.rows[i].convenio_variable ;
+        this.rows[i].x_convenio_fijo     = this.rows[i].convenio_fijo     ;
+        this.rows[i].x_contribucion      = this.rows[i].contribucion      ;
+        // agregar las marcas
+        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
+      }
+      //
+    } else if ( this.vista === '%' ) {
+      //
+      this.sumas = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      // tslint:disable-next-line: prefer-for-of
+      for ( let i = 0; i < this.marcas.length; i++ ) {
+        //
+        this.marcas[i].x_vta_neta          = this.marcas[i].vta_neta           ;
+        this.marcas[i].x_costo_operacional = ( this.marcas[i].costo_operacional / this.marcas[i].vta_neta ) * 100 ;
+        this.marcas[i].x_rebaja_de_precios = ( this.marcas[i].rebaja_de_precios / this.marcas[i].vta_neta ) * 100 ;
+        this.marcas[i].x_margen_bruto      = ( this.marcas[i].margen_bruto      / this.marcas[i].vta_neta ) * 100 ;
+        this.marcas[i].x_gasto_promotores  = ( this.marcas[i].gasto_promotores  / this.marcas[i].vta_neta ) * 100 ;
+        this.marcas[i].x_cross_docking     = ( this.marcas[i].cross_docking     / this.marcas[i].vta_neta ) * 100 ;
+        this.marcas[i].x_convenio_variable = ( this.marcas[i].convenio_variable / this.marcas[i].vta_neta ) * 100 ;
+        this.marcas[i].x_convenio_fijo     = ( this.marcas[i].convenio_fijo     / this.marcas[i].vta_neta ) * 100 ;
+        this.marcas[i].x_contribucion      = ( this.marcas[i].contribucion      / this.marcas[i].vta_neta ) * 100 ;
+      }
+      // tslint:disable-next-line: prefer-for-of
+      for (let i = 0; i < this.rows.length; i++) {
+        // totales
+        this.sumas[0] += this.rows[i].vta_neta         ;
+        this.sumas[1] += this.rows[i].costo_operacional;
+        this.sumas[2] += this.rows[i].rebaja_de_precios;
+        this.sumas[3] += this.rows[i].margen_bruto     ;
+        this.sumas[4] += this.rows[i].gasto_promotores ;
+        this.sumas[5] += this.rows[i].cross_docking    ;
+        this.sumas[6] += this.rows[i].convenio_variable;
+        this.sumas[7] += this.rows[i].convenio_fijo    ;
+        this.sumas[8] += this.rows[i].contribucion     ;
+        // datos
+        this.rows[i].x_vta_neta          = this.rows[i].vta_neta          ;
+        this.rows[i].x_costo_operacional = ( this.rows[i].costo_operacional / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].x_rebaja_de_precios = ( this.rows[i].rebaja_de_precios / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].x_margen_bruto      = ( this.rows[i].margen_bruto      / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].x_gasto_promotores  = ( this.rows[i].gasto_promotores  / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].x_cross_docking     = ( this.rows[i].cross_docking     / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].x_convenio_variable = ( this.rows[i].convenio_variable / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].x_convenio_fijo     = ( this.rows[i].convenio_fijo     / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].x_contribucion      = ( this.rows[i].contribucion      / this.rows[i].vta_neta ) * 100 ;
+        // agregar las marcas
+        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
+      }
+      //
+      this.sumas[1] = ( this.sumas[1] / this.sumas[0] ) * 100;
+      this.sumas[2] = ( this.sumas[2] / this.sumas[0] ) * 100;
+      this.sumas[3] = ( this.sumas[3] / this.sumas[0] ) * 100;
+      this.sumas[4] = ( this.sumas[4] / this.sumas[0] ) * 100;
+      this.sumas[5] = ( this.sumas[5] / this.sumas[0] ) * 100;
+      this.sumas[6] = ( this.sumas[6] / this.sumas[0] ) * 100;
+      this.sumas[7] = ( this.sumas[7] / this.sumas[0] ) * 100;
+      this.sumas[8] = ( this.sumas[8] / this.sumas[0] ) * 100;
+      //
+    } else if ( this.vista === 'F%' ) {
+      //
+      this.sumas = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      // tslint:disable-next-line: prefer-for-of
+      for ( let i = 0; i < this.marcas.length; i++ ) {
+          // valores
+          this.marcas[i].x_vta_neta          = this.marcas[i].vta_neta          / 1000000 ;
+          this.marcas[i].x_costo_operacional = this.marcas[i].costo_operacional / 1000000 ;
+          this.marcas[i].x_rebaja_de_precios = this.marcas[i].rebaja_de_precios / 1000000 ;
+          this.marcas[i].x_margen_bruto      = this.marcas[i].margen_bruto      / 1000000 ;
+          this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores  / 1000000 ;
+          this.marcas[i].x_cross_docking     = this.marcas[i].cross_docking     / 1000000 ;
+          this.marcas[i].x_convenio_variable = this.marcas[i].convenio_variable / 1000000 ;
+          this.marcas[i].x_convenio_fijo     = this.marcas[i].convenio_fijo     / 1000000 ;
+          this.marcas[i].x_contribucion      = this.marcas[i].contribucion      / 1000000 ;
+          // porcentajes
+          this.marcas[i].p_vta_neta          =   this.marcas[i].vta_neta ;
+          this.marcas[i].p_costo_operacional = ( this.marcas[i].costo_operacional / this.marcas[i].vta_neta ) * 100 ;
+          this.marcas[i].p_rebaja_de_precios = ( this.marcas[i].rebaja_de_precios / this.marcas[i].vta_neta ) * 100 ;
+          this.marcas[i].p_margen_bruto      = ( this.marcas[i].margen_bruto      / this.marcas[i].vta_neta ) * 100 ;
+          this.marcas[i].p_gasto_promotores  = ( this.marcas[i].gasto_promotores  / this.marcas[i].vta_neta ) * 100 ;
+          this.marcas[i].p_cross_docking     = ( this.marcas[i].cross_docking     / this.marcas[i].vta_neta ) * 100 ;
+          this.marcas[i].p_convenio_variable = ( this.marcas[i].convenio_variable / this.marcas[i].vta_neta ) * 100 ;
+          this.marcas[i].p_convenio_fijo     = ( this.marcas[i].convenio_fijo     / this.marcas[i].vta_neta ) * 100 ;
+          this.marcas[i].p_contribucion      = ( this.marcas[i].contribucion      / this.marcas[i].vta_neta ) * 100 ;
+      }
+      // tslint:disable-next-line: prefer-for-of
+      for (let i = 0; i < this.rows.length; i++) {
+        // totales
+        this.sumas[0] += this.rows[i].vta_neta         ;
+        this.sumas[1] += this.rows[i].costo_operacional;
+        this.sumas[2] += this.rows[i].rebaja_de_precios;
+        this.sumas[3] += this.rows[i].margen_bruto     ;
+        this.sumas[4] += this.rows[i].gasto_promotores ;
+        this.sumas[5] += this.rows[i].cross_docking    ;
+        this.sumas[6] += this.rows[i].convenio_variable;
+        this.sumas[7] += this.rows[i].convenio_fijo    ;
+        this.sumas[8] += this.rows[i].contribucion     ;
+        // datos
+        this.rows[i].x_vta_neta          = this.rows[i].vta_neta          / 1000000 ;
+        this.rows[i].x_costo_operacional = this.rows[i].costo_operacional / 1000000 ;
+        this.rows[i].x_rebaja_de_precios = this.rows[i].rebaja_de_precios / 1000000 ;
+        this.rows[i].x_margen_bruto      = this.rows[i].margen_bruto      / 1000000 ;
+        this.rows[i].x_gasto_promotores  = this.rows[i].gasto_promotores  / 1000000 ;
+        this.rows[i].x_cross_docking     = this.rows[i].cross_docking     / 1000000 ;
+        this.rows[i].x_convenio_variable = this.rows[i].convenio_variable / 1000000 ;
+        this.rows[i].x_convenio_fijo     = this.rows[i].convenio_fijo     / 1000000 ;
+        this.rows[i].x_contribucion      = this.rows[i].contribucion      / 1000000 ;
+        // porcentajes
+        this.rows[i].p_vta_neta          =   this.rows[i].vta_neta ;
+        this.rows[i].p_costo_operacional = ( this.rows[i].costo_operacional / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].p_rebaja_de_precios = ( this.rows[i].rebaja_de_precios / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].p_margen_bruto      = ( this.rows[i].margen_bruto      / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].p_gasto_promotores  = ( this.rows[i].gasto_promotores  / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].p_cross_docking     = ( this.rows[i].cross_docking     / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].p_convenio_variable = ( this.rows[i].convenio_variable / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].p_convenio_fijo     = ( this.rows[i].convenio_fijo     / this.rows[i].vta_neta ) * 100 ;
+        this.rows[i].p_contribucion      = ( this.rows[i].contribucion      / this.rows[i].vta_neta ) * 100 ;
+        // agregar las marcas
+        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
+      }
+      //
+      this.sumas[0]  = this.sumas[0] / 1000000 ;
+      this.sumas[1]  = this.sumas[1] / 1000000 ;
+      this.sumas[2]  = this.sumas[2] / 1000000 ;
+      this.sumas[3]  = this.sumas[3] / 1000000 ;
+      this.sumas[4]  = this.sumas[4] / 1000000 ;
+      this.sumas[5]  = this.sumas[5] / 1000000 ;
+      this.sumas[6]  = this.sumas[6] / 1000000 ;
+      this.sumas[7]  = this.sumas[7] / 1000000 ;
+      this.sumas[8]  = this.sumas[8] / 1000000 ;
+      // porcentajes
+      this.sumasp[0] =   this.sumas[0];
+      this.sumasp[1] = ( this.sumas[1] / this.sumas[0] ) * 100 ;
+      this.sumasp[2] = ( this.sumas[2] / this.sumas[0] ) * 100 ;
+      this.sumasp[3] = ( this.sumas[3] / this.sumas[0] ) * 100 ;
+      this.sumasp[4] = ( this.sumas[4] / this.sumas[0] ) * 100 ;
+      this.sumasp[5] = ( this.sumas[5] / this.sumas[0] ) * 100 ;
+      this.sumasp[6] = ( this.sumas[6] / this.sumas[0] ) * 100 ;
+      this.sumasp[7] = ( this.sumas[7] / this.sumas[0] ) * 100 ;
+      this.sumasp[8] = ( this.sumas[8] / this.sumas[0] ) * 100 ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+  }
 
 }

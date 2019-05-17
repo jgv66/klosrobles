@@ -1,9 +1,8 @@
 
 
-<ion-list>
+<ion-list lines='none'>
   <ion-item *ngFor="let mes of meses; let i = index;" 
-            (click)="onClick( i + 1 )"
-            detail>
+            (click)="onClick( i + 1 )">
     <ion-label>{{ mes }}</ion-label>
   </ion-item>
 </ion-list>

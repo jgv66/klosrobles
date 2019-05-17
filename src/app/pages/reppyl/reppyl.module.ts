@@ -10,6 +10,8 @@ import { ComponentsModule } from '../../components/components.module';
 import { PeriodosComponent } from '../../components/periodos/periodos.component';
 import { NotasPage } from '../notas/notas.page';
 import { NotasPageModule } from '../notas/notas.module';
+import { VistasPage } from '../../components/vistas/vistas.page';
+import { VistasPageModule } from '../../components/vistas/vistas.module';
 
 const routes: Routes = [
   {
@@ -19,14 +21,15 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  entryComponents: [ PeriodosComponent, NotasPage ],
+  entryComponents: [ PeriodosComponent, NotasPage, VistasPage ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
     ComponentsModule,
-    NotasPageModule
+    NotasPageModule,
+    VistasPageModule
   ],
   declarations: [ReppylPage]
 })

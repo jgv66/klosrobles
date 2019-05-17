@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { FuncionesService } from '../../services/funciones.service';
 import { PopoverController } from '@ionic/angular';
 

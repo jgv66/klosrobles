@@ -1,5 +1,5 @@
 
-<ion-header no-border>
+<ion-header no-border translucent>
 
   <ion-toolbar color="dark">
 
@@ -7,24 +7,22 @@
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
 
-    <ion-title text-center text-capitalize>Resumen P&L Clientes Acumulado : {{ nombreMes }} / {{ periodo }}</ion-title>
+    <ion-title text-center text-capitalize>Profit & Loss Statement Accumulated : {{ nombreMes }} / {{ periodo }}</ion-title>
 
     <ion-buttons slot="end">
-
-        <ion-button (click)="notas()">            
-          <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>       
-          <ion-icon slot="icon-only" name="notifications"></ion-icon>
-        </ion-button>
-
-        <ion-button (click)="periodos( $event )"> <ion-icon slot="icon-only" name="calendar"></ion-icon></ion-button>
-        <ion-button (click)="millones()">         <ion-icon slot="icon-only" [name]=" (millon === false)?'eye':'eye-off' "></ion-icon></ion-button>
+      <ion-button (click)="notas()">            
+        <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>       
+        <ion-icon slot="icon-only" name="notifications"></ion-icon>
+      </ion-button>
+      <ion-button (click)="periodos( $event )"><ion-icon slot="icon-only" name="calendar"></ion-icon></ion-button>
+      <ion-button (click)="vistas( $event )">  <ion-icon slot="icon-only" name="eye">     </ion-icon></ion-button>
     </ion-buttons>
 
   </ion-toolbar>
 
 </ion-header> 
 
-<ion-content padding>
+<ion-content padding fullscreen>
 
   <div class="chart-container">
       <div id="pieChart1" class="chart"></div>
@@ -49,49 +47,138 @@
         </ion-row>
     </ion-grid>
 
-    <ion-grid no-padding fixed style=" width: inherit;" >
-        <ion-row *ngFor="let dato of rows; let i = index;" (click)="OnOff( dato )" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
-          <ion-col             size="1.4"><ion-label>{{ dato.sigla                               }}</ion-label></ion-col>
-          <ion-col class="der" size="1.2"><ion-label>{{ dato.vta_neta          | number:"1.0-0"  }}</ion-label></ion-col>
-          <ion-col class="der" size="1.2"><ion-label>{{ dato.costo_operacional | number:"1.0-0"  }}</ion-label></ion-col>
-          <ion-col class="der" size="1.2"><ion-label>{{ dato.rebaja_de_precios | number:"1.0-0"  }}</ion-label></ion-col>
-          <ion-col class="der" size="1.2"><ion-label>{{ dato.margen_bruto      | number:"1.0-0"  }}</ion-label></ion-col>
-          <ion-col class="der" size="1.2"><ion-label>{{ dato.gasto_promotores  | number:"1.0-0"  }}</ion-label></ion-col>
-          <ion-col class="der" size="1.1"><ion-label>{{ dato.cross_docking     | number:"1.0-0"  }}</ion-label></ion-col>
-          <ion-col class="der" size="1.1"><ion-label>{{ dato.convenio_variable | number:"1.0-0"  }}</ion-label></ion-col>
-          <ion-col class="der" size="1.1"><ion-label>{{ dato.convenio_fijo     | number:"1.0-0"  }}</ion-label></ion-col>
-          <ion-col class="der" size="1.2"><ion-label>{{ dato.contribucion      | number:"1.0-0"  }}</ion-label></ion-col>
-          <!-- fila de marcas -->
-          <ion-grid  *ngIf=" dato.show " no-padding fixed class="header-in" style=" width: auto;">
-            <ion-row *ngFor="let marca of dato.marcas" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
-              <ion-col class="zen" size="1.4"><ion-label>{{ marca.nombre_marca                        }}</ion-label></ion-col>
-              <ion-col class="der" size="1.2"><ion-label>{{ marca.vta_neta          | number:"1.0-0"  }}</ion-label></ion-col>
-              <ion-col class="der" size="1.2"><ion-label>{{ marca.costo_operacional | number:"1.0-0"  }}</ion-label></ion-col>
-              <ion-col class="der" size="1.2"><ion-label>{{ marca.rebaja_de_precios | number:"1.0-0"  }}</ion-label></ion-col>
-              <ion-col class="der" size="1.2"><ion-label>{{ marca.margen_bruto      | number:"1.0-0"  }}</ion-label></ion-col>
-              <ion-col class="der" size="1.2"><ion-label>{{ marca.gasto_promotores  | number:"1.0-0"  }}</ion-label></ion-col>
-              <ion-col class="der" size="1.1"><ion-label>{{ marca.cross_docking     | number:"1.0-0"  }}</ion-label></ion-col>
-              <ion-col class="der" size="1.1"><ion-label>{{ marca.convenio_variable | number:"1.0-0"  }}</ion-label></ion-col>
-              <ion-col class="der" size="1.1"><ion-label>{{ marca.convenio_fijo     | number:"1.0-0"  }}</ion-label></ion-col>
-              <ion-col class="der" size="1.2"><ion-label>{{ marca.contribucion      | number:"1.0-0"  }}</ion-label></ion-col>           
-            </ion-row>
-          </ion-grid>
-
-        </ion-row>
+    <!-- numeros grandes -->
+    <ion-grid no-padding fixed style=" width: inherit;" *ngIf=" vista === 'M' || vista === 'F' " >
+      <ion-row  *ngFor="let dato of rows; let i = index;" (click)="OnOff( dato )" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+        <ion-col             size="1.4"><ion-label>{{ dato.sigla                                }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_vta_neta          | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_costo_operacional | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_rebaja_de_precios | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_margen_bruto      | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_gasto_promotores  | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col class="der" size="1.1"><ion-label>{{ dato.x_cross_docking     | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col class="der" size="1.1"><ion-label>{{ dato.x_convenio_variable | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col class="der" size="1.1"><ion-label>{{ dato.x_convenio_fijo     | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_contribucion      | number:"1.0-0" }}</ion-label></ion-col>
+        <!-- fila de marcas -->
+        <ion-grid *ngIf=" dato.show " no-padding fixed class="header-in" style=" width: auto;">
+          <ion-row  *ngFor="let marca of dato.marcas" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+            <ion-col class="zen" size="1.4"><ion-label>{{ marca.nombre_marca                         }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_vta_neta          | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_costo_operacional | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_rebaja_de_precios | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_margen_bruto      | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_gasto_promotores  | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ marca.x_cross_docking     | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ marca.x_convenio_variable | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ marca.x_convenio_fijo     | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_contribucion      | number:"1.0-0" }}</ion-label></ion-col>           
+          </ion-row>
+        </ion-grid>
+      </ion-row>
+    </ion-grid>
+    <ion-grid no-padding fixed class="header" style=" width: auto;" *ngIf=" vista === 'M' || vista === 'F' ">
+        <ion-row>
+            <ion-col             size="1.4"><ion-label>Totales                        </ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[0] | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[1] | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[2] | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[3] | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[4] | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ sumas[5] | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ sumas[6] | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ sumas[7] | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[8] | number:"1.0-0" }}</ion-label></ion-col>
+          </ion-row>
     </ion-grid>
 
-    <ion-grid no-padding fixed class="header" style=" width: auto;">
+    <!-- porcentajes -->
+    <ion-grid no-padding fixed style=" width: inherit;" *ngIf=" vista === '%' " >
+      <ion-row  *ngFor="let dato of rows; let i = index;" (click)="OnOff( dato )" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+        <ion-col             size="1.4"><ion-label>{{ dato.sigla                                }} </ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_vta_neta          | number:"1.0-0" }} </ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label [color]=" ( dato.x_costo_operacional < 0 ) ? 'danger' : 'dark' ">{{ dato.x_costo_operacional | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label [color]=" ( dato.x_rebaja_de_precios < 0 ) ? 'danger' : 'dark' ">{{ dato.x_rebaja_de_precios | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label [color]=" ( dato.x_margen_bruto      < 0 ) ? 'danger' : 'dark' ">{{ dato.x_margen_bruto      | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label [color]=" ( dato.x_gasto_promotores  < 0 ) ? 'danger' : 'dark' ">{{ dato.x_gasto_promotores  | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="der" size="1.1"><ion-label [color]=" ( dato.x_cross_docking     < 0 ) ? 'danger' : 'dark' ">{{ dato.x_cross_docking     | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="der" size="1.1"><ion-label [color]=" ( dato.x_convenio_variable < 0 ) ? 'danger' : 'dark' ">{{ dato.x_convenio_variable | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="der" size="1.1"><ion-label [color]=" ( dato.x_convenio_fijo     < 0 ) ? 'danger' : 'dark' ">{{ dato.x_convenio_fijo     | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label [color]=" ( dato.x_contribucion      < 0 ) ? 'danger' : 'dark' ">{{ dato.x_contribucion      | number:"1.2-2" }}%</ion-label></ion-col>
+        <!-- fila de marcas -->
+        <ion-grid *ngIf=" dato.show " no-padding fixed class="header-in" style=" width: auto;">
+          <ion-row  *ngFor="let marca of dato.marcas" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+            <ion-col class="zen" size="1.4"><ion-label>{{ marca.nombre_marca                         }} </ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_vta_neta          | number:"1.0-0" }} </ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label [color]=" ( marca.x_costo_operacional < 0 ) ? 'danger' : 'dark' ">{{ marca.x_costo_operacional | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label [color]=" ( marca.x_rebaja_de_precios < 0 ) ? 'danger' : 'dark' ">{{ marca.x_rebaja_de_precios | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label [color]=" ( marca.x_margen_bruto      < 0 ) ? 'danger' : 'dark' ">{{ marca.x_margen_bruto      | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label [color]=" ( marca.x_gasto_promotores  < 0 ) ? 'danger' : 'dark' ">{{ marca.x_gasto_promotores  | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label [color]=" ( marca.x_cross_docking     < 0 ) ? 'danger' : 'dark' ">{{ marca.x_cross_docking     | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label [color]=" ( marca.x_convenio_variable < 0 ) ? 'danger' : 'dark' ">{{ marca.x_convenio_variable | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label [color]=" ( marca.x_convenio_fijo     < 0 ) ? 'danger' : 'dark' ">{{ marca.x_convenio_fijo     | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label [color]=" ( marca.x_contribucion      < 0 ) ? 'danger' : 'dark' ">{{ marca.x_contribucion      | number:"1.2-2" }}%</ion-label></ion-col>           
+          </ion-row>
+        </ion-grid>
+      </ion-row>
+    </ion-grid>
+    <ion-grid no-padding fixed class="header" style=" width: auto;" *ngIf=" vista === '%' ">
         <ion-row>
-            <ion-col             size="1.4"><ion-label>Totales          </ion-label></ion-col>
-            <ion-col class="der" size="1.2"><ion-label>{{ sumas[0] | number:"1.0-0"  }}</ion-label></ion-col>
-            <ion-col class="der" size="1.2"><ion-label>{{ sumas[1] | number:"1.0-0"  }}</ion-label></ion-col>
-            <ion-col class="der" size="1.2"><ion-label>{{ sumas[2] | number:"1.0-0"  }}</ion-label></ion-col>
-            <ion-col class="der" size="1.2"><ion-label>{{ sumas[3] | number:"1.0-0"  }}</ion-label></ion-col>
-            <ion-col class="der" size="1.2"><ion-label>{{ sumas[4] | number:"1.0-0"  }}</ion-label></ion-col>
-            <ion-col class="der" size="1.1"><ion-label>{{ sumas[5] | number:"1.0-0"  }}</ion-label></ion-col>
-            <ion-col class="der" size="1.1"><ion-label>{{ sumas[6] | number:"1.0-0"  }}</ion-label></ion-col>
-            <ion-col class="der" size="1.1"><ion-label>{{ sumas[7] | number:"1.0-0"  }}</ion-label></ion-col>
-            <ion-col class="der" size="1.2"><ion-label>{{ sumas[8] | number:"1.0-0"  }}</ion-label></ion-col>
+            <ion-col             size="1.4"><ion-label>Totales                         </ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[0] | number:"1.0-0" }} </ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[1] | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[2] | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[3] | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[4] | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ sumas[5] | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ sumas[6] | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ sumas[7] | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[8] | number:"1.2-2" }}%</ion-label></ion-col>
+          </ion-row>
+    </ion-grid>
+
+    <!-- numeros grandes y porcentajes -->
+    <ion-grid no-padding fixed style=" width: inherit;" *ngIf=" vista === 'F%' " >
+      <ion-row  *ngFor="let dato of rows; let i = index;" (click)="OnOff( dato )" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+        <ion-col             size="1.4"><ion-label>{{ dato.sigla                                }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_vta_neta          | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_costo_operacional | number:"1.0-0" }} </ion-label> <sup class='der'>{{ dato.p_costo_operacional | number:"1.2-2" }}%</sup></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_rebaja_de_precios | number:"1.0-0" }} </ion-label> <sup class='der'>{{ dato.p_rebaja_de_precios | number:"1.2-2" }}%</sup></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_margen_bruto      | number:"1.0-0" }} </ion-label> <sup class='der'>{{ dato.p_margen_bruto      | number:"1.2-2" }}%</sup></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_gasto_promotores  | number:"1.0-0" }} </ion-label> <sup class='der'>{{ dato.p_gasto_promotores  | number:"1.2-2" }}%</sup></ion-col>
+        <ion-col class="der" size="1.1"><ion-label>{{ dato.x_cross_docking     | number:"1.0-0" }} </ion-label> <sup class='der'>{{ dato.p_cross_docking     | number:"1.2-2" }}%</sup></ion-col>
+        <ion-col class="der" size="1.1"><ion-label>{{ dato.x_convenio_variable | number:"1.0-0" }} </ion-label> <sup class='der'>{{ dato.p_convenio_variable | number:"1.2-2" }}%</sup></ion-col>
+        <ion-col class="der" size="1.1"><ion-label>{{ dato.x_convenio_fijo     | number:"1.0-0" }} </ion-label> <sup class='der'>{{ dato.p_convenio_fijo     | number:"1.2-2" }}%</sup></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ dato.x_contribucion      | number:"1.0-0" }} </ion-label> <sup class='der'>{{ dato.p_contribucion      | number:"1.2-2" }}%</sup></ion-col>
+        <!-- fila de marcas -->
+        <ion-grid *ngIf=" dato.show " no-padding fixed class="header-in" style=" width: auto;">
+          <ion-row  *ngFor="let marca of dato.marcas" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+            <ion-col class="zen" size="1.4"><ion-label>{{ marca.nombre_marca                         }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_vta_neta          | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_costo_operacional | number:"1.0-0" }} </ion-label> <sup class="der">{{ marca.p_costo_operacional | number:"1.2-2" }}%</sup>sup></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_rebaja_de_precios | number:"1.0-0" }} </ion-label> <sup class="der">{{ marca.p_rebaja_de_precios | number:"1.2-2" }}%</sup>sup></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_margen_bruto      | number:"1.0-0" }} </ion-label> <sup class="der">{{ marca.p_margen_bruto      | number:"1.2-2" }}%</sup>sup></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_gasto_promotores  | number:"1.0-0" }} </ion-label> <sup class="der">{{ marca.p_gasto_promotores  | number:"1.2-2" }}%</sup>sup></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ marca.x_cross_docking     | number:"1.0-0" }} </ion-label> <sup class="der">{{ marca.p_cross_docking     | number:"1.2-2" }}%</sup>sup></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ marca.x_convenio_variable | number:"1.0-0" }} </ion-label> <sup class="der">{{ marca.p_convenio_variable | number:"1.2-2" }}%</sup>sup></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ marca.x_convenio_fijo     | number:"1.0-0" }} </ion-label> <sup class="der">{{ marca.p_convenio_fijo     | number:"1.2-2" }}%</sup>sup></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ marca.x_contribucion      | number:"1.0-0" }} </ion-label> <sup class="der">{{ marca.p_contribucion      | number:"1.2-2" }}%</sup>sup></ion-col>           
+          </ion-row>
+        </ion-grid>
+      </ion-row>
+    </ion-grid>
+    <ion-grid no-padding fixed class="header" style=" width: auto;" *ngIf=" vista === 'F%' ">
+        <ion-row>
+            <ion-col             size="1.4"><ion-label>Totales                        </ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[0] | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[1] | number:"1.0-0" }} </ion-label> <sup class='der'>{{ sumasp[1] | number:"1.2-2" }}%</sup></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[2] | number:"1.0-0" }} </ion-label> <sup class='der'>{{ sumasp[2] | number:"1.2-2" }}%</sup></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[3] | number:"1.0-0" }} </ion-label> <sup class='der'>{{ sumasp[3] | number:"1.2-2" }}%</sup></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[4] | number:"1.0-0" }} </ion-label> <sup class='der'>{{ sumasp[4] | number:"1.2-2" }}%</sup></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ sumas[5] | number:"1.0-0" }} </ion-label> <sup class='der'>{{ sumasp[5] | number:"1.2-2" }}%</sup></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ sumas[6] | number:"1.0-0" }} </ion-label> <sup class='der'>{{ sumasp[6] | number:"1.2-2" }}%</sup></ion-col>
+            <ion-col class="der" size="1.1"><ion-label>{{ sumas[7] | number:"1.0-0" }} </ion-label> <sup class='der'>{{ sumasp[7] | number:"1.2-2" }}%</sup></ion-col>
+            <ion-col class="der" size="1.2"><ion-label>{{ sumas[8] | number:"1.0-0" }} </ion-label> <sup class='der'>{{ sumasp[8] | number:"1.2-2" }}%</sup></ion-col>
           </ion-row>
     </ion-grid>
 
