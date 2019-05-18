@@ -1,5 +1,5 @@
 ion-grid {
-    font-size: 80%;
+    font-size: 78%;
 }
 
 ion-badge {
@@ -31,9 +31,39 @@ ion-badge {
     text-align: left;
 }
 
+.srojo {
+    color: #f04141 !important;
+    font-weight: bold !important;
+    font-size: 80%;
+}
+.snegro {
+    color: #222428 !important;
+    font-weight: bold !important;
+    font-size: 80%;
+}
+
+.xrojo {
+    color: #f04141 !important;
+}
+.xnegro {
+    color: #222428 !important;
+}
+
 .der {
     text-align: right;
     font-style: italic;
+}
+.dex {
+    margin-top: 1px;
+    padding-top: 1px;
+    text-align: right;
+    font-style: italic;
+    font-weight: bold !important;
+}
+.det {
+    text-align: right;
+    font-style: italic;
+    font-weight: bold !important;
 }
 .der-bold {
     text-align: right;
