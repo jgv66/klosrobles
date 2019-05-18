@@ -30,7 +30,8 @@ export class ReppylPage implements OnInit {
   // barra superior
   hayNotas  = undefined;
   nNotas    = 0;
-  vista     = 'M';  // millon
+  vista = 'M';  // millon
+  millon: boolean;
 
   constructor(private datos: DatosService,
               private funciones: FuncionesService,
