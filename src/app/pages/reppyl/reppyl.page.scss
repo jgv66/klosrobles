@@ -1,6 +1,6 @@
-ion-grid {
-    font-size: 78%;
-}
+// ion-grid {
+//     font-size: 78%;
+// }
 
 ion-badge {
     color: #fff;
@@ -9,7 +9,7 @@ ion-badge {
     right: 0px;
     border-radius: 100%;
 }
- 
+
 .header-in {
     font-size: 100%;
 }
@@ -79,7 +79,7 @@ ion-badge {
 .grafica {
     display:block;
     margin:auto;
-    width: 900px; 
+    width: 900px;
     height: 500px;
 }
 
@@ -89,10 +89,20 @@ ion-badge {
     overflow-x: scroll;
 
     .chart {
-        max-width: 350px;
         height: 260px;
         width: 50%;
+        min-width: 400px;
         max-width: 50%;
-        min-width: 300px;
+    }
+}
+
+ion-grid {
+    font-size: calc(8px + (14 - 8) * ((100vw - 300px) / (1600 - 300)));
+}
+ion-grid.header {
+    ion-row {
+        ion-col {
+            font-weight: bold;
+        }
     }
 }
