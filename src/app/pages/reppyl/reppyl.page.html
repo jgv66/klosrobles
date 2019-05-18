@@ -10,8 +10,8 @@
     <ion-title text-center text-capitalize>Profit & Loss Statement Accumulated : {{ nombreMes }} / {{ periodo }}</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button (click)="notas()">            
-        <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>       
+      <ion-button (click)="notas()">
+        <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>
         <ion-icon slot="icon-only" name="notifications"></ion-icon>
       </ion-button>
       <ion-button (click)="periodos( $event )"><ion-icon slot="icon-only" name="calendar"></ion-icon></ion-button>
@@ -20,11 +20,11 @@
 
   </ion-toolbar>
 
-</ion-header> 
+</ion-header>
 
-<ion-content padding fullscreen>
+<ion-content fullscreen>
 
-  <div class="chart-container">
+  <div padding class="chart-container">
       <div id="pieChart1" class="chart"></div>
       <div id="pieChart2" class="chart"></div>
       <div id="pieChart3" class="chart"></div>
@@ -72,7 +72,7 @@
             <ion-col class="der" size="1.1"><ion-label *ngIf=" marca.x_cross_docking     != 0 " [ngClass]="( marca.x_cross_docking     < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_cross_docking     | number:"1.0-0" }}</ion-label></ion-col>
             <ion-col class="der" size="1.1"><ion-label *ngIf=" marca.x_convenio_variable != 0 " [ngClass]="( marca.x_convenio_variable < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_convenio_variable | number:"1.0-0" }}</ion-label></ion-col>
             <ion-col class="der" size="1.1"><ion-label *ngIf=" marca.x_convenio_fijo     != 0 " [ngClass]="( marca.x_convenio_fijo     < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_convenio_fijo     | number:"1.0-0" }}</ion-label></ion-col>
-            <ion-col class="der" size="1.2"><ion-label *ngIf=" marca.x_contribucion      != 0 " [ngClass]="( marca.x_contribucion      < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_contribucion      | number:"1.0-0" }}</ion-label></ion-col>           
+            <ion-col class="der" size="1.2"><ion-label *ngIf=" marca.x_contribucion      != 0 " [ngClass]="( marca.x_contribucion      < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_contribucion      | number:"1.0-0" }}</ion-label></ion-col>
           </ion-row>
         </ion-grid>
       </ion-row>
@@ -117,7 +117,7 @@
             <ion-col class="der" size="1.1"><ion-label *ngIf=" marca.x_cross_docking     != 0 " [ngClass]="( marca.x_cross_docking     < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_cross_docking     | number:"1.2-2" }}%</ion-label></ion-col>
             <ion-col class="der" size="1.1"><ion-label *ngIf=" marca.x_convenio_variable != 0 " [ngClass]="( marca.x_convenio_variable < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_convenio_variable | number:"1.2-2" }}%</ion-label></ion-col>
             <ion-col class="der" size="1.1"><ion-label *ngIf=" marca.x_convenio_fijo     != 0 " [ngClass]="( marca.x_convenio_fijo     < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_convenio_fijo     | number:"1.2-2" }}%</ion-label></ion-col>
-            <ion-col class="der" size="1.2"><ion-label *ngIf=" marca.x_contribucion      != 0 " [ngClass]="( marca.x_contribucion      < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_contribucion      | number:"1.2-2" }}%</ion-label></ion-col>           
+            <ion-col class="der" size="1.2"><ion-label *ngIf=" marca.x_contribucion      != 0 " [ngClass]="( marca.x_contribucion      < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_contribucion      | number:"1.2-2" }}%</ion-label></ion-col>
           </ion-row>
         </ion-grid>
       </ion-row>
