@@ -13,9 +13,7 @@ export class PeriodosComponent implements OnInit {
 
   constructor(  private popoverCtrl: PopoverController,
                 private funciones: FuncionesService ) {
-      for (let index = 0; index < 12; index++) {
-        this.meses.push( this.funciones.nombreMes( index + 1 ) );
-      }
+      this.meses = this.funciones.losMeses();
    }
 
   ngOnInit() {}

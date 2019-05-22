@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
+import { Component, OnInit, Input } from '@angular/core';
+import { PopoverController, NavParams } from '@ionic/angular';
 
 @Component({
   selector: 'app-vistas',
@@ -8,6 +8,9 @@ import { PopoverController } from '@ionic/angular';
 })
 export class VistasPage implements OnInit {
 
+  @Input() empresas;
+
+  clientesgt = [];
   vistas =  [
               { descripcion: 'Millones'          , opcion: 'M'  },
               { descripcion: 'Fracción de millón', opcion: 'F'  },
@@ -16,14 +19,24 @@ export class VistasPage implements OnInit {
               { descripcion: 'Millones + %'      , opcion: 'M%' }
             ];
 
-  constructor( private popoverCtrl: PopoverController ) { }
+  constructor( private popoverCtrl: PopoverController,
+               private params: NavParams ) {
+    this.clientesgt = this.params.get( 'clientesgt' );
+  }
 
   ngOnInit() {
+    if ( this.clientesgt ) {
+      this.vistas = [];
+      this.clientesgt.forEach( element => {
+        this.vistas.push( { descripcion: element.sigla, opcion: element.cliente } );
+      });
+    }
   }
 
   onClick( pos ) {
-    console.log( this.vistas[pos].descripcion );
+    // console.log( this.vistas[pos].descripcion );
     this.popoverCtrl.dismiss({ vista: this.vistas[pos].opcion });
   }
+
 
 }

@@ -25,7 +25,7 @@ export class InicioPage implements OnInit {
   ngOnInit() {
     this.usrdata();
     this.uniqueDeviceID.get()
-        .then(  (uuid: any)   => { console.log('uniqueDeviceID', uuid); this.uniqueID = uuid; }  )
+        .then(  (uuid: any)   => this.uniqueID = uuid )
         .catch( (error: any)  => console.log('problemas->', error) );
   }
 
@@ -47,8 +47,8 @@ export class InicioPage implements OnInit {
                               pass:    this.clave,
                               empresa: this.empresa,
                               uuid:    this.uniqueID } )
-      .subscribe( data => {
-        const rs = data['datos'][0];
+      .subscribe( ( data: any ) => {
+        const rs = data.datos[0];
         try {
             if ( rs.usuario ) { this.datos.saveDatoLocal( 'KRLR_usuario', rs ); }
             this.router.navigate( ['/menu'] );

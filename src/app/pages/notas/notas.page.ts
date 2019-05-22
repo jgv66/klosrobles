@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { DatosService } from 'src/app/services/datos.service';
 import { FuncionesService } from '../../services/funciones.service';
 
@@ -13,16 +13,19 @@ export class NotasPage implements OnInit {
   @Input() periodo;
   @Input() mes;
   @Input() empresa;
+  @Input() informe;
 
   notas     = [];
   editando  = undefined;
+  idModif   = 0;
   titulo    = '';
   contenido = '';
-  usuario: any = [];
+  usuario:  any = [];
 
   constructor( private modalCtrl: ModalController,
                private funciones: FuncionesService,
-               private datos: DatosService ) {
+               private datos: DatosService,
+               private alertCtrl: AlertController ) {
   }
 
   ngOnInit() {
@@ -48,9 +51,10 @@ export class NotasPage implements OnInit {
   cargaNotas() {
     return this.datos.postDataSP( { sp:      '/ws_pylnotas',
                                     periodo: this.periodo.toString(),
+                                    informe: this.informe, 
                                     mes:     this.mes.toString() } )
-      .subscribe( data => {
-          const rs = data['datos'];
+      .subscribe( (data: any) => {
+          const rs = data.datos;
           this.notas = rs;
       });
   }
@@ -75,17 +79,65 @@ export class NotasPage implements OnInit {
                                       mes:      this.mes.toString(),
                                       titulo:   this.titulo,
                                       texto:    this.contenido,
-                                      creador:  this.usuario.nombre
+                                      creador:  this.usuario.nombre,
+                                      informe:  this.informe,
+                                      id:       this.idModif.toString()
                                     } )
-        .subscribe( data => {
-          const rs = data['datos'];
+        .subscribe( ( data: any ) => {
+          const rs = data.datos;
           // console.log(rs);
-          this.editando = undefined;
-          this.titulo   = '';
-          this.contenido = '';
+          this.editando   = undefined;
+          this.idModif    = 0;
+          this.titulo     = '';
+          this.contenido  = '';
           this.cargaNotas();
         });
     }
+  }
+
+  modificar( nota ) {
+    if ( nota.creador.trim() === this.usuario.nombre.trim() ) {
+      this.editando   = true;
+      this.idModif    = nota.id;
+      this.titulo     = nota.titulo;
+      this.contenido  = nota.nota;
+    } else {
+      this.funciones.msgAlert( 'ATENCION', 'Este comentario solo puede ser editado por su creador.');
+    }
+  }
+
+  // pyl_notas_borra
+  async eliminar( nota ) {
+    if ( nota.creador.trim() === this.usuario.nombre.trim() ) {
+      const alert = await this.alertCtrl.create({
+        header: 'ATENCION',
+        message: 'Esta nota será <strong>ELIMINADA</strong>...',
+        buttons: [
+          {
+            text: 'No, me equivoqué',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: (blah) => {}
+          },
+          {
+            text: 'Sí, elimine !',
+            handler: () => { this.eliminaNota( nota );  }
+          }
+        ]
+      });
+      await alert.present();
+    } else {
+      this.funciones.msgAlert( 'ATENCION', 'Este comentario solo puede ser eliminado por su creador.');
+    }
+  }
+
+  eliminaNota( nota ) {
+    this.datos.postDataSP({ sp: '/ws_pylnotasborra',
+                            id: nota.id.toString() })
+        .subscribe( ( data: any ) => { this.editando = undefined;
+                                       this.idModif  = 0;
+                                       this.cargaNotas();
+                                     });
   }
 
 }

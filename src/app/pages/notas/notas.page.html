@@ -24,7 +24,6 @@
 
   <!-- cuando se edita aparece -->
   <ion-card *ngIf=" editando ">
-
     <ion-card-header>
       <ion-card-title>
         <ion-item>
@@ -33,26 +32,37 @@
         </ion-item>
       </ion-card-title>
     </ion-card-header>
-
     <ion-card-content>
       <ion-item>
         <ion-label position="floating">Comentario</ion-label>
         <ion-textarea rows="6" placeholder="escriba aquí..." name="contenido" [(ngModel)]="contenido"></ion-textarea>
       </ion-item>      
     </ion-card-content>
-
     <ion-grid fixed>
       <ion-row>
         <ion-col size="5"><ion-button expand="block" color="primary" (click)="salirComentario()" >Salir sin grabar</ion-button></ion-col>
         <ion-col>         <ion-button expand="block" color="primary" (click)="grabarComentario()">Grabar comentario</ion-button></ion-col>
       </ion-row>
     </ion-grid>
-
   </ion-card>
 
+  <!-- despliega normal sin edicion -->
   <ion-card  *ngFor="let nota of notas; let i = index;">
     <ion-card-header>
-      <ion-card-subtitle>{{ nota.creador }}. {{ nota.fecha | date }}</ion-card-subtitle>
+
+      <!-- agregados dos botones: modif y elimin -->
+      <ion-card-subtitle style="height: 30px; margin-left: -15px;">
+        <ion-item lines="none">
+          <ion-label style="font-size: 75%;" color="medium">{{ nota.creador }}. {{ nota.fecha | date }}</ion-label>
+          <ion-button *ngIf=" nota.creador === usuario.nombre " fill="clear" (click)="modificar( nota )">
+            <ion-icon slot='end' name='create' color='medium'></ion-icon>
+          </ion-button>  
+          <ion-button *ngIf=" nota.creador === usuario.nombre " fill="clear" (click)="eliminar( nota )" >
+            <ion-icon slot='end' name='trash'  color='medium'></ion-icon>
+          </ion-button>  
+        </ion-item>
+      </ion-card-subtitle>
+
       <ion-card-title>{{ nota.titulo }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>{{ nota.nota}}</ion-card-content>

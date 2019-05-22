@@ -80,7 +80,16 @@ export class FuncionesService {
     else if ( nMes === 12) { return 'Diciembre' ; }
     else                   { return 'n/n'       ; }
   }
-  
+
+  losMeses( tope? ) {
+    const m = [];
+    const hasta = (tope) ? tope : 12;
+    for (let index = 0; index < hasta; index++) {
+      m.push( this.nombreMes( index + 1 ) );
+    }
+    return m;
+  }
+
   /**
    * Realiza el formato de número de acuerdo a los parámetros indicados.
    * Si un parámetro no va

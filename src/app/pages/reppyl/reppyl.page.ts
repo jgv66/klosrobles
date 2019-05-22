@@ -14,7 +14,9 @@ declare var google;
   styleUrls: ['./reppyl.page.scss'],
 })
 export class ReppylPage implements OnInit {
-
+  //
+  informe   = 'p&l';
+  //
   empresa   = '01';
   hoy       = new Date();
   mes       = this.hoy.getMonth();
@@ -31,7 +33,6 @@ export class ReppylPage implements OnInit {
   hayNotas  = undefined;
   nNotas    = 0;
   vista = 'M';  // millon
-  millon: boolean;
 
   constructor(private datos: DatosService,
               private funciones: FuncionesService,
@@ -49,9 +50,9 @@ export class ReppylPage implements OnInit {
     return this.datos.postDataSP( { sp:      '/ws_pylmarcas',
                                     periodo: this.periodo.toString(),
                                     mes:     this.mes.toString() } )
-      .subscribe( data => {
+      .subscribe( ( data: any ) => {
         // console.log(data);
-          const rs = data['datos'];
+          const rs = data.datos;
           this.marcas = rs;
           this.cargaDatos();
       });
@@ -62,8 +63,8 @@ export class ReppylPage implements OnInit {
     this.datos.postDataSP( {  sp:      '/ws_pyl',
                               periodo: this.periodo.toString(),
                               mes:     this.mes.toString() } )
-      .subscribe( data => {
-            const rs  = data['datos'];
+      .subscribe( (data: any) => {
+            const rs  = data.datos;
             this.rows = rs;
             this.tranData();  /* cambia el formatode los datos */
             // -------------------------------------------------------------- grafica contribucion
@@ -175,7 +176,6 @@ export class ReppylPage implements OnInit {
     if ( data !== undefined ) {
       this.mes = data.mes ;
       this.nombreMes = this.funciones.nombreMes( this.mes );
-      this.millon    = false;
       //
       this.cargaMarcas();
       this.cuantasNotas();
@@ -186,9 +186,10 @@ export class ReppylPage implements OnInit {
   cuantasNotas() {
     return this.datos.postDataSPSilent( { sp:      '/ws_pylnotascuenta',
                                           periodo: this.periodo.toString(),
-                                          mes:     this.mes.toString() } )
-      .subscribe( data => {
-          const rs = data['datos'];
+                                          mes:     this.mes.toString(),
+                                          informe: this.informe } )
+      .subscribe( ( data: any ) => {
+          const rs = data.datos;
           this.nNotas   = ( rs[0].notas ) ? rs[0].notas : 0 ;
           this.hayNotas = ( rs[0].notas ) ? true : undefined;
       });
@@ -199,16 +200,14 @@ export class ReppylPage implements OnInit {
         component: NotasPage,
         componentProps: { periodo: this.periodo,
                           mes:     this.mes,
+                          informe: this.informe,
                           empresa: this.empresa },
         mode: 'ios'
     });
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
-
-    if ( data !== undefined ) {
-      this.cuantasNotas();
-    }
+    this.cuantasNotas();
   }
 
   async vistas( event ) {
@@ -291,7 +290,7 @@ export class ReppylPage implements OnInit {
         this.marcas[i].x_costo_operacional = this.marcas[i].costo_operacional  ;
         this.marcas[i].x_rebaja_de_precios = this.marcas[i].rebaja_de_precios  ;
         this.marcas[i].x_margen_bruto      = this.marcas[i].margen_bruto       ;
-        this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores   ;
+        this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores   ; 
         this.marcas[i].x_cross_docking     = this.marcas[i].cross_docking      ;
         this.marcas[i].x_convenio_variable = this.marcas[i].convenio_variable  ;
         this.marcas[i].x_convenio_fijo     = this.marcas[i].convenio_fijo      ;

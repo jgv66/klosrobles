@@ -23,16 +23,11 @@ export class DatosService implements OnInit {
   constructor( private loadingCtrl: LoadingController,
                private http: HttpClient,
                private dataLocal: Storage ) {
-    // console.log( environment.mensaje );
-    // console.log(environment.production);
-    // console.log(SERVER_URL);
     this.url    = SERVER_URL;
     this.puerto = PORT_URL;
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   async showLoading() {
     this.loading = await this.loadingCtrl.create({
@@ -78,16 +73,26 @@ export class DatosService implements OnInit {
 
   postDataSP( data ) {
     this.showLoading();
-    // console.log(data.sp);
-    // console.log(this.url + this.puerto + data.sp, data);
     return this.http.post( this.url + this.puerto + data.sp, data )
       .pipe( tap( value =>  { if ( this.loading ) { this.loading.dismiss(); } }) );
   }
 
   postDataSPSilent( data ) {
-    // console.log(data.sp);
-    // console.log(this.url + this.puerto + data.sp, data);
     return this.http.post( this.url + this.puerto + data.sp, data );
   }
 
-} 
+  /*
+    sitio mindicador.cl  tipo="uf"  dia=dd-mm-aaaa  año=aaaa
+    https://mindicador.cl/api/{tipo_indicador}
+    https://mindicador.cl/api/{tipo_indicador}/{dd-mm-yyyy}
+    https://mindicador.cl/api/{tipo_indicador}/{yyyy}
+  */
+  valorPeriodo( periodo, indicador ) {
+    return this.http.get( 'https://mindicador.cl/api/' + indicador + '/' + periodo );
+  }
+  valorDia( fecha, indicador ) {
+    return this.http.get( 'https://mindicador.cl/api/' + indicador + '/' + fecha );
+  }
+
+
+}
