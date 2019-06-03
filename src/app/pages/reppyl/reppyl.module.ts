@@ -14,10 +14,7 @@ import { VistasPage } from '../../components/vistas/vistas.page';
 import { VistasPageModule } from '../../components/vistas/vistas.module';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: ReppylPage
-  }
+  { path: '', component: ReppylPage }
 ];
 
 @NgModule({

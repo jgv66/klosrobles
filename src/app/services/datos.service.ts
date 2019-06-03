@@ -15,6 +15,8 @@ export class DatosService implements OnInit {
   xDato: any;
   loading: any;
   params: any;
+  // truco para pasar parametros
+  data = [];
 
   // puerto: LOS ROBLES
   url    = '';  /* servidor linode:  http://23.239.29.171 */
@@ -35,6 +37,14 @@ export class DatosService implements OnInit {
                       duration: 7000
                     });
     return await this.loading.present();
+  }
+
+  //guardar y rescatar para paso de parametros
+  setData( id, dato ) {
+    this.data[id] = dato;
+  }
+  getData( id ) {
+    return this.data[id];
   }
 
   /* FUNCIONES LOCALES */

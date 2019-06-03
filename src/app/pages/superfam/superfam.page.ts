@@ -1,75 +1,91 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { DatosService } from '../../services/datos.service';
 import { FuncionesService } from '../../services/funciones.service';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { PeriodosComponent } from 'src/app/components/periodos/periodos.component';
+
+
 import { NotasPage } from '../notas/notas.page';
 import { VistasPage } from 'src/app/components/vistas/vistas.page';
-import { Router } from '@angular/router';
-import { SuperfamPage } from '../superfam/superfam.page';
 
 declare var google;
 
 @Component({
-  selector: 'app-reppyl',
-  templateUrl: './reppyl.page.html',
-  styleUrls: ['./reppyl.page.scss'],
+  selector: 'app-superfam',
+  templateUrl: './superfam.page.html',
+  styleUrls: ['./superfam.page.scss'],
 })
-export class ReppylPage implements OnInit {
+export class SuperfamPage implements OnInit {
   //
-  informe   = 'p&l';
+  datosParam;
   //
-  empresa   = '01';
+  informe   = 'p&lfamilias';
+  //
   hoy       = new Date();
-  mes       = this.hoy.getMonth();
-  periodo   = this.hoy.getFullYear();
   meses     = [];
   nombreMes = '';
   //
   rows      = [];
-  marcas    = [];
+  familias  = [];
   // sumas
-  sumas     = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-  sumasp    = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  sumas     = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  sumasp    = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   // barra superior
   hayNotas  = undefined;
   nNotas    = 0;
   vista     = 'M%';  // millon
-  inmerse   = false;
 
-  constructor(private datos: DatosService,
-              private funciones: FuncionesService,
-              private router: Router,
-              private popoverCtrl: PopoverController,
-              private modalCtrl: ModalController ) {
-    this.nombreMes = this.funciones.nombreMes( this.mes );
+  constructor( private modalCtrl: ModalController,
+               private popoverCtrl: PopoverController,
+               private funciones: FuncionesService,
+               private datos: DatosService ) {
+    // rescatar datos
+    this.datosParam = this.datos.getData(1);
+    this.nombreMes  = this.funciones.nombreMes( this.datosParam.mes );
   }
 
   ngOnInit() {
-    this.cargaMarcas();
+    this.cargaFamilias();
     this.cuantasNotas();
   }
 
-  cargaMarcas() {
-    return this.datos.postDataSP( { sp:      '/ws_pylmarcas',
-                                    periodo: this.periodo.toString(),
-                                    mes:     this.mes.toString() } )
+  OnOff( fila ) {
+    fila.show = !fila.show;
+  }
+
+  OnOffTotal() {
+    let i = 0;
+    this.rows.forEach( () => {
+      this.rows[i].show = !this.rows[i].show ;
+      ++i;
+    });
+  }
+
+  cargaFamilias() {
+    return this.datos.postDataSP( { sp:      '/ws_pylmarcafam',
+                                    empresa: this.datosParam.empresa,
+                                    periodo: this.datosParam.periodo.toString(),
+                                    mes:     this.datosParam.mes.toString(),
+                                    cliente: this.datosParam.cliente,
+                                    marca:   this.datosParam.marca })
       .subscribe( ( data: any ) => {
         // console.log(data);
           const rs = data.datos;
-          this.marcas = rs;
+          this.rows = rs;
           this.cargaDatos();
       });
   }
 
   cargaDatos() {
     //
-    this.datos.postDataSP( {  sp:      '/ws_pyl',
-                              periodo: this.periodo.toString(),
-                              mes:     this.mes.toString() } )
-      .subscribe( (data: any) => {
+    this.datos.postDataSP( {  sp:      '/ws_pylmarfamcod',
+                              empresa: this.datosParam.empresa,
+                              periodo: this.datosParam.periodo.toString(),
+                              mes:     this.datosParam.mes.toString(),
+                              cliente: this.datosParam.cliente,
+                              marca:   this.datosParam.marca })
+        .subscribe( (data: any) => {
             const rs  = data.datos;
-            this.rows = rs;
+            this.familias = rs;
             this.tranData();  /* cambia el formato de los datos */
             // -------------------------------------------------------------- grafica contribucion
             const eje = [];
@@ -85,7 +101,7 @@ export class ReppylPage implements OnInit {
             PieContribucion.addColumn('number', 'Contribución');
             PieContribucion.addRows( eje );
             // Instantiate and draw our chart, passing in some options.
-            const PieContrib1 = new google.visualization.PieChart(document.getElementById('pieChart1'));
+            const PieContrib1 = new google.visualization.PieChart(document.getElementById('pieChart11'));
             const options   = { title:  'Contribución Total',
                                 width:  '100%',
                                 height: '100%',
@@ -112,7 +128,7 @@ export class ReppylPage implements OnInit {
             PieMargenBruto.addColumn('number', 'Margen Bruto');
             PieMargenBruto.addRows( ejem );
             // Instantiate and draw our chart, passing in some options.
-            const PieMargenB = new google.visualization.PieChart(document.getElementById('pieChart2'));
+            const PieMargenB = new google.visualization.PieChart(document.getElementById('pieChart22'));
             const optionsmb   = { title:  'Margen Bruto Total',
                                 width:  '100%',
                                 height: '100%',
@@ -139,7 +155,7 @@ export class ReppylPage implements OnInit {
             PieVentas.addColumn('number', 'Rebajas');
             PieVentas.addRows( ejev );
             // Instantiate and draw our chart, passing in some options.
-            const PieVentas1 = new google.visualization.PieChart(document.getElementById('pieChart3'));
+            const PieVentas1 = new google.visualization.PieChart(document.getElementById('pieChart33'));
             const optionsv  = { title:  'Rebajas Total',
                                 width:  '100%',
                                 height: '100%',
@@ -155,70 +171,10 @@ export class ReppylPage implements OnInit {
       });
   }
 
-  OnOff( fila ) {
-    if ( !this.inmerse ) {
-      fila.show = !fila.show;
-    }
-  }
-
-  OnOffTotal() {
-    if ( !this.inmerse ) {
-      let i = 0;
-      this.rows.forEach( () => {
-        this.rows[i].show = !this.rows[i].show ;
-        ++i;
-      });
-    }
-  }
-
-  drillDown() {
-    this.inmerse = !this.inmerse;
-    let i = 0;
-    this.rows.forEach( () => {
-      this.rows[i].show = ( this.inmerse ) ? true : false ;
-      ++i;
-    });
-    this.funciones.muestraySale( 'Modo inmersión: ' + (( this.inmerse ) ? 'ACTIVO' : 'INACTIVO') , 1.2, 'middle' );
-  }
-
-  clickporMarcas( marca ) {
-    if ( this.inmerse ) {
-      // guarda datos
-      this.datos.setData( 1, { empresa:      this.empresa,
-                               periodo:      this.periodo,
-                               mes:          this.mes,
-                               marca:        marca.marca.trim(),
-                               nombre_marca: marca.nombre_marca,
-                               sigla:        marca.sigla.trim(),
-                               cliente:      marca.cliente.trim() } );
-      this.router.navigate( ['/superfam'] );
-    }
-  }
-
-  async periodos( event ) {
-    const popover = await this.popoverCtrl.create({
-        component: PeriodosComponent,
-        event,
-        mode: 'ios'
-    });
-    await popover.present();
-
-    const { data } = await popover.onWillDismiss();
-
-    if ( data !== undefined ) {
-      this.mes = data.mes ;
-      this.nombreMes = this.funciones.nombreMes( this.mes );
-      //
-      this.cargaMarcas();
-      this.cuantasNotas();
-      //
-    }
-  }
-
   cuantasNotas() {
     return this.datos.postDataSPSilent( { sp:      '/ws_pylnotascuenta',
-                                          periodo: this.periodo.toString(),
-                                          mes:     this.mes.toString(),
+                                          periodo: this.datosParam.periodo.toString(),
+                                          mes:     this.datosParam.mes.toString(),
                                           informe: this.informe } )
       .subscribe( ( data: any ) => {
           const rs = data.datos;
@@ -264,17 +220,17 @@ export class ReppylPage implements OnInit {
       //
       this.sumas = [0, 0, 0, 0, 0, 0, 0, 0, 0];
       // tslint:disable-next-line: prefer-for-of
-      for ( let i = 0; i < this.marcas.length; i++ ) {
+      for ( let i = 0; i < this.familias.length; i++ ) {
           //
-          this.marcas[i].x_vta_neta          = this.marcas[i].vta_neta          / 1000000 ;
-          this.marcas[i].x_costo_operacional = this.marcas[i].costo_operacional / 1000000 ;
-          this.marcas[i].x_rebaja_de_precios = this.marcas[i].rebaja_de_precios / 1000000 ;
-          this.marcas[i].x_margen_bruto      = this.marcas[i].margen_bruto      / 1000000 ;
-          this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores  / 1000000 ;
-          this.marcas[i].x_cross_docking     = this.marcas[i].cross_docking     / 1000000 ;
-          this.marcas[i].x_convenio_variable = this.marcas[i].convenio_variable / 1000000 ;
-          this.marcas[i].x_convenio_fijo     = this.marcas[i].convenio_fijo     / 1000000 ;
-          this.marcas[i].x_contribucion      = this.marcas[i].contribucion      / 1000000 ;
+          this.familias[i].x_vta_neta          = this.familias[i].vta_neta          / 1000000 ;
+          this.familias[i].x_costo_operacional = this.familias[i].costo_operacional / 1000000 ;
+          this.familias[i].x_rebaja_de_precios = this.familias[i].rebaja_de_precios / 1000000 ;
+          this.familias[i].x_margen_bruto      = this.familias[i].margen_bruto      / 1000000 ;
+          this.familias[i].x_gasto_promotores  = this.familias[i].gasto_promotores  / 1000000 ;
+          this.familias[i].x_cross_docking     = this.familias[i].cross_docking     / 1000000 ;
+          this.familias[i].x_convenio_variable = this.familias[i].convenio_variable / 1000000 ;
+          this.familias[i].x_convenio_fijo     = this.familias[i].convenio_fijo     / 1000000 ;
+          this.familias[i].x_contribucion      = this.familias[i].contribucion      / 1000000 ;
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
@@ -298,8 +254,8 @@ export class ReppylPage implements OnInit {
         this.rows[i].x_convenio_variable = this.rows[i].convenio_variable / 1000000 ;
         this.rows[i].x_convenio_fijo     = this.rows[i].convenio_fijo     / 1000000 ;
         this.rows[i].x_contribucion      = this.rows[i].contribucion      / 1000000 ;
-        // agregar las marcas
-        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
+        // agregar las familias
+        this.rows[i].familias = this.familias.filter( fila => fila.sigla === this.rows[i].sigla );
       }
       //
       this.sumas[0] = this.sumas[0] / 1000000;
@@ -316,17 +272,17 @@ export class ReppylPage implements OnInit {
       //
       this.sumas = [0, 0, 0, 0, 0, 0, 0, 0, 0];
       // tslint:disable-next-line: prefer-for-of
-      for ( let i = 0; i < this.marcas.length; i++ ) {
+      for ( let i = 0; i < this.familias.length; i++ ) {
         //
-        this.marcas[i].x_vta_neta          = this.marcas[i].vta_neta           ;
-        this.marcas[i].x_costo_operacional = this.marcas[i].costo_operacional  ;
-        this.marcas[i].x_rebaja_de_precios = this.marcas[i].rebaja_de_precios  ;
-        this.marcas[i].x_margen_bruto      = this.marcas[i].margen_bruto       ;
-        this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores   ; 
-        this.marcas[i].x_cross_docking     = this.marcas[i].cross_docking      ;
-        this.marcas[i].x_convenio_variable = this.marcas[i].convenio_variable  ;
-        this.marcas[i].x_convenio_fijo     = this.marcas[i].convenio_fijo      ;
-        this.marcas[i].x_contribucion      = this.marcas[i].contribucion       ;
+        this.familias[i].x_vta_neta          = this.familias[i].vta_neta           ;
+        this.familias[i].x_costo_operacional = this.familias[i].costo_operacional  ;
+        this.familias[i].x_rebaja_de_precios = this.familias[i].rebaja_de_precios  ;
+        this.familias[i].x_margen_bruto      = this.familias[i].margen_bruto       ;
+        this.familias[i].x_gasto_promotores  = this.familias[i].gasto_promotores   ; 
+        this.familias[i].x_cross_docking     = this.familias[i].cross_docking      ;
+        this.familias[i].x_convenio_variable = this.familias[i].convenio_variable  ;
+        this.familias[i].x_convenio_fijo     = this.familias[i].convenio_fijo      ;
+        this.familias[i].x_contribucion      = this.familias[i].contribucion       ;
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
@@ -350,25 +306,25 @@ export class ReppylPage implements OnInit {
         this.rows[i].x_convenio_variable = this.rows[i].convenio_variable ;
         this.rows[i].x_convenio_fijo     = this.rows[i].convenio_fijo     ;
         this.rows[i].x_contribucion      = this.rows[i].contribucion      ;
-        // agregar las marcas
-        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
+        // agregar las familias
+        this.rows[i].familias = this.familias.filter( fila => fila.sigla === this.rows[i].sigla );
       }
       //
     } else if ( this.vista === '%'  ) {
       //
       this.sumas = [0, 0, 0, 0, 0, 0, 0, 0, 0];
       // tslint:disable-next-line: prefer-for-of
-      for ( let i = 0; i < this.marcas.length; i++ ) {
+      for ( let i = 0; i < this.familias.length; i++ ) {
         //
-        this.marcas[i].x_vta_neta          = this.marcas[i].vta_neta           ;
-        this.marcas[i].x_costo_operacional = ( this.marcas[i].costo_operacional / this.marcas[i].vta_neta ) * 100 ;
-        this.marcas[i].x_rebaja_de_precios = ( this.marcas[i].rebaja_de_precios / this.marcas[i].vta_neta ) * 100 ;
-        this.marcas[i].x_margen_bruto      = ( this.marcas[i].margen_bruto      / this.marcas[i].vta_neta ) * 100 ;
-        this.marcas[i].x_gasto_promotores  = ( this.marcas[i].gasto_promotores  / this.marcas[i].vta_neta ) * 100 ;
-        this.marcas[i].x_cross_docking     = ( this.marcas[i].cross_docking     / this.marcas[i].vta_neta ) * 100 ;
-        this.marcas[i].x_convenio_variable = ( this.marcas[i].convenio_variable / this.marcas[i].vta_neta ) * 100 ;
-        this.marcas[i].x_convenio_fijo     = ( this.marcas[i].convenio_fijo     / this.marcas[i].vta_neta ) * 100 ;
-        this.marcas[i].x_contribucion      = ( this.marcas[i].contribucion      / this.marcas[i].vta_neta ) * 100 ;
+        this.familias[i].x_vta_neta          = this.familias[i].vta_neta           ;
+        this.familias[i].x_costo_operacional = ( this.familias[i].costo_operacional / this.familias[i].vta_neta ) * 100 ;
+        this.familias[i].x_rebaja_de_precios = ( this.familias[i].rebaja_de_precios / this.familias[i].vta_neta ) * 100 ;
+        this.familias[i].x_margen_bruto      = ( this.familias[i].margen_bruto      / this.familias[i].vta_neta ) * 100 ;
+        this.familias[i].x_gasto_promotores  = ( this.familias[i].gasto_promotores  / this.familias[i].vta_neta ) * 100 ;
+        this.familias[i].x_cross_docking     = ( this.familias[i].cross_docking     / this.familias[i].vta_neta ) * 100 ;
+        this.familias[i].x_convenio_variable = ( this.familias[i].convenio_variable / this.familias[i].vta_neta ) * 100 ;
+        this.familias[i].x_convenio_fijo     = ( this.familias[i].convenio_fijo     / this.familias[i].vta_neta ) * 100 ;
+        this.familias[i].x_contribucion      = ( this.familias[i].contribucion      / this.familias[i].vta_neta ) * 100 ;
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
@@ -392,8 +348,8 @@ export class ReppylPage implements OnInit {
         this.rows[i].x_convenio_variable = ( this.rows[i].convenio_variable / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].x_convenio_fijo     = ( this.rows[i].convenio_fijo     / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].x_contribucion      = ( this.rows[i].contribucion      / this.rows[i].vta_neta ) * 100 ;
-        // agregar las marcas
-        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
+        // agregar las familias
+        this.rows[i].familias = this.familias.filter( fila => fila.sigla === this.rows[i].sigla );
       }
       //
       this.sumas[1] = ( this.sumas[1] / this.sumas[0] ) * 100;
@@ -409,27 +365,27 @@ export class ReppylPage implements OnInit {
       //
       this.sumas = [0, 0, 0, 0, 0, 0, 0, 0, 0];
       // tslint:disable-next-line: prefer-for-of
-      for ( let i = 0; i < this.marcas.length; i++ ) {
+      for ( let i = 0; i < this.familias.length; i++ ) {
           // valores
-          this.marcas[i].x_vta_neta          = this.marcas[i].vta_neta          / 1000000 ;
-          this.marcas[i].x_costo_operacional = this.marcas[i].costo_operacional / 1000000 ;
-          this.marcas[i].x_rebaja_de_precios = this.marcas[i].rebaja_de_precios / 1000000 ;
-          this.marcas[i].x_margen_bruto      = this.marcas[i].margen_bruto      / 1000000 ;
-          this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores  / 1000000 ;
-          this.marcas[i].x_cross_docking     = this.marcas[i].cross_docking     / 1000000 ;
-          this.marcas[i].x_convenio_variable = this.marcas[i].convenio_variable / 1000000 ;
-          this.marcas[i].x_convenio_fijo     = this.marcas[i].convenio_fijo     / 1000000 ;
-          this.marcas[i].x_contribucion      = this.marcas[i].contribucion      / 1000000 ;
+          this.familias[i].x_vta_neta          = this.familias[i].vta_neta          / 1000000 ;
+          this.familias[i].x_costo_operacional = this.familias[i].costo_operacional / 1000000 ;
+          this.familias[i].x_rebaja_de_precios = this.familias[i].rebaja_de_precios / 1000000 ;
+          this.familias[i].x_margen_bruto      = this.familias[i].margen_bruto      / 1000000 ;
+          this.familias[i].x_gasto_promotores  = this.familias[i].gasto_promotores  / 1000000 ;
+          this.familias[i].x_cross_docking     = this.familias[i].cross_docking     / 1000000 ;
+          this.familias[i].x_convenio_variable = this.familias[i].convenio_variable / 1000000 ;
+          this.familias[i].x_convenio_fijo     = this.familias[i].convenio_fijo     / 1000000 ;
+          this.familias[i].x_contribucion      = this.familias[i].contribucion      / 1000000 ;
           // porcentajes
-          this.marcas[i].p_vta_neta          =   this.marcas[i].vta_neta ;
-          this.marcas[i].p_costo_operacional = ( this.marcas[i].costo_operacional / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_rebaja_de_precios = ( this.marcas[i].rebaja_de_precios / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_margen_bruto      = ( this.marcas[i].margen_bruto      / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_gasto_promotores  = ( this.marcas[i].gasto_promotores  / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_cross_docking     = ( this.marcas[i].cross_docking     / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_convenio_variable = ( this.marcas[i].convenio_variable / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_convenio_fijo     = ( this.marcas[i].convenio_fijo     / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_contribucion      = ( this.marcas[i].contribucion      / this.marcas[i].vta_neta ) * 100 ;
+          this.familias[i].p_vta_neta          =   this.familias[i].vta_neta ;
+          this.familias[i].p_costo_operacional = ( this.familias[i].costo_operacional / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_rebaja_de_precios = ( this.familias[i].rebaja_de_precios / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_margen_bruto      = ( this.familias[i].margen_bruto      / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_gasto_promotores  = ( this.familias[i].gasto_promotores  / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_cross_docking     = ( this.familias[i].cross_docking     / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_convenio_variable = ( this.familias[i].convenio_variable / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_convenio_fijo     = ( this.familias[i].convenio_fijo     / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_contribucion      = ( this.familias[i].contribucion      / this.familias[i].vta_neta ) * 100 ;
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
@@ -463,13 +419,13 @@ export class ReppylPage implements OnInit {
         this.rows[i].p_convenio_variable = ( this.rows[i].convenio_variable / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].p_convenio_fijo     = ( this.rows[i].convenio_fijo     / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].p_contribucion      = ( this.rows[i].contribucion      / this.rows[i].vta_neta ) * 100 ;
-        // agregar las marcas
-        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
+        // agregar las familias
+        this.rows[i].familias = this.familias.filter( fila => fila.sigla === this.rows[i].sigla );
         // tslint:disable-next-line: prefer-for-of
-        for ( let j = 0; j < this.rows[i].marcas.length; j++ ) {
+        for ( let j = 0; j < this.rows[i].familias.length; j++ ) {
           // porcentajes sobre total
           // tslint:disable-next-line: max-line-length
-          this.rows[i].marcas[j].p_vta_neta  = ( ( ( this.rows[i].marcas[j].vta_neta * 1000000 ) / this.rows[i].vta_neta ) / 1000000 ) * 100 ;
+          this.rows[i].familias[j].p_vta_neta  = ( ( ( this.rows[i].familias[j].vta_neta * 1000000 ) / this.rows[i].vta_neta ) / 1000000 ) * 100 ;
         }
       }
       //
@@ -502,27 +458,27 @@ export class ReppylPage implements OnInit {
       //
       this.sumas = [0, 0, 0, 0, 0, 0, 0, 0, 0];
       // tslint:disable-next-line: prefer-for-of
-      for ( let i = 0; i < this.marcas.length; i++ ) {
+      for ( let i = 0; i < this.familias.length; i++ ) {
           // valores
-          this.marcas[i].x_vta_neta          = this.marcas[i].vta_neta          ;
-          this.marcas[i].x_costo_operacional = this.marcas[i].costo_operacional ;
-          this.marcas[i].x_rebaja_de_precios = this.marcas[i].rebaja_de_precios ;
-          this.marcas[i].x_margen_bruto      = this.marcas[i].margen_bruto      ;
-          this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores  ;
-          this.marcas[i].x_cross_docking     = this.marcas[i].cross_docking     ;
-          this.marcas[i].x_convenio_variable = this.marcas[i].convenio_variable ;
-          this.marcas[i].x_convenio_fijo     = this.marcas[i].convenio_fijo     ;
-          this.marcas[i].x_contribucion      = this.marcas[i].contribucion      ;
+          this.familias[i].x_vta_neta          = this.familias[i].vta_neta          ;
+          this.familias[i].x_costo_operacional = this.familias[i].costo_operacional ;
+          this.familias[i].x_rebaja_de_precios = this.familias[i].rebaja_de_precios ;
+          this.familias[i].x_margen_bruto      = this.familias[i].margen_bruto      ;
+          this.familias[i].x_gasto_promotores  = this.familias[i].gasto_promotores  ;
+          this.familias[i].x_cross_docking     = this.familias[i].cross_docking     ;
+          this.familias[i].x_convenio_variable = this.familias[i].convenio_variable ;
+          this.familias[i].x_convenio_fijo     = this.familias[i].convenio_fijo     ;
+          this.familias[i].x_contribucion      = this.familias[i].contribucion      ;
           // porcentajes
-          this.marcas[i].p_vta_neta          =   this.marcas[i].vta_neta ;
-          this.marcas[i].p_costo_operacional = ( this.marcas[i].costo_operacional / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_rebaja_de_precios = ( this.marcas[i].rebaja_de_precios / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_margen_bruto      = ( this.marcas[i].margen_bruto      / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_gasto_promotores  = ( this.marcas[i].gasto_promotores  / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_cross_docking     = ( this.marcas[i].cross_docking     / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_convenio_variable = ( this.marcas[i].convenio_variable / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_convenio_fijo     = ( this.marcas[i].convenio_fijo     / this.marcas[i].vta_neta ) * 100 ;
-          this.marcas[i].p_contribucion      = ( this.marcas[i].contribucion      / this.marcas[i].vta_neta ) * 100 ;
+          this.familias[i].p_vta_neta          =   this.familias[i].vta_neta ;
+          this.familias[i].p_costo_operacional = ( this.familias[i].costo_operacional / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_rebaja_de_precios = ( this.familias[i].rebaja_de_precios / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_margen_bruto      = ( this.familias[i].margen_bruto      / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_gasto_promotores  = ( this.familias[i].gasto_promotores  / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_cross_docking     = ( this.familias[i].cross_docking     / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_convenio_variable = ( this.familias[i].convenio_variable / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_convenio_fijo     = ( this.familias[i].convenio_fijo     / this.familias[i].vta_neta ) * 100 ;
+          this.familias[i].p_contribucion      = ( this.familias[i].contribucion      / this.familias[i].vta_neta ) * 100 ;
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
@@ -556,12 +512,12 @@ export class ReppylPage implements OnInit {
         this.rows[i].p_convenio_variable = ( this.rows[i].convenio_variable / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].p_convenio_fijo     = ( this.rows[i].convenio_fijo     / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].p_contribucion      = ( this.rows[i].contribucion      / this.rows[i].vta_neta ) * 100 ;
-        // agregar las marcas
-        this.rows[i].marcas = this.marcas.filter( fila => fila.sigla === this.rows[i].sigla );
+        // agregar las familias
+        this.rows[i].familias = this.familias.filter( fila => fila.superfam === this.rows[i].superfam );
         // tslint:disable-next-line: prefer-for-of
-        for ( let j = 0; j < this.rows[i].marcas.length; j++ ) {
+        for ( let j = 0; j < this.rows[i].familias.length; j++ ) {
           // porcentajes sobre total
-          this.rows[i].marcas[j].p_vta_neta  = ( this.rows[i].marcas[j].vta_neta / this.rows[i].vta_neta ) * 100 ;
+          this.rows[i].familias[j].p_vta_neta  = ( this.rows[i].familias[j].vta_neta / this.rows[i].vta_neta ) * 100 ;
         }
       }
       // porcentajes

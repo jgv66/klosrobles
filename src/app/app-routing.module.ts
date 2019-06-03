@@ -5,9 +5,11 @@ const routes: Routes = [
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
   { path: 'inicio',          loadChildren: './pages/inicio/inicio.module#InicioPageModule' },
   { path: 'menu',            loadChildren: './pages/menu/menu.module#MenuPageModule' },
-  { path: 'reppyl',          loadChildren: './pages/reppyl/reppyl.module#ReppylPageModule' },
+  { path: 'reppyl',          loadChildren: './pages/reppyl/reppyl.module#ReppylPageModule'},
+  { path: 'superfam',        loadChildren: './pages/superfam/superfam.module#SuperfamPageModule' },
   { path: 'reppylmes',       loadChildren: './pages/reppylmes/reppylmes.module#ReppylmesPageModule' },
   { path: 'indicador/:dato', loadChildren: './pages/indicador/indicador.module#IndicadorPageModule' },
+  { path: '**', redirectTo: 'inicio', pathMatch: 'full' },
 ];
 
 @NgModule({

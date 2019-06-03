@@ -12,11 +12,11 @@ export class VistasPage implements OnInit {
 
   clientesgt = [];
   vistas =  [
+              { descripcion: 'Millones + %'      , opcion: 'M%' },
               { descripcion: 'Millones'          , opcion: 'M'  },
               { descripcion: 'Fracción de millón', opcion: 'F'  },
-              { descripcion: 'Porcentaje'        , opcion: '%'  },
               { descripcion: 'Fracción + %'      , opcion: 'F%' },
-              { descripcion: 'Millones + %'      , opcion: 'M%' }
+              { descripcion: 'Porcentaje'        , opcion: '%'  }
             ];
 
   constructor( private popoverCtrl: PopoverController,

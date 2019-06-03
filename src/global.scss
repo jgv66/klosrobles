@@ -9,3 +9,14 @@
 @import '~@ionic/angular/css/text-alignment.css';
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
+
+ion-toast {
+    --max-width: 75%;
+    --background: var( --ion-color-dark-tint );
+    color: var( --ion-color-warning );
+    text-align: center;
+    /* nuevos*/
+    --border-radius: 10px;
+    --border-width: 5px;
+    --border-style: double;
+}
