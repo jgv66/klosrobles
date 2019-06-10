@@ -39,7 +39,7 @@ export class DatosService implements OnInit {
     return await this.loading.present();
   }
 
-  //guardar y rescatar para paso de parametros
+  // guardar y rescatar para paso de parametros
   setData( id, dato ) {
     this.data[id] = dato;
   }

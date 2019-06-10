@@ -6,6 +6,7 @@ import { PopoverController, ModalController } from '@ionic/angular';
 
 import { NotasPage } from '../notas/notas.page';
 import { VistasPage } from 'src/app/components/vistas/vistas.page';
+import { PeriodosComponent } from '../../components/periodos/periodos.component';
 
 declare var google;
 
@@ -40,12 +41,17 @@ export class SuperfamPage implements OnInit {
                private datos: DatosService ) {
     // rescatar datos
     this.datosParam = this.datos.getData(1);
-    this.nombreMes  = this.funciones.nombreMes( this.datosParam.mes );
+    this.nombreMes  = this.funciones.nombreMes( this.datos.getData(1).mes );
   }
 
   ngOnInit() {
-    this.cargaFamilias();
-    this.cuantasNotas();
+    this.cargaFamilias( this.datosParam.empresa,
+                        this.datosParam.periodo,
+                        this.datosParam.mes,
+                        this.datosParam.cliente,
+                        this.datosParam.marca );
+    this.cuantasNotas( this.datosParam.periodo,
+                       this.datosParam.mes );
   }
 
   OnOff( fila ) {
@@ -60,29 +66,29 @@ export class SuperfamPage implements OnInit {
     });
   }
 
-  cargaFamilias() {
+  cargaFamilias( emp, per, mes, cli, mar ) {
     return this.datos.postDataSP( { sp:      '/ws_pylmarcafam',
-                                    empresa: this.datosParam.empresa,
-                                    periodo: this.datosParam.periodo.toString(),
-                                    mes:     this.datosParam.mes.toString(),
-                                    cliente: this.datosParam.cliente,
-                                    marca:   this.datosParam.marca })
+                                    empresa: emp,
+                                    periodo: per.toString(),
+                                    mes:     mes.toString(),
+                                    cliente: cli,
+                                    marca:   mar })
       .subscribe( ( data: any ) => {
         // console.log(data);
           const rs = data.datos;
           this.rows = rs;
-          this.cargaDatos();
+          this.cargaDatos( emp, per, mes, cli, mar );
       });
   }
 
-  cargaDatos() {
+  cargaDatos( emp, per, mes, cli, mar ) {
     //
     this.datos.postDataSP( {  sp:      '/ws_pylmarfamcod',
-                              empresa: this.datosParam.empresa,
-                              periodo: this.datosParam.periodo.toString(),
-                              mes:     this.datosParam.mes.toString(),
-                              cliente: this.datosParam.cliente,
-                              marca:   this.datosParam.marca })
+                              empresa: emp,
+                              periodo: per.toString(),
+                              mes:     mes.toString(),
+                              cliente: cli,
+                              marca:   mar })
         .subscribe( (data: any) => {
             const rs  = data.datos;
             this.familias = rs;
@@ -90,19 +96,19 @@ export class SuperfamPage implements OnInit {
             // -------------------------------------------------------------- grafica contribucion
             const eje = [];
             this.rows.forEach( element => {
-              if ( element.contribucion > 0 ) {
-                eje.push( [ element.sigla, element.contribucion ] );
+              if ( element.margen_bruto > 0 ) {
+                eje.push( [ element.nombre_super_familia, element.margen_bruto ] );
               }
             });
             // crear el grafico de pie
             const PieContribucion = new google.visualization.DataTable();
             //
-            PieContribucion.addColumn('string', 'Cliente');
-            PieContribucion.addColumn('number', 'Contribución');
+            PieContribucion.addColumn('string', 'Marca');
+            PieContribucion.addColumn('number', 'Margen Bruto');
             PieContribucion.addRows( eje );
             // Instantiate and draw our chart, passing in some options.
             const PieContrib1 = new google.visualization.PieChart(document.getElementById('pieChart11'));
-            const options   = { title:  'Contribución Total',
+            const options   = { title:  'Margen Bruto Total',
                                 width:  '100%',
                                 height: '100%',
                                 chartArea: { left:    '10',
@@ -116,7 +122,7 @@ export class SuperfamPage implements OnInit {
             const ejem = [];
             this.rows.forEach( element => {
               if ( element.margen_bruto > 0 ) {
-                ejem.push( [ element.sigla, element.margen_bruto ] );
+                ejem.push( [ element.nombre_super_familia, element.costo_operacional ] );
               }
             });
             // ordenar
@@ -124,12 +130,12 @@ export class SuperfamPage implements OnInit {
             // crear el grafico de pie
             const PieMargenBruto = new google.visualization.DataTable();
             //
-            PieMargenBruto.addColumn('string', 'Cliente');
-            PieMargenBruto.addColumn('number', 'Margen Bruto');
+            PieMargenBruto.addColumn('string', 'Marca');
+            PieMargenBruto.addColumn('number', 'Costo Operacional');
             PieMargenBruto.addRows( ejem );
             // Instantiate and draw our chart, passing in some options.
             const PieMargenB = new google.visualization.PieChart(document.getElementById('pieChart22'));
-            const optionsmb   = { title:  'Margen Bruto Total',
+            const optionsmb   = { title:  'Costo Operacional',
                                 width:  '100%',
                                 height: '100%',
                                 chartArea: { left:    '10',
@@ -141,9 +147,9 @@ export class SuperfamPage implements OnInit {
             PieMargenB.draw(PieMargenBruto, optionsmb );
             // -------------------------------------------------------------- ventas
             const ejev = [];
-            this.rows.forEach( element => {
-              if ( element.rebaja_de_precios > 0 ) {
-                ejev.push( [ element.sigla, element.rebaja_de_precios ] );
+            this.familias.forEach( element => {
+              if ( element.margen_bruto > 0 ) {
+                ejev.push( [ element.descripcion, element.margen_bruto ] );
               }
             });
             // ordenar por rebajas
@@ -151,12 +157,12 @@ export class SuperfamPage implements OnInit {
             // crear el grafico de pie
             const PieVentas = new google.visualization.DataTable();
             //
-            PieVentas.addColumn('string', 'Cliente');
-            PieVentas.addColumn('number', 'Rebajas');
-            PieVentas.addRows( ejev );
+            PieVentas.addColumn('string', 'Producto');
+            PieVentas.addColumn('number', 'Margen bruto');
+            PieVentas.addRows( ejev.slice( 0, 10 ) );
             // Instantiate and draw our chart, passing in some options.
             const PieVentas1 = new google.visualization.PieChart(document.getElementById('pieChart33'));
-            const optionsv  = { title:  'Rebajas Total',
+            const optionsv  = { title:  'Top-10',
                                 width:  '100%',
                                 height: '100%',
                                 chartArea: { left:    '10',
@@ -167,14 +173,13 @@ export class SuperfamPage implements OnInit {
                               };
             PieVentas1.draw(PieVentas, optionsv );
             // --------------------------------------------------------------
-
       });
   }
 
-  cuantasNotas() {
+  cuantasNotas( per, mes ) {
     return this.datos.postDataSPSilent( { sp:      '/ws_pylnotascuenta',
-                                          periodo: this.datosParam.periodo.toString(),
-                                          mes:     this.datosParam.mes.toString(),
+                                          periodo: per.toString(),
+                                          mes:     mes.toString(),
                                           informe: this.informe } )
       .subscribe( ( data: any ) => {
           const rs = data.datos;
@@ -186,16 +191,17 @@ export class SuperfamPage implements OnInit {
   async notas() {
     const modal = await this.modalCtrl.create({
         component: NotasPage,
-        componentProps: { periodo: this.periodo,
-                          mes:     this.mes,
+        componentProps: { periodo: this.datosParam.periodo,
+                          mes:     this.datosParam.mes,
                           informe: this.informe,
-                          empresa: this.empresa },
+                          empresa: this.datosParam.empresa },
         mode: 'ios'
     });
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
-    this.cuantasNotas();
+    this.cuantasNotas( this.datosParam.periodo,
+                       this.datosParam.mes );
   }
 
   async vistas( event ) {
@@ -223,50 +229,34 @@ export class SuperfamPage implements OnInit {
       for ( let i = 0; i < this.familias.length; i++ ) {
           //
           this.familias[i].x_vta_neta          = this.familias[i].vta_neta          / 1000000 ;
+          this.familias[i].x_cantidad          = this.familias[i].cantidad  ;
           this.familias[i].x_costo_operacional = this.familias[i].costo_operacional / 1000000 ;
           this.familias[i].x_rebaja_de_precios = this.familias[i].rebaja_de_precios / 1000000 ;
           this.familias[i].x_margen_bruto      = this.familias[i].margen_bruto      / 1000000 ;
-          this.familias[i].x_gasto_promotores  = this.familias[i].gasto_promotores  / 1000000 ;
-          this.familias[i].x_cross_docking     = this.familias[i].cross_docking     / 1000000 ;
-          this.familias[i].x_convenio_variable = this.familias[i].convenio_variable / 1000000 ;
-          this.familias[i].x_convenio_fijo     = this.familias[i].convenio_fijo     / 1000000 ;
-          this.familias[i].x_contribucion      = this.familias[i].contribucion      / 1000000 ;
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
         // totales
-        this.sumas[0] += this.rows[i].vta_neta         ;
+        this.sumas[0] += this.rows[i].vta_neta ;
+        this.sumas[4] += this.rows[i].cantidad ;
         this.sumas[1] += this.rows[i].costo_operacional;
         this.sumas[2] += this.rows[i].rebaja_de_precios;
         this.sumas[3] += this.rows[i].margen_bruto     ;
-        this.sumas[4] += this.rows[i].gasto_promotores ;
-        this.sumas[5] += this.rows[i].cross_docking    ;
-        this.sumas[6] += this.rows[i].convenio_variable;
-        this.sumas[7] += this.rows[i].convenio_fijo    ;
-        this.sumas[8] += this.rows[i].contribucion     ;
         // datos
         this.rows[i].x_vta_neta          = this.rows[i].vta_neta          / 1000000 ;
+        this.rows[i].x_cantidad          = this.rows[i].cantidad ;
         this.rows[i].x_costo_operacional = this.rows[i].costo_operacional / 1000000 ;
         this.rows[i].x_rebaja_de_precios = this.rows[i].rebaja_de_precios / 1000000 ;
         this.rows[i].x_margen_bruto      = this.rows[i].margen_bruto      / 1000000 ;
-        this.rows[i].x_gasto_promotores  = this.rows[i].gasto_promotores  / 1000000 ;
-        this.rows[i].x_cross_docking     = this.rows[i].cross_docking     / 1000000 ;
-        this.rows[i].x_convenio_variable = this.rows[i].convenio_variable / 1000000 ;
-        this.rows[i].x_convenio_fijo     = this.rows[i].convenio_fijo     / 1000000 ;
-        this.rows[i].x_contribucion      = this.rows[i].contribucion      / 1000000 ;
         // agregar las familias
-        this.rows[i].familias = this.familias.filter( fila => fila.sigla === this.rows[i].sigla );
+        this.rows[i].familias = this.familias.filter( fila => fila.super_familia === this.rows[i].super_familia );
       }
       //
       this.sumas[0] = this.sumas[0] / 1000000;
+      this.sumas[4] = this.sumas[4] ;
       this.sumas[1] = this.sumas[1] / 1000000;
       this.sumas[2] = this.sumas[2] / 1000000;
       this.sumas[3] = this.sumas[3] / 1000000;
-      this.sumas[4] = this.sumas[4] / 1000000;
-      this.sumas[5] = this.sumas[5] / 1000000;
-      this.sumas[6] = this.sumas[6] / 1000000;
-      this.sumas[7] = this.sumas[7] / 1000000;
-      this.sumas[8] = this.sumas[8] / 1000000;
       //
     } else if ( this.vista === 'M'  ) {
       //
@@ -274,40 +264,28 @@ export class SuperfamPage implements OnInit {
       // tslint:disable-next-line: prefer-for-of
       for ( let i = 0; i < this.familias.length; i++ ) {
         //
-        this.familias[i].x_vta_neta          = this.familias[i].vta_neta           ;
+        this.familias[i].x_vta_neta          = this.familias[i].vta_neta ;
+        this.familias[i].x_cantidad          = this.familias[i].cantidad ;
         this.familias[i].x_costo_operacional = this.familias[i].costo_operacional  ;
         this.familias[i].x_rebaja_de_precios = this.familias[i].rebaja_de_precios  ;
         this.familias[i].x_margen_bruto      = this.familias[i].margen_bruto       ;
-        this.familias[i].x_gasto_promotores  = this.familias[i].gasto_promotores   ; 
-        this.familias[i].x_cross_docking     = this.familias[i].cross_docking      ;
-        this.familias[i].x_convenio_variable = this.familias[i].convenio_variable  ;
-        this.familias[i].x_convenio_fijo     = this.familias[i].convenio_fijo      ;
-        this.familias[i].x_contribucion      = this.familias[i].contribucion       ;
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
         // totales
-        this.sumas[0] += this.rows[i].vta_neta         ;
+        this.sumas[0] += this.rows[i].vta_neta ;
+        this.sumas[4] += this.rows[i].cantidad ;
         this.sumas[1] += this.rows[i].costo_operacional;
         this.sumas[2] += this.rows[i].rebaja_de_precios;
         this.sumas[3] += this.rows[i].margen_bruto     ;
-        this.sumas[4] += this.rows[i].gasto_promotores ;
-        this.sumas[5] += this.rows[i].cross_docking    ;
-        this.sumas[6] += this.rows[i].convenio_variable;
-        this.sumas[7] += this.rows[i].convenio_fijo    ;
-        this.sumas[8] += this.rows[i].contribucion     ;
         // datos
-        this.rows[i].x_vta_neta          = this.rows[i].vta_neta          ;
+        this.rows[i].x_vta_neta          = this.rows[i].vta_neta ;
+        this.rows[i].x_cantidad          = this.rows[i].cantidad ;
         this.rows[i].x_costo_operacional = this.rows[i].costo_operacional ;
         this.rows[i].x_rebaja_de_precios = this.rows[i].rebaja_de_precios ;
         this.rows[i].x_margen_bruto      = this.rows[i].margen_bruto      ;
-        this.rows[i].x_gasto_promotores  = this.rows[i].gasto_promotores  ;
-        this.rows[i].x_cross_docking     = this.rows[i].cross_docking     ;
-        this.rows[i].x_convenio_variable = this.rows[i].convenio_variable ;
-        this.rows[i].x_convenio_fijo     = this.rows[i].convenio_fijo     ;
-        this.rows[i].x_contribucion      = this.rows[i].contribucion      ;
         // agregar las familias
-        this.rows[i].familias = this.familias.filter( fila => fila.sigla === this.rows[i].sigla );
+        this.rows[i].familias = this.familias.filter( fila => fila.super_familia === this.rows[i].super_familia );
       }
       //
     } else if ( this.vista === '%'  ) {
@@ -316,50 +294,34 @@ export class SuperfamPage implements OnInit {
       // tslint:disable-next-line: prefer-for-of
       for ( let i = 0; i < this.familias.length; i++ ) {
         //
-        this.familias[i].x_vta_neta          = this.familias[i].vta_neta           ;
+        this.familias[i].x_vta_neta          = this.familias[i].vta_neta ;
+        this.familias[i].x_cantidad          = this.familias[i].cantidad ;
         this.familias[i].x_costo_operacional = ( this.familias[i].costo_operacional / this.familias[i].vta_neta ) * 100 ;
         this.familias[i].x_rebaja_de_precios = ( this.familias[i].rebaja_de_precios / this.familias[i].vta_neta ) * 100 ;
         this.familias[i].x_margen_bruto      = ( this.familias[i].margen_bruto      / this.familias[i].vta_neta ) * 100 ;
-        this.familias[i].x_gasto_promotores  = ( this.familias[i].gasto_promotores  / this.familias[i].vta_neta ) * 100 ;
-        this.familias[i].x_cross_docking     = ( this.familias[i].cross_docking     / this.familias[i].vta_neta ) * 100 ;
-        this.familias[i].x_convenio_variable = ( this.familias[i].convenio_variable / this.familias[i].vta_neta ) * 100 ;
-        this.familias[i].x_convenio_fijo     = ( this.familias[i].convenio_fijo     / this.familias[i].vta_neta ) * 100 ;
-        this.familias[i].x_contribucion      = ( this.familias[i].contribucion      / this.familias[i].vta_neta ) * 100 ;
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
         // totales
-        this.sumas[0] += this.rows[i].vta_neta         ;
+        this.sumas[0] += this.rows[i].vta_neta ;
+        this.sumas[4] += this.rows[i].cantidad ;
         this.sumas[1] += this.rows[i].costo_operacional;
         this.sumas[2] += this.rows[i].rebaja_de_precios;
         this.sumas[3] += this.rows[i].margen_bruto     ;
-        this.sumas[4] += this.rows[i].gasto_promotores ;
-        this.sumas[5] += this.rows[i].cross_docking    ;
-        this.sumas[6] += this.rows[i].convenio_variable;
-        this.sumas[7] += this.rows[i].convenio_fijo    ;
-        this.sumas[8] += this.rows[i].contribucion     ;
         // datos
-        this.rows[i].x_vta_neta          = this.rows[i].vta_neta          ;
+        this.rows[i].x_vta_neta          = this.rows[i].vta_neta ;
+        this.rows[i].x_cantidad          = this.rows[i].cantidad ;
         this.rows[i].x_costo_operacional = ( this.rows[i].costo_operacional / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].x_rebaja_de_precios = ( this.rows[i].rebaja_de_precios / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].x_margen_bruto      = ( this.rows[i].margen_bruto      / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].x_gasto_promotores  = ( this.rows[i].gasto_promotores  / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].x_cross_docking     = ( this.rows[i].cross_docking     / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].x_convenio_variable = ( this.rows[i].convenio_variable / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].x_convenio_fijo     = ( this.rows[i].convenio_fijo     / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].x_contribucion      = ( this.rows[i].contribucion      / this.rows[i].vta_neta ) * 100 ;
         // agregar las familias
-        this.rows[i].familias = this.familias.filter( fila => fila.sigla === this.rows[i].sigla );
+        this.rows[i].familias = this.familias.filter( fila => fila.super_familia === this.rows[i].super_familia );
       }
       //
+      this.sumas[4] =   this.sumas[4] ;
       this.sumas[1] = ( this.sumas[1] / this.sumas[0] ) * 100;
       this.sumas[2] = ( this.sumas[2] / this.sumas[0] ) * 100;
       this.sumas[3] = ( this.sumas[3] / this.sumas[0] ) * 100;
-      this.sumas[4] = ( this.sumas[4] / this.sumas[0] ) * 100;
-      this.sumas[5] = ( this.sumas[5] / this.sumas[0] ) * 100;
-      this.sumas[6] = ( this.sumas[6] / this.sumas[0] ) * 100;
-      this.sumas[7] = ( this.sumas[7] / this.sumas[0] ) * 100;
-      this.sumas[8] = ( this.sumas[8] / this.sumas[0] ) * 100;
       //
     } else if ( this.vista === 'F%' ) {
       //
@@ -368,59 +330,39 @@ export class SuperfamPage implements OnInit {
       for ( let i = 0; i < this.familias.length; i++ ) {
           // valores
           this.familias[i].x_vta_neta          = this.familias[i].vta_neta          / 1000000 ;
+          this.familias[i].x_cantidad          = this.familias[i].cantidad ;
           this.familias[i].x_costo_operacional = this.familias[i].costo_operacional / 1000000 ;
           this.familias[i].x_rebaja_de_precios = this.familias[i].rebaja_de_precios / 1000000 ;
           this.familias[i].x_margen_bruto      = this.familias[i].margen_bruto      / 1000000 ;
-          this.familias[i].x_gasto_promotores  = this.familias[i].gasto_promotores  / 1000000 ;
-          this.familias[i].x_cross_docking     = this.familias[i].cross_docking     / 1000000 ;
-          this.familias[i].x_convenio_variable = this.familias[i].convenio_variable / 1000000 ;
-          this.familias[i].x_convenio_fijo     = this.familias[i].convenio_fijo     / 1000000 ;
-          this.familias[i].x_contribucion      = this.familias[i].contribucion      / 1000000 ;
           // porcentajes
           this.familias[i].p_vta_neta          =   this.familias[i].vta_neta ;
+          this.familias[i].p_cantidad          =   this.familias[i].cantidad ;
           this.familias[i].p_costo_operacional = ( this.familias[i].costo_operacional / this.familias[i].vta_neta ) * 100 ;
           this.familias[i].p_rebaja_de_precios = ( this.familias[i].rebaja_de_precios / this.familias[i].vta_neta ) * 100 ;
           this.familias[i].p_margen_bruto      = ( this.familias[i].margen_bruto      / this.familias[i].vta_neta ) * 100 ;
-          this.familias[i].p_gasto_promotores  = ( this.familias[i].gasto_promotores  / this.familias[i].vta_neta ) * 100 ;
-          this.familias[i].p_cross_docking     = ( this.familias[i].cross_docking     / this.familias[i].vta_neta ) * 100 ;
-          this.familias[i].p_convenio_variable = ( this.familias[i].convenio_variable / this.familias[i].vta_neta ) * 100 ;
-          this.familias[i].p_convenio_fijo     = ( this.familias[i].convenio_fijo     / this.familias[i].vta_neta ) * 100 ;
-          this.familias[i].p_contribucion      = ( this.familias[i].contribucion      / this.familias[i].vta_neta ) * 100 ;
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
         // totales
-        this.sumas[0] += this.rows[i].vta_neta         ;
+        this.sumas[0] += this.rows[i].vta_neta ;
+        this.sumas[4] += this.rows[i].cantidad ;
         this.sumas[1] += this.rows[i].costo_operacional;
         this.sumas[2] += this.rows[i].rebaja_de_precios;
         this.sumas[3] += this.rows[i].margen_bruto     ;
-        this.sumas[4] += this.rows[i].gasto_promotores ;
-        this.sumas[5] += this.rows[i].cross_docking    ;
-        this.sumas[6] += this.rows[i].convenio_variable;
-        this.sumas[7] += this.rows[i].convenio_fijo    ;
-        this.sumas[8] += this.rows[i].contribucion     ;
         // datos
         this.rows[i].x_vta_neta          = this.rows[i].vta_neta          / 1000000 ;
+        this.rows[i].x_cantidad          = this.rows[i].cantidad ;
         this.rows[i].x_costo_operacional = this.rows[i].costo_operacional / 1000000 ;
         this.rows[i].x_rebaja_de_precios = this.rows[i].rebaja_de_precios / 1000000 ;
         this.rows[i].x_margen_bruto      = this.rows[i].margen_bruto      / 1000000 ;
-        this.rows[i].x_gasto_promotores  = this.rows[i].gasto_promotores  / 1000000 ;
-        this.rows[i].x_cross_docking     = this.rows[i].cross_docking     / 1000000 ;
-        this.rows[i].x_convenio_variable = this.rows[i].convenio_variable / 1000000 ;
-        this.rows[i].x_convenio_fijo     = this.rows[i].convenio_fijo     / 1000000 ;
-        this.rows[i].x_contribucion      = this.rows[i].contribucion      / 1000000 ;
         // porcentajes
         this.rows[i].p_vta_neta          =   this.rows[i].vta_neta ;
+        this.rows[i].p_cantidad          =   this.rows[i].cantidad ;
         this.rows[i].p_costo_operacional = ( this.rows[i].costo_operacional / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].p_rebaja_de_precios = ( this.rows[i].rebaja_de_precios / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].p_margen_bruto      = ( this.rows[i].margen_bruto      / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].p_gasto_promotores  = ( this.rows[i].gasto_promotores  / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].p_cross_docking     = ( this.rows[i].cross_docking     / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].p_convenio_variable = ( this.rows[i].convenio_variable / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].p_convenio_fijo     = ( this.rows[i].convenio_fijo     / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].p_contribucion      = ( this.rows[i].contribucion      / this.rows[i].vta_neta ) * 100 ;
         // agregar las familias
-        this.rows[i].familias = this.familias.filter( fila => fila.sigla === this.rows[i].sigla );
+        this.rows[i].familias = this.familias.filter( fila => fila.super_familia === this.rows[i].super_familia );
         // tslint:disable-next-line: prefer-for-of
         for ( let j = 0; j < this.rows[i].familias.length; j++ ) {
           // porcentajes sobre total
@@ -430,24 +372,16 @@ export class SuperfamPage implements OnInit {
       }
       //
       this.sumas[0]  = this.sumas[0] / 1000000 ;
+      this.sumas[4]  = this.sumas[4] ;
       this.sumas[1]  = this.sumas[1] / 1000000 ;
       this.sumas[2]  = this.sumas[2] / 1000000 ;
       this.sumas[3]  = this.sumas[3] / 1000000 ;
-      this.sumas[4]  = this.sumas[4] / 1000000 ;
-      this.sumas[5]  = this.sumas[5] / 1000000 ;
-      this.sumas[6]  = this.sumas[6] / 1000000 ;
-      this.sumas[7]  = this.sumas[7] / 1000000 ;
-      this.sumas[8]  = this.sumas[8] / 1000000 ;
       // porcentajes
-      this.sumasp[0] =   this.sumas[0];
+      this.sumasp[0] =   this.sumas[0] ;
+      this.sumasp[4] =   this.sumas[4] ;
       this.sumasp[1] = ( this.sumas[1] / this.sumas[0] ) * 100 ;
       this.sumasp[2] = ( this.sumas[2] / this.sumas[0] ) * 100 ;
       this.sumasp[3] = ( this.sumas[3] / this.sumas[0] ) * 100 ;
-      this.sumasp[4] = ( this.sumas[4] / this.sumas[0] ) * 100 ;
-      this.sumasp[5] = ( this.sumas[5] / this.sumas[0] ) * 100 ;
-      this.sumasp[6] = ( this.sumas[6] / this.sumas[0] ) * 100 ;
-      this.sumasp[7] = ( this.sumas[7] / this.sumas[0] ) * 100 ;
-      this.sumasp[8] = ( this.sumas[8] / this.sumas[0] ) * 100 ;
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
         // porcentajes sobre total
@@ -461,24 +395,16 @@ export class SuperfamPage implements OnInit {
       for ( let i = 0; i < this.familias.length; i++ ) {
           // valores
           this.familias[i].x_vta_neta          = this.familias[i].vta_neta          ;
+          this.familias[i].x_cantidad          = this.familias[i].cantidad          ;
           this.familias[i].x_costo_operacional = this.familias[i].costo_operacional ;
           this.familias[i].x_rebaja_de_precios = this.familias[i].rebaja_de_precios ;
           this.familias[i].x_margen_bruto      = this.familias[i].margen_bruto      ;
-          this.familias[i].x_gasto_promotores  = this.familias[i].gasto_promotores  ;
-          this.familias[i].x_cross_docking     = this.familias[i].cross_docking     ;
-          this.familias[i].x_convenio_variable = this.familias[i].convenio_variable ;
-          this.familias[i].x_convenio_fijo     = this.familias[i].convenio_fijo     ;
-          this.familias[i].x_contribucion      = this.familias[i].contribucion      ;
           // porcentajes
           this.familias[i].p_vta_neta          =   this.familias[i].vta_neta ;
+          this.familias[i].p_cantidad          =   this.familias[i].cantidad ;
           this.familias[i].p_costo_operacional = ( this.familias[i].costo_operacional / this.familias[i].vta_neta ) * 100 ;
           this.familias[i].p_rebaja_de_precios = ( this.familias[i].rebaja_de_precios / this.familias[i].vta_neta ) * 100 ;
           this.familias[i].p_margen_bruto      = ( this.familias[i].margen_bruto      / this.familias[i].vta_neta ) * 100 ;
-          this.familias[i].p_gasto_promotores  = ( this.familias[i].gasto_promotores  / this.familias[i].vta_neta ) * 100 ;
-          this.familias[i].p_cross_docking     = ( this.familias[i].cross_docking     / this.familias[i].vta_neta ) * 100 ;
-          this.familias[i].p_convenio_variable = ( this.familias[i].convenio_variable / this.familias[i].vta_neta ) * 100 ;
-          this.familias[i].p_convenio_fijo     = ( this.familias[i].convenio_fijo     / this.familias[i].vta_neta ) * 100 ;
-          this.familias[i].p_contribucion      = ( this.familias[i].contribucion      / this.familias[i].vta_neta ) * 100 ;
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
@@ -487,33 +413,21 @@ export class SuperfamPage implements OnInit {
         this.sumas[1] += this.rows[i].costo_operacional;
         this.sumas[2] += this.rows[i].rebaja_de_precios;
         this.sumas[3] += this.rows[i].margen_bruto     ;
-        this.sumas[4] += this.rows[i].gasto_promotores ;
-        this.sumas[5] += this.rows[i].cross_docking    ;
-        this.sumas[6] += this.rows[i].convenio_variable;
-        this.sumas[7] += this.rows[i].convenio_fijo    ;
-        this.sumas[8] += this.rows[i].contribucion     ;
+        this.sumas[4] += this.rows[i].cantidad         ;
         // datos
         this.rows[i].x_vta_neta          = this.rows[i].vta_neta          ;
+        this.rows[i].x_cantidad          = this.rows[i].cantidad          ;
         this.rows[i].x_costo_operacional = this.rows[i].costo_operacional ;
         this.rows[i].x_rebaja_de_precios = this.rows[i].rebaja_de_precios ;
         this.rows[i].x_margen_bruto      = this.rows[i].margen_bruto      ;
-        this.rows[i].x_gasto_promotores  = this.rows[i].gasto_promotores  ;
-        this.rows[i].x_cross_docking     = this.rows[i].cross_docking     ;
-        this.rows[i].x_convenio_variable = this.rows[i].convenio_variable ;
-        this.rows[i].x_convenio_fijo     = this.rows[i].convenio_fijo     ;
-        this.rows[i].x_contribucion      = this.rows[i].contribucion      ;
         // porcentajes
         this.rows[i].p_vta_neta          =   this.rows[i].vta_neta ;
+        this.rows[i].p_cantidad          =   this.rows[i].cantidad ;
         this.rows[i].p_costo_operacional = ( this.rows[i].costo_operacional / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].p_rebaja_de_precios = ( this.rows[i].rebaja_de_precios / this.rows[i].vta_neta ) * 100 ;
         this.rows[i].p_margen_bruto      = ( this.rows[i].margen_bruto      / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].p_gasto_promotores  = ( this.rows[i].gasto_promotores  / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].p_cross_docking     = ( this.rows[i].cross_docking     / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].p_convenio_variable = ( this.rows[i].convenio_variable / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].p_convenio_fijo     = ( this.rows[i].convenio_fijo     / this.rows[i].vta_neta ) * 100 ;
-        this.rows[i].p_contribucion      = ( this.rows[i].contribucion      / this.rows[i].vta_neta ) * 100 ;
         // agregar las familias
-        this.rows[i].familias = this.familias.filter( fila => fila.superfam === this.rows[i].superfam );
+        this.rows[i].familias = this.familias.filter( fila => fila.super_familia === this.rows[i].super_familia );
         // tslint:disable-next-line: prefer-for-of
         for ( let j = 0; j < this.rows[i].familias.length; j++ ) {
           // porcentajes sobre total
@@ -525,16 +439,36 @@ export class SuperfamPage implements OnInit {
       this.sumasp[1] = ( this.sumas[1] / this.sumas[0] ) * 100 ;
       this.sumasp[2] = ( this.sumas[2] / this.sumas[0] ) * 100 ;
       this.sumasp[3] = ( this.sumas[3] / this.sumas[0] ) * 100 ;
-      this.sumasp[4] = ( this.sumas[4] / this.sumas[0] ) * 100 ;
-      this.sumasp[5] = ( this.sumas[5] / this.sumas[0] ) * 100 ;
-      this.sumasp[6] = ( this.sumas[6] / this.sumas[0] ) * 100 ;
-      this.sumasp[7] = ( this.sumas[7] / this.sumas[0] ) * 100 ;
-      this.sumasp[8] = ( this.sumas[8] / this.sumas[0] ) * 100 ;
+      this.sumasp[4] =   this.sumas[4] ;
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.rows.length; i++) {
         // porcentajes sobre total
         this.rows[i].p_vta_neta  = ( this.rows[i].vta_neta / this.sumas[0] ) * 100 ;
       }
+    }
+  }
+
+  async periodos( event ) {
+    const popover = await this.popoverCtrl.create({
+        component: PeriodosComponent,
+        event,
+        mode: 'ios'
+    });
+    await popover.present();
+
+    const { data } = await popover.onWillDismiss();
+
+    if ( data !== undefined ) {
+      this.nombreMes = this.funciones.nombreMes( data.mes );
+      //
+      this.cargaFamilias( this.datosParam.empresa,
+                          this.datosParam.periodo,
+                          data.mes,
+                          this.datosParam.cliente,
+                          this.datosParam.marca );
+      this.cuantasNotas( this.datosParam.periodo,
+                         data.mes );
+      //
     }
   }
 
