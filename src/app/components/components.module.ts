@@ -6,10 +6,11 @@ import { HeaderComponent } from './header/header.component';
 import { PeriodosComponent } from './periodos/periodos.component';
 import { DoblealtoComponent } from './doblealto/doblealto.component';
 import { DobletextComponent } from './dobletext/dobletext.component';
+import { ItemComponent } from './item/item.component';
 
 @NgModule({
-  declarations: [ HeaderComponent, PeriodosComponent, DoblealtoComponent, DobletextComponent ],
-  exports:      [ HeaderComponent, PeriodosComponent, DoblealtoComponent, DobletextComponent ],  /* esto se escribe para exportar */
+  declarations: [ HeaderComponent, PeriodosComponent, DoblealtoComponent, DobletextComponent, ItemComponent ],
+  exports:      [ HeaderComponent, PeriodosComponent, DoblealtoComponent, DobletextComponent, ItemComponent ],
   imports:      [ CommonModule, IonicModule ]
 })
 export class ComponentsModule { }

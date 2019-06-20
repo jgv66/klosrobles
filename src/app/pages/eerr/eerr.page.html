@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+        <ion-back-button defaultHref="/menu"></ion-back-button>
+    </ion-buttons>
+    <ion-title text-center text-capitalize>Estado de Resultado {{ textoAcumulado }} {{ nombreMes }} / {{ periodo }}</ion-title>
+
+    <ion-buttons slot="end">
+<!-- 
+        <ion-button (click)="drillDown()">
+          <ion-icon *ngIf=" !inmerse " size = "small" src="assets/icon/drilldown.svg"></ion-icon>
+          <ion-icon *ngIf="  inmerse " size = "small" name="ios-close-circle"></ion-icon>
+        </ion-button>
+   -->
+        <ion-button (click)="notas()">
+          <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>
+          <ion-icon slot="icon-only" size="small" src="assets/icon/campanilla.svg"></ion-icon>
+        </ion-button>
+
+        <ion-button (click)="periodos( $event )"><ion-icon slot="icon-only" size="small" src="assets/icon/calendario.svg"></ion-icon></ion-button>
+        
+      </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-toolbar>
+
+  <ion-segment  (ionChange)="segmentChanged($event)" 
+                [(ngModel)]="valorSegmento" 
+                mode="ios" 
+                color="tertiary">
+
+    <ion-segment-button value="Del Mes"> 
+      <ion-label>Del Mes</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="Acumulado">
+      <ion-label>Acumulado</ion-label>
+    </ion-segment-button>
+
+  </ion-segment>
+
+</ion-toolbar>
+
+<ion-content>
+
+    <app-item [informacion]="[ 'Detalle','Año Pasado','Este Año'] "              fila=00 concepto="Concepto">                    </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? ingoper   : acumingoper   " fila=01 concepto="Ingresos Operacionales">      </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? ingnooper : acumingnooper " fila=02 concepto="Ingresos No Operacionales">   </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? ingnetos  : acumingnetos  " fila=03 concepto="Ingresos Netos">              </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? gastoper  : acumgastoper  " fila=04 concepto="Gastos Operacionales">        </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? margbrut  : acummargbrut  " fila=05 concepto="Margen Bruto">                </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? ogastoper : acumogastoper " fila=06 concepto="Otros Gastos Operacionales">  </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? gastadmin : acumgastadmin " fila=07 concepto="Gastos De Administración">    </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? gastventa : acumgastventa " fila=08 concepto="Gastos De Venta">             </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? convenios : acumconvenios " fila=09 concepto="Convenios">                   </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? margopera : acummargopera " fila=10 concepto="Margen Operacional">          </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? gastnoper : acumgastnoper " fila=11 concepto="Gastos No Operacionales">     </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? difcambio : acumdifcambio " fila=12 concepto="Diferencia De Cambio">        </app-item>  <hr class="linea">  
+    <app-item [informacion]=" ( ldelMes === true ) ? deprecia  : acumdeprecia  " fila=13 concepto="Depreciación">                </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? utiantimp : acumutiantimp " fila=14 concepto="Utilidad Antes De Impuesto">  </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? impuesto  : acumimpuesto  " fila=15 concepto="Impuesto">                    </app-item>  <hr class="linea">
+    <app-item [informacion]=" ( ldelMes === true ) ? utidesimp : acumutidesimp " fila=16 concepto="Utilidad Después De Impuesto"></app-item>  <hr class="linea">
+    
+</ion-content>

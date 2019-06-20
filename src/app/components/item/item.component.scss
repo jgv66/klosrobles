@@ -1,0 +1,48 @@
+.montos {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+}
+
+.cajon {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+
+    .caja-i {
+        width:          250px; 
+        max-width:      250px;
+        text-align:     center;
+        font-style:     italic;
+        font-size:      110%;
+        margin:         auto;
+        height:         100%;
+        vertical-align: middle !important;
+    }
+    .caja-d {
+        width:      490px; 
+        max-width:  550px;
+        text-align: center;
+        font-style: italic;        
+        font-size:  85%;
+    }
+}
+
+.der {
+    text-align: right;
+    font-style: italic;
+}
+.zen {
+    text-align: right;
+    vertical-align: middle;
+    font-style: italic;
+}
+
+.keven {
+    background-color: #e7c6a6;
+ }
+
+.kodd {
+    background-color: #fff4ea;
+}
+

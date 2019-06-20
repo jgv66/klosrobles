@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'reppyl',          loadChildren: './pages/reppyl/reppyl.module#ReppylPageModule'},
   { path: 'superfam',        loadChildren: './pages/superfam/superfam.module#SuperfamPageModule' },
   { path: 'reppylmes',       loadChildren: './pages/reppylmes/reppylmes.module#ReppylmesPageModule' },
+  { path: 'eerr',            loadChildren: './pages/eerr/eerr.module#EerrPageModule'},
   { path: 'indicador/:dato', loadChildren: './pages/indicador/indicador.module#IndicadorPageModule' },
   { path: '**', redirectTo: 'inicio', pathMatch: 'full' },
 ];

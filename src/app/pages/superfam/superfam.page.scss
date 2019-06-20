@@ -101,11 +101,15 @@ ion-badge {
     overflow-x: scroll;
 
     .chart {
-        height: 240px;
-        width: 50%;
-        min-width: 345px;
-        max-width: 50%;
+        height: 350px;
+        width: 300px;
     }
+
+    .linchart {
+        height: 350px;
+        width: 900px;
+    }
+
 }
 
 ion-grid {

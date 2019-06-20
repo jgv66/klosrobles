@@ -26,16 +26,13 @@ ion-grid {
 .izq {
     text-align: left;
 }
-.der {
+.der .der-bold {
     text-align: right;
     font-style: italic;
-}
-.der-bold {
-    text-align: right;
-    font-style: italic;
-    // font-weight: bold !important;
 }
 .zen {
     text-align: center;
     font-style: italic;
 }
+
+

@@ -20,3 +20,12 @@ ion-toast {
     --border-width: 5px;
     --border-style: double;
 }
+
+ion-badge {
+    color: #fff;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border-radius: 100%;
+}
+

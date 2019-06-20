@@ -27,6 +27,7 @@ export class SuperfamPage implements OnInit {
   //
   rows      = [];
   familias  = [];
+  top10     = [];
   // sumas
   sumas     = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   sumasp    = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -93,67 +94,13 @@ export class SuperfamPage implements OnInit {
             const rs  = data.datos;
             this.familias = rs;
             this.tranData();  /* cambia el formato de los datos */
-            // -------------------------------------------------------------- grafica contribucion
-            const eje = [];
-            this.rows.forEach( element => {
-              if ( element.margen_bruto > 0 ) {
-                eje.push( [ element.nombre_super_familia, element.margen_bruto ] );
-              }
-            });
-            // crear el grafico de pie
-            const PieContribucion = new google.visualization.DataTable();
-            //
-            PieContribucion.addColumn('string', 'Marca');
-            PieContribucion.addColumn('number', 'Margen Bruto');
-            PieContribucion.addRows( eje );
-            // Instantiate and draw our chart, passing in some options.
-            const PieContrib1 = new google.visualization.PieChart(document.getElementById('pieChart11'));
-            const options   = { title:  'Margen Bruto Total',
-                                width:  '100%',
-                                height: '100%',
-                                chartArea: { left:    '10',
-                                             top:     '20',
-                                             bottom:  '50',
-                                             width:   '100%',
-                                             height:  '100%' },
-                              };
-            PieContrib1.draw(PieContribucion, options );
-            // -------------------------------------------------------------- grafica margen_bruto
-            const ejem = [];
-            this.rows.forEach( element => {
-              if ( element.margen_bruto > 0 ) {
-                ejem.push( [ element.nombre_super_familia, element.costo_operacional ] );
-              }
-            });
-            // ordenar
-            ejem.sort( (a, b) => b[1] - a[1] );
-            // crear el grafico de pie
-            const PieMargenBruto = new google.visualization.DataTable();
-            //
-            PieMargenBruto.addColumn('string', 'Marca');
-            PieMargenBruto.addColumn('number', 'Costo Operacional');
-            PieMargenBruto.addRows( ejem );
-            // Instantiate and draw our chart, passing in some options.
-            const PieMargenB = new google.visualization.PieChart(document.getElementById('pieChart22'));
-            const optionsmb   = { title:  'Costo Operacional',
-                                width:  '100%',
-                                height: '100%',
-                                chartArea: { left:    '10',
-                                              top:     '20',
-                                              bottom:  '50',
-                                              width:   '100%',
-                                              height:  '100%' },
-                              };
-            PieMargenB.draw(PieMargenBruto, optionsmb );
-            // -------------------------------------------------------------- ventas
+            // -------------------------------------------------------------- ventas/pie
             const ejev = [];
             this.familias.forEach( element => {
               if ( element.margen_bruto > 0 ) {
                 ejev.push( [ element.descripcion, element.margen_bruto ] );
               }
             });
-            // ordenar por rebajas
-            ejev.sort( (a, b) => b[1] - a[1] );
             // crear el grafico de pie
             const PieVentas = new google.visualization.DataTable();
             //
@@ -172,7 +119,63 @@ export class SuperfamPage implements OnInit {
                                              height:  '100%' },
                               };
             PieVentas1.draw(PieVentas, optionsv );
-            // --------------------------------------------------------------
+            // -------------------------------------------------------------------------
+    });
+    //
+    this.datos.postDataSP( {  sp:      '/ws_pylmarfamcod',
+                              empresa: emp,
+                              periodo: per.toString(),
+                              mes:     mes.toString(),
+                              cliente: cli,
+                              marca:   mar,
+                              top10:   'si' })
+        .subscribe( (data: any) => {
+            const rs  = data.datos;
+            this.top10 = rs;
+            // console.log(rs);
+            // -------------------------------------------------------------- ventas/lineas
+            let eje    = [];
+            let header = ['Mes'];
+            let xmes   = mes;
+            let xper   = per;
+            let fila   = [];
+
+            this.top10.forEach( element => {
+                if ( per === element.periodo && mes === element.mes ) {
+                  header.push( element.producto );
+                }
+            });
+            console.log( header );
+            eje.push( header );
+            //
+            for (let index = 0; index < 5; index++) {
+              //
+              fila = [ xper.toString() + '/' + xmes.toString() ];
+              //
+              this.top10.forEach( element => {
+                if ( xper === element.periodo && xmes === element.mes ) {
+                  fila.push( element.margen_bruto );
+                }
+              });
+              eje.push( fila );
+              //
+              xper = ( xmes === 1 ) ?	xper-1 : xper    ;
+              xmes = ( xmes === 1	) ? 12		 : xmes - 1;
+              //
+            }
+            console.log( eje );
+            // crear el grafico de barras/lineas
+            const barrasLineas  = new google.visualization.arrayToDataTable( eje );
+            // Instantiate and draw our chart, passing in some options.
+            const barrasLineas1 = new google.visualization.ComboChart(document.getElementById('LinChart33'));
+            var options = {
+              title : 'Evolución Top-10 5 Ultimos meses',
+              vAxis: {title: 'Ventas'},
+              hAxis: {title: 'Mes'},
+              seriesType: 'bars'
+            };
+            barrasLineas1.draw( barrasLineas, options );  
+            // -------------------------------------------------------------------------
       });
   }
 
