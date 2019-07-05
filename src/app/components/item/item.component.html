@@ -25,8 +25,8 @@
           <ion-col *ngIf="dato.numero === true " [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' " size="2.5"><ion-label>{{ dato.real_anterior | number:"1.0-0" }}</ion-label></ion-col>
           <ion-col *ngIf="dato.numero === true " [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' " size="2.5"><ion-label>{{ dato.real_actual   | number:"1.0-0" }}</ion-label></ion-col>
 
-          <ion-col *ngIf="dato.numero === true " size="0.6"><ion-icon [class]=" dato.actant > 0 ? 'zen_green' : 'zen_red' " [name]=" dato.actant > 0 ? 'trending-up' : 'trending-down' "></ion-icon></ion-col>
-          <ion-col *ngIf="dato.numero === true "                      [class]=" dato.actant > 0 ? 'zen_green' : 'zen_red' " size="1.4">  <ion-label>{{ dato.actant   | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col *ngIf="dato.numero === true " size="0.6"><ion-icon [class]=" dato.actant > 0 ? 'zen_green' : 'zen_red' " [name]=" dato.actant > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+          <ion-col *ngIf="dato.numero === true "                      class="zen_white" size="1.4">  <ion-label>{{ dato.actant   | number:"1.2-2" }}%</ion-label></ion-col>
 
           <ion-col *ngIf="dato.porcent === true " [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' " size="2.5"><ion-label>{{ dato.real_anterior | number:"1.2-2" }}%</ion-label></ion-col>
           <ion-col *ngIf="dato.porcent === true " [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' " size="2.5"><ion-label>{{ dato.real_actual   | number:"1.2-2" }}%</ion-label></ion-col>
