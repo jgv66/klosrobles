@@ -11,7 +11,7 @@ export class ItemComponent implements OnInit {
   @Input() concepto: string;
   @Input() fila: number;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {}
 

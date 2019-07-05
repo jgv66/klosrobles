@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header transparency>
   <ion-toolbar color="dark">
     <ion-buttons slot="start">
         <ion-back-button defaultHref="/menu"></ion-back-button>
@@ -24,7 +24,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-toolbar>
+<ion-toolbar color="dark">
 
   <ion-segment  (ionChange)="segmentChanged($event)" 
                 [(ngModel)]="valorSegmento" 
@@ -41,11 +41,13 @@
 
   </ion-segment>
 
+  <app-item [informacion]="[ 'Detalle',periodo-1,periodo,actualSobreAnterior] " fila=00 concepto="Concepto"> </app-item> 
+   <!-- <hr class="linea"> -->
+
 </ion-toolbar>
 
-<ion-content>
+<ion-content color="dark">
 
-    <app-item [informacion]="[ 'Detalle','Año Pasado','Este Año'] "              fila=00 concepto="Concepto">                    </app-item>  <hr class="linea">
     <app-item [informacion]=" ( ldelMes === true ) ? ingoper   : acumingoper   " fila=01 concepto="Ingresos Operacionales">      </app-item>  <hr class="linea">
     <app-item [informacion]=" ( ldelMes === true ) ? ingnooper : acumingnooper " fila=02 concepto="Ingresos No Operacionales">   </app-item>  <hr class="linea">
     <app-item [informacion]=" ( ldelMes === true ) ? ingnetos  : acumingnetos  " fila=03 concepto="Ingresos Netos">              </app-item>  <hr class="linea">

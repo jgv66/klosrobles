@@ -25,6 +25,8 @@ export class EerrPage implements OnInit {
   meses     = [];
   nombreMes = '';
   //
+  actualSobreAnterior = this.periodo.toString() + '/' + (this.periodo - 1).toString();
+  //
   textoAcumulado = '';
   //
   rows      = [];
@@ -97,27 +99,33 @@ export class EerrPage implements OnInit {
           this.cargaAcumulado();
           data.datos.forEach(element => {
             if ( [1, 2, 2.5 ].includes( element.orden ) ) {
+              element.concolor = ( element.orden === 2.5 ) ? true : false ;
               this.ingoper.push( element );
             }
             if ( [3, 4 ].includes( element.orden ) ) {
               this.ingnooper.push( element );
             }
             if ( [4.2, 4.4 ].includes( element.orden ) ) {
+              element.concolor = true;
               this.ingnetos.push( element );
             }
-            if ( [5, 6, 7, 8, 9, 10, 10.2, 11, 11.5 ].includes( element.orden ) ) {
+            if ( [5, 6, 7, 8, 9, 10, 10.1, 10.2, 11, 11.5 ].includes( element.orden ) ) {
+              element.concolor = ( element.orden === 11.5 ) ? true : false ;
               this.gastoper.push( element );
             }
             if ( [12.1, 13.1 ].includes( element.orden ) ) {
+              element.concolor = true;
               this.margbrut.push( element );
             }
             if ( [14, 15, 16, 17, 18, 19, 20, 21.2 ].includes( element.orden ) ) {
+              element.concolor = ( element.orden === 21.2 ) ? true : false ;
               this.ogastoper.push( element );
             }
             if ( [22 ].includes( element.orden ) ) {
               this.gastadmin.push( element );
             }
             if ( [23, 24, 25, 26, 27, 28, 29, 30, 32, 32, 33, 34, 35, 36, 36.2 ].includes( element.orden ) ) {
+              element.concolor = ( element.orden === 36.2 ) ? true : false ;
               this.gastventa.push( element );
             }
             if ( [37 ].includes( element.orden ) ) {
@@ -136,12 +144,14 @@ export class EerrPage implements OnInit {
               this.deprecia.push( element );
             }
             if ( [45.1, 46.1 ].includes( element.orden ) ) {
+              element.concolor = true;
               this.utiantimp.push( element );
             }
             if ( [47 ].includes( element.orden ) ) {
               this.impuesto.push( element );
             }
             if ( [48.1, 48.2 ].includes( element.orden ) ) {
+              element.concolor = true;
               this.utidesimp.push( element );
             }
           });
@@ -159,27 +169,33 @@ export class EerrPage implements OnInit {
           // this.acumulado = rs;
           data.datos.forEach(element => {
             if ( [1, 2, 2.5 ].includes( element.orden ) ) {
+              element.concolor = ( element.orden === 2.5 ) ? true : false ;
               this.acumingoper.push( element );
             }
             if ( [3, 4 ].includes( element.orden ) ) {
               this.acumingnooper.push( element );
             }
             if ( [4.2, 4.4 ].includes( element.orden ) ) {
+              element.concolor = true;
               this.acumingnetos.push( element );
             }
             if ( [5, 6, 7, 8, 9, 10, 10.2, 11, 11.5 ].includes( element.orden ) ) {
+              element.concolor = ( element.orden === 11.5 ) ? true : false ;
               this.acumgastoper.push( element );
             }
             if ( [12.1, 13.1 ].includes( element.orden ) ) {
+              element.concolor = true;
               this.acummargbrut.push( element );
             }
             if ( [14, 15, 16, 17, 18, 19, 20, 21.2 ].includes( element.orden ) ) {
+              element.concolor = ( element.orden === 21.2 ) ? true : false ;
               this.acumogastoper.push( element );
             }
             if ( [22 ].includes( element.orden ) ) {
               this.acumgastadmin.push( element );
             }
             if ( [23, 24, 25, 26, 27, 28, 29, 30, 32, 32, 33, 34, 35, 36, 36.2 ].includes( element.orden ) ) {
+              element.concolor = ( element.orden === 36.2 ) ? true : false ;
               this.acumgastventa.push( element );
             }
             if ( [37 ].includes( element.orden ) ) {
@@ -198,12 +214,14 @@ export class EerrPage implements OnInit {
               this.acumdeprecia.push( element );
             }
             if ( [45.1, 46.1 ].includes( element.orden ) ) {
+              element.concolor = true;
               this.acumutiantimp.push( element );
             }
             if ( [47 ].includes( element.orden ) ) {
               this.acumimpuesto.push( element );
             }
             if ( [48.1, 48.2 ].includes( element.orden ) ) {
+              element.concolor = true;
               this.acumutidesimp.push( element );
             }
           });

@@ -10,21 +10,21 @@
     overflow-x: scroll;
 
     .caja-i {
-        width:          250px; 
-        max-width:      250px;
-        text-align:     center;
+        width:          27%; 
+        max-width:      27%;
+        text-align:     right;
         font-style:     italic;
         font-size:      110%;
-        margin:         auto;
+        margin:         10px 15px 10px 2px;
         height:         100%;
         vertical-align: middle !important;
     }
     .caja-d {
-        width:      490px; 
-        max-width:  550px;
+        width:      73%; /*490px; */
+        max-width:  73%; /*550px; */
+        font-size:  75%;
         text-align: center;
         font-style: italic;        
-        font-size:  85%;
     }
 }
 
@@ -32,17 +32,37 @@
     text-align: right;
     font-style: italic;
 }
-.zen {
+.der_ama {
     text-align: right;
+    font-style: italic;
+    color: yellow;
+}
+.zen {
+    text-align: center;
     vertical-align: middle;
     font-style: italic;
 }
+.zen_ama {
+    text-align: center;
+    vertical-align: middle;
+    font-style: italic;
+    color: yellow;
+}
+.zen_green {
+    text-align: center;
+    font-style: italic;
+    color: yellow;
+}
+.zen_red {
+    text-align: center;
+    font-style: italic;
+    color: red;
+}
 
 .keven {
-    background-color: #e7c6a6;
- }
-
+    background-color: #383a3e;
+}
 .kodd {
-    background-color: #fff4ea;
+    background-color: #28292b;
 }
 
