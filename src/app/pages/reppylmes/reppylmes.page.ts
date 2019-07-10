@@ -34,6 +34,7 @@ export class ReppylmesPage implements OnInit {
   hayNotas  = undefined;
   nNotas    = 0;
   vista = 'M';  // millon
+  cargando = false;
 
   constructor(private datos: DatosService,
               private funciones: FuncionesService,
@@ -65,8 +66,6 @@ export class ReppylmesPage implements OnInit {
 
     if ( data !== undefined ) {
       this.vista  = data.vista ;
-      //this.tranData();
-      //
     }
   }
 
@@ -90,13 +89,12 @@ export class ReppylmesPage implements OnInit {
   }
 
   cargaClienteMensual() {
-    //
+    this.cargando = true;
     this.datos.postDataSP( {  sp:      '/ws_pylmensual',
                               periodo: this.periodo.toString(),
                               cliente: this.cliente } )
           .subscribe( (data: any) => { this.rows = data.datos;
                                        this.distribuyeData();
-                                       // this.tranData(); 
                                      });
   }
 
@@ -108,11 +106,11 @@ export class ReppylmesPage implements OnInit {
     // tslint:disable-next-line: max-line-length
     // const data = [ 'Mes', 'ADM', 'B2B', 'CDOK', 'CFIJ', 'COST', 'CVAR', 'G.OP', 'GNOP', 'INOP', 'LOG', 'MARG', 'NCV', 'PROM', 'PUB', 'REB', 'SUP', 'VTA' ];
     const data = [ 'Mes', 'G.OP', 'GNOP', 'MARG', 'NCV', 'REB', 'VTA' ];
-    let eje = [];
+    const eje = [];
     eje.push( data );
     for (let index = 0; index < 6; index++) {
-      // eje.push( [ this.funciones.nombreMes( index + 1 ).slice( 0, 5 ), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] );
-      eje.push( [ this.funciones.nombreMes( index + 1 ).slice( 0, 5 ), 0, 0, 0, 0, 0, 0 ] );
+      eje.push( [ this.funciones.nombreMes( index + 1 ).slice( 0, 5 ), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] );
+      // eje.push( [ this.funciones.nombreMes( index + 1 ).slice( 0, 5 ), 0, 0, 0, 0, 0, 0 ] );
     }
     // existen datos? falta preguntar
     this.rows.forEach( element => {
@@ -140,18 +138,16 @@ export class ReppylmesPage implements OnInit {
         if ( element.mes === 4  ) { this.filas[index].abr += element.monto; if ( pos > 0) { eje[ element.mes ][ pos ] += element.monto; } }
         if ( element.mes === 5  ) { this.filas[index].may += element.monto; if ( pos > 0) { eje[ element.mes ][ pos ] += element.monto; } }
         if ( element.mes === 6  ) { this.filas[index].jun += element.monto; if ( pos > 0) { eje[ element.mes ][ pos ] += element.monto; } }
-        /*
         if ( element.mes === 7  ) { this.filas[index].jul += element.monto; if ( pos > 0) { eje[ element.mes ][ pos ] += element.monto; } }
         if ( element.mes === 8  ) { this.filas[index].ago += element.monto; if ( pos > 0) { eje[ element.mes ][ pos ] += element.monto; } }
         if ( element.mes === 9  ) { this.filas[index].sep += element.monto; if ( pos > 0) { eje[ element.mes ][ pos ] += element.monto; } }
         if ( element.mes === 10 ) { this.filas[index].oct += element.monto; if ( pos > 0) { eje[ element.mes ][ pos ] += element.monto; } }
         if ( element.mes === 11 ) { this.filas[index].nov += element.monto; if ( pos > 0) { eje[ element.mes ][ pos ] += element.monto; } }
         if ( element.mes === 12 ) { this.filas[index].dic += element.monto; if ( pos > 0) { eje[ element.mes ][ pos ] += element.monto; } }
-        */
       });
     }
-    // console.log(this.filas);
-    // console.log(eje);
+    console.log(this.filas);
+    console.log(eje);
     // crear el grafico de lineas curvas
     const dataline = google.visualization.arrayToDataTable(eje);
     // Instantiate and draw our chart, passing in some options.
@@ -169,7 +165,7 @@ export class ReppylmesPage implements OnInit {
                                 bars: 'vertical',
                                 vAxis: {format: 'decimal'},
                               });
-
+    this.cargando = false;
   }  // funcion
 
 }  // fin

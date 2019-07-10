@@ -52,6 +52,7 @@ export class EerrPage implements OnInit {
   hayNotas  = undefined;
   nNotas    = 0;
   inmerse   = false;
+  cargando  = false;
 
   constructor(private datos: DatosService,
               private funciones: FuncionesService,
@@ -88,6 +89,7 @@ export class EerrPage implements OnInit {
   }
 
   cargaMes() {
+    this.cargando = true;
     return this.datos.postDataSP( { sp:      '/ws_eerr',
                                     empresa: this.empresa,
                                     periodo: this.periodo.toString(),
@@ -165,7 +167,7 @@ export class EerrPage implements OnInit {
                                     mes:     this.mes.toString() } )
       .subscribe( ( data: any ) => {
           // console.log(data);
-          //const rs = data.datos;
+          // const rs = data.datos;
           // this.acumulado = rs;
           data.datos.forEach(element => {
             if ( [1, 2, 2.5 ].includes( element.orden ) ) {
@@ -225,6 +227,7 @@ export class EerrPage implements OnInit {
               this.acumutidesimp.push( element );
             }
           });
+          this.cargando = false;
       });
   }
 

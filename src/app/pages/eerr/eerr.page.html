@@ -43,6 +43,7 @@
 
   <app-item [informacion]="[ 'Detalle',periodo-1,periodo,actualSobreAnterior] " fila=00 concepto="Concepto"> </app-item> 
    <!-- <hr class="linea"> -->
+   <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
 
 </ion-toolbar>
 

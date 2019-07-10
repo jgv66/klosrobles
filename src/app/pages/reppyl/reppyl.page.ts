@@ -36,6 +36,7 @@ export class ReppylPage implements OnInit {
   nNotas    = 0;
   vista     = 'M%';  // millon
   inmerse   = false;
+  cargando  = false;
 
   constructor(private datos: DatosService,
               private funciones: FuncionesService,
@@ -51,6 +52,7 @@ export class ReppylPage implements OnInit {
   }
 
   cargaMarcas() {
+    this.cargando = true;
     return this.datos.postDataSP( { sp:      '/ws_pylmarcas',
                                     periodo: this.periodo.toString(),
                                     mes:     this.mes.toString() } )
@@ -151,7 +153,7 @@ export class ReppylPage implements OnInit {
                               };
             PieVentas1.draw(PieVentas, optionsv );
             // --------------------------------------------------------------
-
+            this.cargando = false;
       });
   }
 
