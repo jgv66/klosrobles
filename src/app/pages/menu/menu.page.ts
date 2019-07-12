@@ -13,7 +13,7 @@ export class MenuPage implements OnInit {
   usuario;
   reportes: Reportes[] = [
     { icono: 'pulse',   redirectTo: '/reppyl',     nombre: 'Profit & Loss Statement Accumulated' },
-    // { icono: 'pie',     redirectTo: '/reppylmes',  nombre: 'Profit & Loss Statement Monthly' },
+    { icono: 'pie',     redirectTo: '/reppylmes',  nombre: 'Profit & Loss Statement Monthly' },
     { icono: 'trophy',  redirectTo: '/eerr',       nombre: 'Estados de Resultado' }
   ];
 

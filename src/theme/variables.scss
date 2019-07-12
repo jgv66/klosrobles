@@ -1,9 +1,13 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
+@font-face{ font-family: "OpenSans"; src: url('../assets/fonts/OpenSans.woff2'); }
+
 /** Ionic CSS Variables **/
 :root {
 
+  --ion-font-family: 'OpenSans';
+  
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;

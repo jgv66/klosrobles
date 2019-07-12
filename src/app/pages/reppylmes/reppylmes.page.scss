@@ -4,7 +4,7 @@ ion-grid {
     font-size: calc(10px + (14 - 10) * ((100vw - 300px) / (1600 - 300)));
 }
 
-ion-grid.header {
+ion-grid.header, ion-grid.footer {
     ion-row {
         ion-col {
             font-weight: bold;
@@ -13,27 +13,6 @@ ion-grid.header {
     }
 }
 
-ion-badge {
-    color: #fff;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    border-radius: 100%;
-}
-
-.header-in {
-    font-size: 90%;
-}
-
-.header {
-    background-color: #e1f5fe;
-    width: auto;
-}
-.footer {
-    background-color: #e1f5fe;
-    width: auto;
-    font-size: 80%;
-}
 .keven {
     background-color: #e1f5fe;
 }
@@ -41,53 +20,36 @@ ion-badge {
     background-color: #e6ffff;
 }
 
+ion-row {
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    overflow: scroll;
+}
+
 .izq {
     text-align: left;
-    font-size: 80%;
+    font-size: 60%;
+    width: 140px;
+    .titulo {
+        font-weight: bold;
+    }
 }
-
-.srojo {
-    color: #f04141 !important;
-    font-weight: bold !important;
-    font-size: 80%;
-}
-.snegro {
-    color: #222428 !important;
-    font-weight: bold !important;
-    font-size: 80%;
-}
-
-.xrojo {
-    color: #f04141 !important;
-}
-.xnegro {
-    color: #222428 !important;
-}
-
 .der {
     text-align: right;
     font-style: italic;
-    font-size: 80%;
+    font-size: 60%;
+    width: 70px;
+    .titulo {
+        font-weight: bold;
+    }
 }
-.dex {
+.dertot {
     text-align: right;
     font-style: italic;
-    // font-weight: bold !important;
-}
-.det {
-    text-align: right;
-    font-style: italic;
-    font-weight: bold !important;
-}
-.der-bold {
-    text-align: right;
-    font-style: italic;
-    // font-weight: bold !important;
-}
-
-.zen {
-    text-align: center;
-    font-style: italic;
+    font-size: 60%;
+    width: 80px;
+    font-weight: bold;
 }
 
 .grafica {
@@ -108,4 +70,9 @@ ion-badge {
         // min-width: 400px;
         // max-width: 100%;
     }
+}
+
+.scroll-on {
+    flex-direction: row;
+    overflow-x: scroll;
 }

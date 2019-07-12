@@ -22,7 +22,7 @@
 
 </ion-header>
 
-<ion-content fullscreen>
+<ion-content padding>
    
   <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
   
@@ -30,69 +30,48 @@
     <div id="line_curve_chart" class="chart"></div>
   </div>
 
-  <!-- hasta 6 meses -->
-  <!-- <ion-grid no-padding fixed class="header" *ngIf=" mes <= 6 ">
-    <ion-row>
-      <ion-col size="2.5"><ion-label>Concepto</ion-label></ion-col>
-      <ion-col class="der" size="1.4" *ngFor="let mes of meses">
-        <ion-label>{{ mes }}</ion-label>
-      </ion-col>
-      <ion-col class="der" size="1.5"><ion-label>Totales</ion-label></ion-col>
+  <div padding class="scroll-on">
+    <ion-row [ngClass]="(1 % 2 == 0) ? 'kodd' : 'keven' ">
+      <div class="izq"><ion-label class="titulo">Concepto</ion-label></div>
+      <div class="der" *ngFor="let mes of meses"><ion-label class="titulo">{{ mes }}</ion-label></div>
+      <div class="der"><ion-label class="titulo">Totales</ion-label></div>
     </ion-row>
-  </ion-grid>
-  <ion-grid no-padding fixed style=" width: inherit;" *ngIf=" ( vista === 'M' || vista === 'F' ) && mes <= 6 " >
-      <ion-row  *ngFor="let fila of filas; let i = index;" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
-        <ion-col             size="2.5"  ><ion-label>{{ fila.concepto }}</ion-label></ion-col>
-        <ion-col class="dex" size="1.4"><ion-label>{{ fila.ene   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col class="dex" size="1.4"><ion-label>{{ fila.feb   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col class="dex" size="1.4"><ion-label>{{ fila.mar   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col class="dex" size="1.4"><ion-label>{{ fila.abr   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col class="dex" size="1.4"><ion-label>{{ fila.may   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col class="dex" size="1.4"><ion-label>{{ fila.jun   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col class="dex" size="1.5"><ion-label>{{ fila.total | number:"1.0-0" }}</ion-label></ion-col>
-      </ion-row>
-  </ion-grid>
-  <ion-grid no-padding fixed class="footer" *ngIf=" ( vista === 'M' || vista === 'F' ) && mes <= 6 ">
-    <ion-row>
-      <ion-col size="2.5"><ion-label>Totales</ion-label></ion-col>
-    </ion-row>
-  </ion-grid> -->
 
-  <!-- hasta 12 meses -->
-  <ion-grid no-padding fixed class="header" *ngIf=" mes > 6 ">
-    <ion-row>
-      <ion-col size="1.65"><ion-label>Concepto</ion-label></ion-col>
-      <ion-col class="der" size="0.85" *ngFor="let mes of meses">
-        <ion-label>{{ mes.slice(0,5) }}</ion-label>
-      </ion-col>
-      <ion-col class="der" size="0.85"><ion-label>Totales</ion-label></ion-col>
+    <ion-row  *ngFor="let fila of filas; let i = index;" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+      <div class="izq" ><ion-label>{{ fila.concepto }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  1 "><ion-label>{{ fila.ene | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  2 "><ion-label>{{ fila.feb | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  3 "><ion-label>{{ fila.mar | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  4 "><ion-label>{{ fila.abr | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  5 "><ion-label>{{ fila.may | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  6 "><ion-label>{{ fila.jun | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  7 "><ion-label>{{ fila.jul | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  8 "><ion-label>{{ fila.ago | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  9 "><ion-label>{{ fila.sep | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >= 10 "><ion-label>{{ fila.oct | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >= 11 "><ion-label>{{ fila.nov | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >= 12 "><ion-label>{{ fila.dic | number:"1.0-0" }}</ion-label></div>
+      <div class="dertot" ><ion-label>{{ fila.total | number:"1.0-0" }}</ion-label></div>
     </ion-row>
-  </ion-grid>
+
+    <ion-row  *ngFor="let total of totales; let i = index;" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+      <div class="izq" ><ion-label>{{ total.concepto }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  1 "><ion-label class="titulo">{{ total.ene | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  2 "><ion-label class="titulo">{{ total.feb | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  3 "><ion-label class="titulo">{{ total.mar | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  4 "><ion-label class="titulo">{{ total.abr | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  5 "><ion-label class="titulo">{{ total.may | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  6 "><ion-label class="titulo">{{ total.jun | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  7 "><ion-label class="titulo">{{ total.jul | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  8 "><ion-label class="titulo">{{ total.ago | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >=  9 "><ion-label class="titulo">{{ total.sep | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >= 10 "><ion-label class="titulo">{{ total.oct | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >= 11 "><ion-label class="titulo">{{ total.nov | number:"1.0-0" }}</ion-label></div>
+      <div class="der" *ngIf=" mes >= 12 "><ion-label class="titulo">{{ total.dic | number:"1.0-0" }}</ion-label></div>
+      <div class="dertot" ><ion-label>{{ total.total | number:"1.0-0" }}</ion-label></div>
+    </ion-row>
   
-  <ion-grid no-padding fixed style=" width: inherit; font-size: 80%;" *ngIf=" ( vista === 'M' || vista === 'F' ) && mes > 6 " >
-      <ion-row  *ngFor="let fila of filas; let i = index;" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
-        <ion-col size="0.85" class="izq" ><ion-label>{{ fila.concepto }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 1 "  class="der" size="0.85"><ion-label>{{ fila.ene   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 2 "  class="der" size="0.85"><ion-label>{{ fila.feb   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 3 "  class="der" size="0.85"><ion-label>{{ fila.mar   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 4 "  class="der" size="0.85"><ion-label>{{ fila.abr   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 5 "  class="der" size="0.85"><ion-label>{{ fila.may   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 6 "  class="der" size="0.85"><ion-label>{{ fila.jun   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 7 "  class="der" size="0.85"><ion-label>{{ fila.jul   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 8 "  class="der" size="0.85"><ion-label>{{ fila.ago   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 9 "  class="der" size="0.85"><ion-label>{{ fila.sep   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 10 " class="der" size="0.85"><ion-label>{{ fila.oct   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 11 " class="der" size="0.85"><ion-label>{{ fila.nov   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col *ngIf=" mes === 12 " class="der" size="0.85"><ion-label>{{ fila.dic   | number:"1.0-0" }}</ion-label></ion-col>
-        <ion-col                      class="der" size="0.85"><ion-label>{{ fila.total | number:"1.0-0" }}</ion-label></ion-col>
-      </ion-row>
-  </ion-grid>
-
-  <ion-grid no-padding fixed class="footer" *ngIf=" ( vista === 'M' || vista === 'F' ) && mes > 6 ">
-    <ion-row>
-      <ion-col size="0.85"><ion-label>Totales</ion-label></ion-col>
-    </ion-row>
-  </ion-grid>
-
+  </div>
+  
 </ion-content>
 
