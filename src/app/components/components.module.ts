@@ -4,13 +4,14 @@ import { IonicModule } from '@ionic/angular';
 
 import { HeaderComponent } from './header/header.component';
 import { PeriodosComponent } from './periodos/periodos.component';
-import { DoblealtoComponent } from './doblealto/doblealto.component';
-import { DobletextComponent } from './dobletext/dobletext.component';
 import { ItemComponent } from './item/item.component';
+import { ItemmgComponent } from './itemmg/itemmg.component';
+import { ItempylComponent } from './itempyl/itempyl.component';
+import { ItempptoComponent } from './itemppto/itemppto.component';
 
 @NgModule({
-  declarations: [ HeaderComponent, PeriodosComponent, DoblealtoComponent, DobletextComponent, ItemComponent ],
-  exports:      [ HeaderComponent, PeriodosComponent, DoblealtoComponent, DobletextComponent, ItemComponent ],
+  declarations: [ HeaderComponent, PeriodosComponent, ItemComponent, ItemmgComponent, ItempylComponent, ItempptoComponent ],
+  exports:      [ HeaderComponent, PeriodosComponent, ItemComponent, ItemmgComponent, ItempylComponent, ItempptoComponent ],
   imports:      [ CommonModule, IonicModule ]
 })
 export class ComponentsModule { }

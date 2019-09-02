@@ -16,6 +16,7 @@ export class IndicadorPage implements OnInit {
   mes       = this.hoy.getMonth() + 1;
   periodo   = this.hoy.getFullYear();
   series    = [];
+  cargando  = false;
 
   constructor(  private params: ActivatedRoute,
                 private funciones: FuncionesService,
@@ -25,12 +26,12 @@ export class IndicadorPage implements OnInit {
   }
 
   ngOnInit() {
-    this.datos.showLoading();
+    this.cargando = true;
     this.datos.valorPeriodo( this.periodo.toString(), this.ind )
       .subscribe( ( data: any ) => {
         this.nombre = data.nombre;
         this.series = data.serie;
-        this.datos.loading.dismiss();
+        this.cargando = false;
     });
   }
 

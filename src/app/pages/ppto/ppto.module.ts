@@ -5,31 +5,31 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ReppylmesPage } from './reppylmes.page';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
+import { PptoPage } from './ppto.page';
 import { ComponentsModule } from '../../components/components.module';
-import { PeriodosComponent } from '../../components/periodos/periodos.component';
 import { NotasPage } from '../notas/notas.page';
 import { NotasPageModule } from '../notas/notas.module';
-import { VistasPage } from '../../components/vistas/vistas.page';
-import { VistasPageModule } from '../../components/vistas/vistas.module';
+import { PeriodosComponent } from '../../components/periodos/periodos.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: ReppylmesPage
+    component: PptoPage
   }
 ];
 
 @NgModule({
-  entryComponents: [ PeriodosComponent, NotasPage, VistasPage ],
+  entryComponents: [ PeriodosComponent, NotasPage ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
     ComponentsModule,
-    NotasPageModule,
-    VistasPageModule  ],
-  declarations: [ReppylmesPage]
+    NgxChartsModule,
+    NotasPageModule ],
+  declarations: [PptoPage]
 })
-export class ReppylmesPageModule {}
+export class PptoPageModule {}

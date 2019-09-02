@@ -9,14 +9,24 @@
 
 <ion-content>
 
-  <ion-list *ngIf=" nombre ">
-    <ion-item lines="none" *ngFor="let serie of series">
-      <ion-label>
-        <ion-text>
-          <h3>{{ serie.fecha | date }} -> {{ serie.valor | number:"1.2-2" }}</h3>
-        </ion-text>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
+
+  <table class="pure-table"  *ngIf=" nombre ">
+      <thead>
+          <tr>
+          <th>#</th>
+          <th>Período</th>
+          <th>Valor</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let serie of series; let i = index;">
+          <td>{{ i }}</td>
+          <td>{{ serie.fecha | date }}</td>
+          <td>{{ serie.valor | number:"1.2-2" }}</td>
+          </tr>
+      </tbody>
+  </table>
 
 </ion-content>
+

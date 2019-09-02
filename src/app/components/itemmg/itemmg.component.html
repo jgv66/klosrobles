@@ -1,0 +1,123 @@
+
+<div class="cajon" [ngClass]="( fila % 2 == 0) ? 'kodd' : 'keven' ">
+
+  <!-- headers -->
+  <div class="caja-d" *ngIf=" fila === 0 ">
+      <ion-grid no-padding>
+        <ion-row>
+          <ion-col class="der" size="3.0">           {{ informacion[0] }}            </ion-col>
+          <ion-col class="izq" size="2.0"><ion-label>{{ informacion[1] }}</ion-label></ion-col>
+          <ion-col class="izq" size="3.5"><ion-label>{{ informacion[2] }}</ion-label></ion-col>
+          <ion-col class="der" size="1.5"><ion-label>{{ informacion[3] }}</ion-label></ion-col>
+          <ion-col class="der" size="1.5"><ion-label>{{ informacion[4] }}</ion-label></ion-col>
+          <ion-col class="der" size="1.5"><ion-label>{{ informacion[5] }}</ion-label></ion-col>
+          <ion-col class="der" size="0.7"><ion-label>{{ informacion[6] }}</ion-label></ion-col>
+        </ion-row>
+      </ion-grid>
+  </div>
+  <div class="caja-d" *ngIf=" fila === -1 ">
+      <ion-grid no-padding>
+        <ion-row>
+          <ion-col class="izq" size="2.0">           {{ informacion[0] }}            </ion-col>
+          <ion-col class="izq" size="4.0"><ion-label>{{ informacion[1] }}</ion-label></ion-col>
+          <ion-col class="der" size="1.5"><ion-label>{{ informacion[2] }}</ion-label></ion-col>
+          <ion-col class="der" size="1.5"><ion-label>{{ informacion[3] }}</ion-label></ion-col>
+          <ion-col class="der" size="1.5"><ion-label>{{ informacion[4] }}</ion-label></ion-col>
+          <ion-col class="der" size="1.5"><ion-label>{{ informacion[5] }}</ion-label></ion-col>
+          <ion-col class="der" size="0.7"><ion-label>{{ informacion[6] }}</ion-label></ion-col>
+          <ion-col class="der" size="0.7"><ion-label color='warning'>{{ informacion[7] }}</ion-label></ion-col>
+        </ion-row>
+      </ion-grid>
+  </div>
+
+  <div class="caja-d" *ngIf=" fila === 1 ">
+    <ion-grid no-padding>
+      <ion-row *ngFor="let dato of informacion">
+        <!-- dato de superfamilia -->
+        
+        <ion-col size="3.0" >
+          <ion-button (click)="OnOff( dato )" 
+                      size="small"
+                      fill="clear" 
+                      color="light">{{ dato.nombre_superfam }} ( {{ (dato.marca === '001') ? 'TH' : 'SG' }} )
+          </ion-button>
+        </ion-col>
+        <ion-col size="2.0" class="izq"></ion-col>
+        <ion-col size="3.5" class="izq"></ion-col>
+        <ion-col size="1.5" class="der"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="0.7" class="der"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+
+        <!-- datos de clientes -->
+        <ion-grid no-padding *ngIf=" dato.show ">
+          <ion-row *ngFor="let dato of dato.clientes " >
+            <ion-col size="3.0" class="der"></ion-col>
+            <ion-col size="2.0" class="izq">
+                <ion-button (click)="OnOff( dato )"
+                            size="small" 
+                            fill="clear" 
+                            color="light">{{ dato.sigla }}</ion-button>
+            </ion-col>
+            <ion-col size="3.5" class="izq"></ion-col>
+            <ion-col size="1.5" class="der"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col size="1.5" class="der"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col size="1.5" class="der"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col size="0.7" class="der"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+
+            <!-- datos de productos -->
+            <ion-grid no-padding *ngIf=" dato.show ">
+              <ion-row *ngFor="let dato of dato.productos">
+                <ion-col size="3.0" class="der"></ion-col>
+                <ion-col size="1.0" class="izq"><ion-label></ion-label></ion-col>
+                <ion-col size="4.5" class="izq"><ion-label color="secondary">{{ dato.descripcion                    }}</ion-label></ion-col>
+                <ion-col size="1.5" class="der"><ion-label color="secondary">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="1.5" class="der"><ion-label color="secondary">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="1.5" class="der"><ion-label color="secondary">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="0.7" class="der"><ion-label color="secondary">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+              </ion-row>
+            </ion-grid>
+
+          </ion-row>
+
+        </ion-grid>
+      
+      </ion-row>
+      <ion-row *ngFor="let dato of informacionTotal">
+        <ion-col size="3.0" class="izq"><ion-label color="warning">Totales</ion-label></ion-col>
+        <ion-col size="2.0" class="izq"><ion-label></ion-label></ion-col>
+        <ion-col size="3.5" class="der"><ion-label></ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label color="warning">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label color="warning">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label color="warning">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="0.7" class="der"><ion-label color="warning">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+      </ion-row>
+  
+    </ion-grid>
+  </div>
+
+  <div class="caja-d" *ngIf=" fila === 2 ">
+    <ion-grid no-padding>
+      <ion-row *ngFor="let dato of informacion">
+        <ion-col size="2.0" class="izq"><ion-label>{{ dato.producto                       }}</ion-label></ion-col>
+        <ion-col size="4.0" class="izq"><ion-label>{{ dato.descripcion                    }}</ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label>{{ dato.cantidad      | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="0.7" class="der"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+        <!-- <ion-col size="0.7" class="der"><ion-label color="warning">{{ ( (dato.costo/informacionTotal[0].vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col> -->
+      </ion-row>
+      <ion-row *ngFor="let dato of informacionTotal">
+        <ion-col size="2.0" class="izq"><ion-label color="warning">Totales</ion-label></ion-col>
+        <ion-col size="4.0" class="izq"><ion-label></ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label></ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label color="warning">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label color="warning">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="1.5" class="der"><ion-label color="warning">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+        <ion-col size="0.7" class="der"><ion-label color="warning">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  
+</div>

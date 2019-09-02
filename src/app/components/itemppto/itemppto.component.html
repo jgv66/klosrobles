@@ -1,0 +1,316 @@
+
+<div class="cajon" [ngClass]="( fila % 2 == 0) ? 'kodd' : 'keven' ">
+
+    <!-- headers -->
+    <div class="caja-d" *ngIf=" fila == 0 ">
+        <ion-grid no-padding>
+            <ion-row>
+                <ion-col class="der_blanco" size="2.0"><ion-label>{{ concepto }}      </ion-label></ion-col>
+                <ion-col class="der_blanco" size="2.0"><ion-label>{{ periodo - 1 }}</ion-label></ion-col>
+                <ion-col class="der_blanco" size="2.0"><ion-label>{{ periodo }}</ion-label></ion-col>
+                <ion-col class="der_blanco" size="2.0"><ion-label>Ppto.{{ periodo }}</ion-label></ion-col>
+                <ion-col class="der_blanco" size="2.0"><ion-label>{{ periodo }}/{{ periodo - 1 }}</ion-label></ion-col>
+                <ion-col class="der_blanco" size="2.0"><ion-label>{{ periodo }}/Ppto</ion-label></ion-col>
+                <ion-col class="der_blanco" size="2.0"><ion-label>Ppto/{{ periodo-1 }}</ion-label></ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+
+    <div class="caja-d" *ngIf=" fila == 1 ">
+        <ion-grid no-padding style=" background-color: #222428">
+            <ion-row  *ngFor="let dato of informacion" (click)="OnOff( dato )" >
+                <!-- dato de "Detalle" -->
+                <ion-col class="der" size="2.0">{{ dato.sigla }}</ion-col>
+                <!-- el mes correspondiente -->
+                <ion-col *ngIf=" mes === 1 " size="2.0" class="der"><ion-label>{{ dato.enepas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 1 " size="2.0" class="der"><ion-label>{{ dato.eneact  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 1 " size="2.0" class="der"><ion-label>{{ dato.eneppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 1 " size="0.6"><ion-icon [class]=" (100*(dato.eneact/dato.enepas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.eneact/dato.enepas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 1 " size="1.4" class="der"><ion-label>{{ 100*(dato.eneact/dato.enepas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 1 " size="0.6"><ion-icon [class]=" (100*(dato.eneact/dato.eneppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.eneact/dato.eneppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 1 " size="1.4" class="der"><ion-label>{{ 100*(dato.eneact/dato.eneppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 1 " size="0.6"><ion-icon [class]=" (100*(dato.eneppto/dato.enepas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.eneppto/dato.enepas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 1 " size="1.3" class="der"><ion-label>{{ 100*(dato.eneppto/dato.enepas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 2 " size="2.0" class="der"><ion-label>{{ dato.febpas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 2 " size="2.0" class="der"><ion-label>{{ dato.febact  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 2 " size="2.0" class="der"><ion-label>{{ dato.febppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 2 " size="0.6"><ion-icon [class]=" (100*(dato.febact/dato.febpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.febact/dato.febpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 2 " size="1.4" class="der"><ion-label>{{ 100*(dato.febact/dato.febpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 2 " size="0.6"><ion-icon [class]=" (100*(dato.febact/dato.febppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.febact/dato.febppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 2 " size="1.4" class="der"><ion-label>{{ 100*(dato.febact/dato.febppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 2 " size="0.6"><ion-icon [class]=" (100*(dato.febppto/dato.febpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.febppto/dato.febpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 2 " size="1.3" class="der"><ion-label>{{ 100*(dato.febppto/dato.febpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 3 " size="2.0" class="der"><ion-label>{{ dato.marpas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 3 " size="2.0" class="der"><ion-label>{{ dato.maract  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 3 " size="2.0" class="der"><ion-label>{{ dato.marppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 3 " size="0.6"><ion-icon [class]=" (100*(dato.maract/dato.marpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.maract/dato.marpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 3 " size="1.4" class="der"><ion-label>{{ 100*(dato.maract/dato.marpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 3 " size="0.6"><ion-icon [class]=" (100*(dato.maract/dato.marppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.maract/dato.marppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 3 " size="1.4" class="der"><ion-label>{{ 100*(dato.maract/dato.marppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 3 " size="0.6"><ion-icon [class]=" (100*(dato.marppto/dato.marpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.marppto/dato.marpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 3 " size="1.3" class="der"><ion-label>{{ 100*(dato.marppto/dato.marpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 4 " size="2.0" class="der"><ion-label>{{ dato.abrpas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 4 " size="2.0" class="der"><ion-label>{{ dato.abract  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 4 " size="2.0" class="der"><ion-label>{{ dato.abrppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 4 " size="0.6"><ion-icon [class]=" (100*(dato.abract/dato.abrpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.abract/dato.abrpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 4 " size="1.4" class="der"><ion-label>{{ 100*(dato.abract/dato.abrpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 4 " size="0.6"><ion-icon [class]=" (100*(dato.abract/dato.abrppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.abract/dato.abrppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 4 " size="1.4" class="der"><ion-label>{{ 100*(dato.abract/dato.abrppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 4 " size="0.6"><ion-icon [class]=" (100*(dato.abrppto/dato.abrpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.abrppto/dato.abrpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 4 " size="1.3" class="der"><ion-label>{{ 100*(dato.abrppto/dato.abrpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 5 " size="2.0" class="der"><ion-label>{{ dato.maypas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 5 " size="2.0" class="der"><ion-label>{{ dato.mayact  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 5 " size="2.0" class="der"><ion-label>{{ dato.mayppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 5 " size="0.6"><ion-icon [class]=" (100*(dato.mayact/dato.maypas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.mayact/dato.maypas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 5 " size="1.4" class="der"><ion-label>{{ 100*(dato.mayact/dato.maypas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 5 " size="0.6"><ion-icon [class]=" (100*(dato.mayact/dato.mayppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.mayact/dato.mayppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 5 " size="1.4" class="der"><ion-label>{{ 100*(dato.mayact/dato.mayppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 5 " size="0.6"><ion-icon [class]=" (100*(dato.mayppto/dato.maypas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.mayppto/dato.maypas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 5 " size="1.3" class="der"><ion-label>{{ 100*(dato.mayppto/dato.maypas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 6 " size="2.0" class="der"><ion-label>{{ dato.junpas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 6 " size="2.0" class="der"><ion-label>{{ dato.junact  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 6 " size="2.0" class="der"><ion-label>{{ dato.junppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 6 " size="0.6"><ion-icon [class]=" (100*(dato.junact/dato.junpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.junact/dato.junpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 6 " size="1.4" class="der"><ion-label>{{ 100*(dato.junact/dato.junpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 6 " size="0.6"><ion-icon [class]=" (100*(dato.junact/dato.junppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.junact/dato.junppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 6 " size="1.4" class="der"><ion-label>{{ 100*(dato.junact/dato.junppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 6 " size="0.6"><ion-icon [class]=" (100*(dato.junppto/dato.junpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.junppto/dato.junpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 6 " size="1.3" class="der"><ion-label>{{ 100*(dato.junppto/dato.junpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 7 " size="2.0" class="der"><ion-label>{{ dato.julpas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 7 " size="2.0" class="der"><ion-label>{{ dato.julact  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 7 " size="2.0" class="der"><ion-label>{{ dato.julppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 7 " size="0.6"><ion-icon [class]=" (100*(dato.julact/dato.julpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.julact/dato.julpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 7 " size="1.4" class="der"><ion-label>{{ 100*(dato.julact/dato.julpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 7 " size="0.6"><ion-icon [class]=" (100*(dato.julact/dato.julppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.julact/dato.julppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 7 " size="1.4" class="der"><ion-label>{{ 100*(dato.julact/dato.julppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 7 " size="0.6"><ion-icon [class]=" (100*(dato.julppto/dato.julpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.julppto/dato.julpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 7 " size="1.3" class="der"><ion-label>{{ 100*(dato.julppto/dato.julpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 8 " size="2.0" class="der"><ion-label>{{ dato.agopas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 8 " size="2.0" class="der"><ion-label>{{ dato.agoact  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 8 " size="2.0" class="der"><ion-label>{{ dato.agoppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 8 " size="0.6"><ion-icon [class]=" (100*(dato.agoact/dato.agopas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.agoact/dato.agopas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 8 " size="1.4" class="der"><ion-label>{{ 100*(dato.agoact/dato.agopas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 8 " size="0.6"><ion-icon [class]=" (100*(dato.agoact/dato.agoppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.agoact/dato.agoppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 8 " size="1.4" class="der"><ion-label>{{ 100*(dato.agoact/dato.agoppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 8 " size="0.6"><ion-icon [class]=" (100*(dato.agoppto/dato.agopas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.agoppto/dato.agopas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 8 " size="1.3" class="der"><ion-label>{{ 100*(dato.agoppto/dato.agopas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 9 " size="2.0" class="der"><ion-label>{{ dato.seppas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 9 " size="2.0" class="der"><ion-label>{{ dato.sepact  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 9 " size="2.0" class="der"><ion-label>{{ dato.sepppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 9 " size="0.6"><ion-icon [class]=" (100*(dato.sepact/dato.seppas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.sepact/dato.seppas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 9 " size="1.4" class="der"><ion-label>{{ 100*(dato.sepact/dato.seppas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 9 " size="0.6"><ion-icon [class]=" (100*(dato.sepact/dato.sepppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.sepact/dato.sepppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 9 " size="1.4" class="der"><ion-label>{{ 100*(dato.sepact/dato.sepppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 9 " size="0.6"><ion-icon [class]=" (100*(dato.sepppto/dato.seppas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.sepppto/dato.seppas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 9 " size="1.3" class="der"><ion-label>{{ 100*(dato.sepppto/dato.seppas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 10 " size="2.0" class="der"><ion-label>{{ dato.octpas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 10 " size="2.0" class="der"><ion-label>{{ dato.octact  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 10 " size="2.0" class="der"><ion-label>{{ dato.octppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 10 " size="0.6"><ion-icon [class]=" (100*(dato.octact/dato.octpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.octact/dato.octpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 10 " size="1.4" class="der"><ion-label>{{ 100*(dato.octact/dato.octpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 10 " size="0.6"><ion-icon [class]=" (100*(dato.octact/dato.octppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.octact/dato.octppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 10 " size="1.4" class="der"><ion-label>{{ 100*(dato.octact/dato.octppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 10 " size="0.6"><ion-icon [class]=" (100*(dato.octppto/dato.octpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.octppto/dato.octpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 10 " size="1.3" class="der"><ion-label>{{ 100*(dato.octppto/dato.octpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 11 " size="2.0" class="der"><ion-label>{{ dato.novpas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 11 " size="2.0" class="der"><ion-label>{{ dato.novact  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 11 " size="2.0" class="der"><ion-label>{{ dato.novppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 11 " size="0.6"><ion-icon [class]=" (100*(dato.novact/dato.novpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.novact/dato.novpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 11 " size="1.4" class="der"><ion-label>{{ 100*(dato.novact/dato.novpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 11 " size="0.6"><ion-icon [class]=" (100*(dato.novact/dato.novppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.novact/dato.novppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 11 " size="1.4" class="der"><ion-label>{{ 100*(dato.novact/dato.novppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 11 " size="0.6"><ion-icon [class]=" (100*(dato.novppto/dato.novpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.novppto/dato.novpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 11 " size="1.3" class="der"><ion-label>{{ 100*(dato.novppto/dato.novpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <ion-col *ngIf=" mes === 12 " size="2.0" class="der"><ion-label>{{ dato.dicpas  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 12 " size="2.0" class="der"><ion-label>{{ dato.dicact  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 12 " size="2.0" class="der"><ion-label>{{ dato.dicppto | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 12 " size="0.6"><ion-icon [class]=" (100*(dato.dicact/dato.dicpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.dicact/dato.dicpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 12 " size="1.4" class="der"><ion-label>{{ 100*(dato.dicact/dato.dicpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 12 " size="0.6"><ion-icon [class]=" (100*(dato.dicact/dato.dicppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.dicact/dato.dicppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 12 " size="1.4" class="der"><ion-label>{{ 100*(dato.dicact/dato.dicppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col *ngIf=" mes === 12 " size="0.6"><ion-icon [class]=" (100*(dato.dicppto/dato.dicpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.dicppto/dato.dicpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col *ngIf=" mes === 12 " size="1.3" class="der"><ion-label>{{ 100*(dato.dicppto/dato.dicpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                <!-- fila de marcas -->
+                <ion-grid no-padding *ngIf=" dato.show " class="inner_grid">
+                    <ion-row  *ngFor="let marca of dato.marcas" >
+
+                        <ion-col size="2.0" class="der"><ion-label class="titulo">{{ marca.nombre_marca }}</ion-label></ion-col>
+                        <!-- el mes correspondiente -->
+                        <ion-col *ngIf=" mes === 1 " size="2.0" class="der"><ion-label>{{ marca.enepas  | number:"1.0-0" }}<br>{{ (100*(marca.enepas/dato.enepas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 1 " size="2.0" class="der"><ion-label>{{ marca.eneact  | number:"1.0-0" }}<br>{{ (100*(marca.eneact/dato.eneact))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 1 " size="2.0" class="der"><ion-label>{{ marca.eneppto | number:"1.0-0" }}<br>{{ (100*(marca.eneppto/dato.eneppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 1 " size="0.6"><ion-icon [class]=" (100*(marca.eneact/marca.enepas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.eneact/marca.enepas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 1 " size="1.4" class="der"><ion-label>{{ 100*(marca.eneact/marca.enepas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 1 " size="0.6"><ion-icon [class]=" (100*(marca.eneact/marca.eneppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.eneact/marca.eneppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 1 " size="1.4" class="der"><ion-label>{{ 100*(marca.eneact/marca.eneppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 1 " size="0.6"><ion-icon [class]=" (100*(marca.eneppto/marca.enepas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.eneppto/marca.enepas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 1 " size="1.3" class="der"><ion-label>{{ 100*(marca.eneppto/marca.enepas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+        
+                        <ion-col *ngIf=" mes === 2 " size="2.0" class="der"><ion-label>{{ marca.febpas  | number:"1.0-0" }}<br>{{ (100*(marca.febpas/dato.febpas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 2 " size="2.0" class="der"><ion-label>{{ marca.febact  | number:"1.0-0" }}<br>{{ (100*(marca.febact/dato.febact))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 2 " size="2.0" class="der"><ion-label>{{ marca.febppto | number:"1.0-0" }}<br>{{ (100*(marca.febppto/dato.febppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 2 " size="0.6"><ion-icon [class]=" (100*(marca.febact/marca.febpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.febact/marca.febpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 2 " size="1.4" class="der"><ion-label>{{ 100*(marca.febact/marca.febpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 2 " size="0.6"><ion-icon [class]=" (100*(marca.febact/marca.febppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.febact/marca.febppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 2 " size="1.4" class="der"><ion-label>{{ 100*(marca.febact/marca.febppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 2 " size="0.6"><ion-icon [class]=" (100*(marca.febppto/marca.febpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.febppto/marca.febpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 2 " size="1.3" class="der"><ion-label>{{ 100*(marca.febppto/marca.febpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                        <ion-col *ngIf=" mes === 3 " size="2.0" class="der"><ion-label>{{ marca.marpas  | number:"1.0-0" }}<br>{{ (100*(marca.marpas/dato.marpas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 3 " size="2.0" class="der"><ion-label>{{ marca.maract  | number:"1.0-0" }}<br>{{ (100*(marca.maract/dato.maract))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 3 " size="2.0" class="der"><ion-label>{{ marca.marppto | number:"1.0-0" }}<br>{{ (100*(marca.marppto/dato.marppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 3 " size="0.6"><ion-icon [class]=" (100*(marca.maract/marca.marpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.maract/marca.marpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 3 " size="1.4" class="der"><ion-label>{{ 100*(marca.maract/marca.marpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 3 " size="0.6"><ion-icon [class]=" (100*(marca.maract/marca.marppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.maract/marca.marppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 3 " size="1.4" class="der"><ion-label>{{ 100*(marca.maract/marca.marppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 3 " size="0.6"><ion-icon [class]=" (100*(marca.marppto/marca.marpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.marppto/marca.marpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 3 " size="1.3" class="der"><ion-label>{{ 100*(marca.marppto/marca.marpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+        
+                        <ion-col *ngIf=" mes === 4 " size="2.0" class="der"><ion-label>{{ marca.abrpas  | number:"1.0-0" }}<br>{{ (100*(marca.abrpas/dato.abrpas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 4 " size="2.0" class="der"><ion-label>{{ marca.abract  | number:"1.0-0" }}<br>{{ (100*(marca.abract/dato.abract))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 4 " size="2.0" class="der"><ion-label>{{ marca.abrppto | number:"1.0-0" }}<br>{{ (100*(marca.abrppto/dato.abrppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 4 " size="0.6"><ion-icon [class]=" (100*(marca.abract/marca.abrpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.abract/marca.abrpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 4 " size="1.4" class="der"><ion-label>{{ 100*(marca.abract/marca.abrpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 4 " size="0.6"><ion-icon [class]=" (100*(marca.abract/marca.abrppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.abract/marca.abrppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 4 " size="1.4" class="der"><ion-label>{{ 100*(marca.abract/marca.abrppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 4 " size="0.6"><ion-icon [class]=" (100*(marca.abrppto/marca.abrpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.abrppto/marca.abrpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 4 " size="1.3" class="der"><ion-label>{{ 100*(marca.abrppto/marca.abrpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                
+                        <ion-col *ngIf=" mes === 5 " size="2.0" class="der"><ion-label>{{ marca.maypas  | number:"1.0-0" }}<br>{{ (100*(marca.maypas/dato.maypas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 5 " size="2.0" class="der"><ion-label>{{ marca.mayact  | number:"1.0-0" }}<br>{{ (100*(marca.mayact/dato.mayact))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 5 " size="2.0" class="der"><ion-label>{{ marca.mayppto | number:"1.0-0" }}<br>{{ (100*(marca.mayppto/dato.mayppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 5 " size="0.6"><ion-icon [class]=" (100*(marca.mayact/marca.maypas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.mayact/marca.maypas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 5 " size="1.4" class="der"><ion-label>{{ 100*(marca.mayact/marca.maypas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 5 " size="0.6"><ion-icon [class]=" (100*(marca.mayact/marca.mayppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.mayact/marca.mayppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 5 " size="1.4" class="der"><ion-label>{{ 100*(marca.mayact/marca.mayppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 5 " size="0.6"><ion-icon [class]=" (100*(marca.mayppto/marca.maypas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.mayppto/marca.maypas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 5 " size="1.3" class="der"><ion-label>{{ 100*(marca.mayppto/marca.maypas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+        
+                        <ion-col *ngIf=" mes === 6 " size="2.0" class="der"><ion-label>{{ marca.junpas  | number:"1.0-0" }}<br>{{ (100*(marca.junpas/dato.junpas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 6 " size="2.0" class="der"><ion-label>{{ marca.junact  | number:"1.0-0" }}<br>{{ (100*(marca.junact/dato.junact))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 6 " size="2.0" class="der"><ion-label>{{ marca.junppto | number:"1.0-0" }}<br>{{ (100*(marca.junppto/dato.junppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 6 " size="0.6"><ion-icon [class]=" (100*(marca.junact/marca.junpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.junact/marca.junpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 6 " size="1.4" class="der"><ion-label>{{ 100*(marca.junact/marca.junpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 6 " size="0.6"><ion-icon [class]=" (100*(marca.junact/marca.junppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.junact/marca.junppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 6 " size="1.4" class="der"><ion-label>{{ 100*(marca.junact/marca.junppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 6 " size="0.6"><ion-icon [class]=" (100*(marca.junppto/marca.junpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.junppto/marca.junpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 6 " size="1.3" class="der"><ion-label>{{ 100*(marca.junppto/marca.junpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                        <ion-col *ngIf=" mes === 7 " size="2.0" class="der"><ion-label>{{ marca.julpas  | number:"1.0-0" }}<br>{{ (100*(marca.julpas/dato.julpas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 7 " size="2.0" class="der"><ion-label>{{ marca.julact  | number:"1.0-0" }}<br>{{ (100*(marca.julact/dato.julact))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 7 " size="2.0" class="der"><ion-label>{{ marca.julppto | number:"1.0-0" }}<br>{{ (100*(marca.julppto/dato.julppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 7 " size="0.6"><ion-icon [class]=" (100*(marca.julact/marca.julpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.julact/marca.julpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 7 " size="1.4" class="der"><ion-label>{{ 100*(marca.julact/marca.julpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 7 " size="0.6"><ion-icon [class]=" (100*(marca.julact/marca.julppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.julact/marca.julppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 7 " size="1.4" class="der"><ion-label>{{ 100*(marca.julact/marca.julppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 7 " size="0.6"><ion-icon [class]=" (100*(marca.julppto/marca.julpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.julppto/marca.julpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 7 " size="1.3" class="der"><ion-label>{{ 100*(marca.julppto/marca.julpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                        <ion-col *ngIf=" mes === 8 " size="2.0" class="der"><ion-label>{{ marca.agopas  | number:"1.0-0" }}<br>{{ (100*(marca.agopas/dato.agopas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 8 " size="2.0" class="der"><ion-label>{{ marca.agoact  | number:"1.0-0" }}<br>{{ (100*(marca.agoact/dato.agoact))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 8 " size="2.0" class="der"><ion-label>{{ marca.agoppto | number:"1.0-0" }}<br>{{ (100*(marca.agoppto/dato.agoppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 8 " size="0.6"><ion-icon [class]=" (100*(marca.agoact/marca.agopas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.agoact/marca.agopas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 8 " size="1.4" class="der"><ion-label>{{ 100*(marca.agoact/marca.agopas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 8 " size="0.6"><ion-icon [class]=" (100*(marca.agoact/marca.agoppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.agoact/marca.agoppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 8 " size="1.4" class="der"><ion-label>{{ 100*(marca.agoact/marca.agoppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 8 " size="0.6"><ion-icon [class]=" (100*(marca.agoppto/marca.agopas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.agoppto/marca.agopas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 8 " size="1.3" class="der"><ion-label>{{ 100*(marca.agoppto/marca.agopas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                        <ion-col *ngIf=" mes === 9 " size="2.0" class="der"><ion-label>{{ marca.seppas  | number:"1.0-0" }}<br>{{ (100*(marca.seppas/dato.seppas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 9 " size="2.0" class="der"><ion-label>{{ marca.sepact  | number:"1.0-0" }}<br>{{ (100*(marca.sepact/dato.sepact))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 9 " size="2.0" class="der"><ion-label>{{ marca.sepppto | number:"1.0-0" }}<br>{{ (100*(marca.sepppto/dato.sepppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 9 " size="0.6"><ion-icon [class]=" (100*(marca.sepact/marca.seppas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.sepact/marca.seppas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 9 " size="1.4" class="der"><ion-label>{{ 100*(marca.sepact/marca.seppas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 9 " size="0.6"><ion-icon [class]=" (100*(marca.sepact/marca.sepppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.sepact/marca.sepppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 9 " size="1.4" class="der"><ion-label>{{ 100*(marca.sepact/marca.sepppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 9 " size="0.6"><ion-icon [class]=" (100*(marca.sepppto/marca.seppas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.sepppto/marca.seppas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 9 " size="1.3" class="der"><ion-label>{{ 100*(marca.sepppto/marca.seppas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                        <ion-col *ngIf=" mes === 10 " size="2.0" class="der"><ion-label>{{ marca.octpas  | number:"1.0-0" }}<br>{{ (100*(marca.octpas/dato.octpas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 10 " size="2.0" class="der"><ion-label>{{ marca.octact  | number:"1.0-0" }}<br>{{ (100*(marca.octact/dato.octact))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 10 " size="2.0" class="der"><ion-label>{{ marca.octppto | number:"1.0-0" }}<br>{{ (100*(marca.octppto/dato.octppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 10 " size="0.6"><ion-icon [class]=" (100*(marca.octact/marca.octpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.octact/marca.octpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 10 " size="1.4" class="der"><ion-label>{{ 100*(marca.octact/marca.octpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 10 " size="0.6"><ion-icon [class]=" (100*(marca.octact/marca.octppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.octact/marca.octppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 10 " size="1.4" class="der"><ion-label>{{ 100*(marca.octact/marca.octppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 10 " size="0.6"><ion-icon [class]=" (100*(marca.octppto/marca.octpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.octppto/marca.octpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 10 " size="1.3" class="der"><ion-label>{{ 100*(marca.octppto/marca.octpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+
+                        <ion-col *ngIf=" mes === 11 " size="2.0" class="der"><ion-label>{{ marca.novpas  | number:"1.0-0" }}<br>{{ (100*(marca.novpas/dato.novpas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 11 " size="2.0" class="der"><ion-label>{{ marca.novact  | number:"1.0-0" }}<br>{{ (100*(marca.novact/dato.novact))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 11 " size="2.0" class="der"><ion-label>{{ marca.novppto | number:"1.0-0" }}<br>{{ (100*(marca.novppto/dato.novppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 11 " size="0.6"><ion-icon [class]=" (100*(marca.novact/marca.novpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.novact/marca.novpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 11 " size="1.4" class="der"><ion-label>{{ 100*(marca.novact/marca.novpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 11 " size="0.6"><ion-icon [class]=" (100*(marca.novact/marca.novppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.novact/marca.novppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 11 " size="1.4" class="der"><ion-label>{{ 100*(marca.novact/marca.novppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 11 " size="0.6"><ion-icon [class]=" (100*(marca.novppto/marca.novpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.novppto/marca.novpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 11 " size="1.3" class="der"><ion-label>{{ 100*(marca.novppto/marca.novpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+        
+                        <ion-col *ngIf=" mes === 12 " size="2.0" class="der"><ion-label>{{ marca.dicpas  | number:"1.0-0" }}<br>{{ (100*(marca.dicpas/dato.dicpas))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 12 " size="2.0" class="der"><ion-label>{{ marca.dicact  | number:"1.0-0" }}<br>{{ (100*(marca.dicact/dato.dicact))   | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 12 " size="2.0" class="der"><ion-label>{{ marca.dicppto | number:"1.0-0" }}<br>{{ (100*(marca.dicppto/dato.dicppto)) | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 12 " size="0.6"><ion-icon [class]=" (100*(marca.dicact/marca.dicpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.dicact/marca.dicpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 12 " size="1.4" class="der"><ion-label>{{ 100*(marca.dicact/marca.dicpas)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 12 " size="0.6"><ion-icon [class]=" (100*(marca.dicact/marca.dicppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.dicact/marca.dicppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 12 " size="1.4" class="der"><ion-label>{{ 100*(marca.dicact/marca.dicppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                        <ion-col *ngIf=" mes === 12 " size="0.6"><ion-icon [class]=" (100*(marca.dicppto/marca.dicpas)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(marca.dicppto/marca.dicpas)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                        <ion-col *ngIf=" mes === 12 " size="1.3" class="der"><ion-label>{{ 100*(marca.dicppto/marca.dicpas)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                                        
+                    </ion-row>
+                </ion-grid>
+    
+            </ion-row>
+        </ion-grid>
+    </div>
+    
+    <div class="caja-d" *ngIf=" fila == 2 ">
+        <ion-grid no-padding style=" background-color: #222428">
+            <ion-row  *ngFor="let dato of informacion" >
+                <!-- dato de "Detalle" -->
+                <ion-col class="der" size="2.0">{{ dato.concepto }}</ion-col>
+                <!-- el mes correspondiente -->
+                <ion-col size="2.0" class="der"><ion-label>{{ dato.anterior | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="2.0" class="der"><ion-label>{{ dato.actual   | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="2.0" class="der"><ion-label>{{ dato.ppto     | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="0.6"><ion-icon [class]=" (100*(dato.actual/dato.anterior)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.actual/dato.anterior)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col size="1.4" class="der"><ion-label>{{ 100*(dato.actual/dato.anterior)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col size="0.6"><ion-icon [class]=" (100*(dato.actual/dato.ppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.actual/dato.ppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col size="1.4" class="der"><ion-label>{{ 100*(dato.actual/dato.ppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col size="0.6"><ion-icon [class]=" (100*(dato.ppto/dato.anterior)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.ppto/dato.anterior)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col size="1.3" class="der"><ion-label>{{ 100*(dato.ppto/dato.anterior)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+
+    <div class="caja-d" *ngIf=" fila == 3 ">
+        <ion-grid no-padding style=" background-color: #222428">
+            <ion-row  *ngFor="let dato of informacion" >
+                <!-- dato de "Detalle" -->
+                <ion-col class="der" size="2.0">{{ dato.concepto }}</ion-col>
+                <!-- el mes correspondiente -->
+                <ion-col size="2.0" class="der_ama"><ion-label>{{ dato.anterior | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="2.0" class="der_ama"><ion-label>{{ dato.actual   | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="2.0" class="der_ama"><ion-label>{{ dato.ppto     | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="0.6"><ion-icon [class]=" (100*(dato.actual/dato.anterior)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.actual/dato.anterior)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col size="1.4" class="der_ama"><ion-label>{{ 100*(dato.actual/dato.anterior)-100  | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col size="0.6"><ion-icon [class]=" (100*(dato.actual/dato.ppto)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.actual/dato.ppto)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col size="1.4" class="der_ama"><ion-label>{{ 100*(dato.actual/dato.ppto)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+                <ion-col size="0.6"><ion-icon [class]=" (100*(dato.ppto/dato.anterior)-100) > 0 ? 'zen_green' : 'zen_red' " [name]=" (100*(dato.ppto/dato.anterior)-100) > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+                <ion-col size="1.3" class="der_ama"><ion-label>{{ 100*(dato.ppto/dato.anterior)-100 | number:"1.2-2" }}%</ion-label></ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+
+</div>

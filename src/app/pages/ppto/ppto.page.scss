@@ -1,21 +1,14 @@
 
 ion-grid {
-    background: var( --ion-color-dark );
-    --ion-grid-columns: 16;    
-    font-size: calc(14px + (14 - 10) * ((100vw - 300px) / (1600 - 300)));
-    .inner_grid {
-        background: var( --ion-color-dark );
-    }
+    --ion-grid-columns: 15;    
+    font-size: calc(12px + (14 - 10) * ((100vw - 300px) / (1600 - 300)));
 }
 
 ion-grid.header, ion-grid.footer {
     ion-row {
         ion-col {
             font-weight: bold;
-            // font-size: 80%;
-        }
-        .inner_row {
-            color: yellow !important;
+            font-size: 80%;
         }
     }
 }
@@ -36,13 +29,13 @@ ion-list {
 .zen {
     text-align: center;
     font-style: italic;
-    font-size: 68%;
+    font-size: 60%;
     width: 140px;
     font-weight: bold;
 }
 .izq {
     text-align: left;
-    font-size: 68%;
+    font-size: 60%;
     width: 140px;
     .titulo {
         font-weight: bold;
@@ -51,7 +44,7 @@ ion-list {
 .der {
     text-align: right;
     font-style: italic;
-    font-size: 68%;
+    font-size: 60%;
     width: 70px;
     .titulo {
         font-weight: bold;
@@ -67,15 +60,21 @@ ion-list {
     display: flex;
     flex-direction: row;
     overflow-x: scroll;
+    // margin-top: 10px;
+    // margin-bottom: -20px;
+    background-color: var(--ion-color-dark);
 
-    .chart {
-        height: 280px;
-        width: 100%;
-        // min-width: 400px;
-        // max-width: 100%;
+    .chartg {
+        height: 200px;
+        width: 500px;
+    }    
+    .chartc {
+        height: 200px;
+        width: 700px;
     }
 }
 .scroll-on {
     flex-direction: row;
     overflow-x: scroll;
 }
+

@@ -12,9 +12,11 @@ export class MenuPage implements OnInit {
   abierto = false;
   usuario;
   reportes: Reportes[] = [
-    { icono: 'pulse',   redirectTo: '/reppyl',     nombre: 'Profit & Loss Statement Accumulated' },
-    { icono: 'pie',     redirectTo: '/reppylmes',  nombre: 'Profit & Loss Statement Monthly' },
-    { icono: 'trophy',  redirectTo: '/eerr',       nombre: 'Estados de Resultado' }
+    { icono: 'pulse',   redirectTo: '/reppyl',    nombre: 'Profit & Loss Statement Accumulated' },
+    { icono: 'pie',     redirectTo: '/reppylmes', nombre: 'Profit & Loss Statement Monthly' },
+    { icono: 'trophy',  redirectTo: '/eerr',      nombre: 'Estados de Resultado' },
+    { icono: 'compass', redirectTo: '/ppto',      nombre: 'Presupuesto de Venta Comercial' },
+    { icono: 'cash',    redirectTo: '/mgxsf',     nombre: 'Márgen de Contribución por Super-Familia' },
   ];
 
   indicadores = [

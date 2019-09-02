@@ -1,0 +1,40 @@
+<ion-header no-border>
+
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/menu"></ion-back-button>
+    </ion-buttons>
+    <ion-title text-center >Márgen de Contribución por Super-Familia {{ nombreMes }}/{{ periodo }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="notas()">
+        <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>
+        <ion-icon slot="icon-only" size="small" src="assets/icon/campanilla.svg"></ion-icon>
+      </ion-button>
+      <ion-button (click)="periodos( $event )">  <ion-icon slot="icon-only" size="small" src="assets/icon/calendario.svg"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar color="dark">
+    <ion-segment  (ionChange)="segmentChanged($event)" [(ngModel)]="valorSegmento" mode="ios" color="primary">
+      <ion-segment-button value="AMBAS"> <ion-label> Ambas Marcas </ion-label></ion-segment-button>
+      <ion-segment-button value="SIEGEN"><ion-label> Siegen </ion-label></ion-segment-button>
+      <ion-segment-button value="THOMAS"><ion-label> Thomas </ion-label></ion-segment-button>
+      <ion-segment-button value="TOP20" ><ion-label> Top-20 </ion-label></ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+
+  <app-itemmg *ngIf=" valorSegmento != 'TOP20'  " [periodo]="periodo" [fila]=0  [informacion]="['Super Familia','Cliente Comercial','Descripción','Vta.Comercial','Costo','Contribución','%']"> </app-itemmg> 
+  <app-itemmg *ngIf=" valorSegmento ==='TOP20'  " [periodo]="periodo" [fila]=-1 [informacion]="['Código','Descripción','Cantidad','Vta.Comercial','Costo','Contribución','%','%']"> </app-itemmg> 
+
+  <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
+  
+</ion-header>    
+    
+<ion-content color="dark" >
+
+    <app-itemmg *ngIf=" valorSegmento==='AMBAS'  " [periodo]="periodo" [fila]=1 [inmerse]="inmerse" [informacion]="filas"      [informacionTotal]="totTotal"></app-itemmg> 
+    <app-itemmg *ngIf=" valorSegmento==='SIEGEN' " [periodo]="periodo" [fila]=1 [inmerse]="inmerse" [informacion]="filasSG"    [informacionTotal]="totSG"></app-itemmg> 
+    <app-itemmg *ngIf=" valorSegmento==='THOMAS' " [periodo]="periodo" [fila]=1 [inmerse]="inmerse" [informacion]="filasTH"    [informacionTotal]="totTH"></app-itemmg> 
+    <app-itemmg *ngIf=" valorSegmento==='TOP20'  " [periodo]="periodo" [fila]=2 [inmerse]="inmerse" [informacion]="filasTOP10" [informacionTotal]="totTop10"></app-itemmg> 
+
+</ion-content>

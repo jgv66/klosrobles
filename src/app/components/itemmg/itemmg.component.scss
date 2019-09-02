@@ -3,6 +3,11 @@ ion-grid {
     --ion-grid-columns: 14;
 }
 
+ion-button {
+    text-transform: none !important;
+    text-align: right !important;
+}   
+
 .montos {
     display: flex;
     flex-direction: row;
@@ -13,26 +18,21 @@ ion-grid {
     display: flex;
     flex-direction: row;
     overflow-x: scroll;
+    color: white;
+    font-size: 75%;
 
-    .caja-i {
-        width:          21%; 
-        max-width:      21%;
-        text-align:     right;
-        font-style:     italic;
-        font-size:      105%;
-        margin:         10px 15px 10px 2px;
-        height:         100%;
-        vertical-align: middle !important;
-    }
     .caja-d {
-        width:      79%; /*490px; */
-        max-width:  79%; /*550px; */
-        font-size:  70%;
+        width:      1200px;
+        max-width:  1200px;
         text-align: center;
-        font-style: italic;        
+        font-style: italic;     
     }
 }
 
+.izq {
+    text-align: left;
+    font-style: italic;
+}
 .der {
     text-align: right;
     font-style: italic;

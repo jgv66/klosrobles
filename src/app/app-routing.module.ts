@@ -9,6 +9,8 @@ const routes: Routes = [
   { path: 'superfam',        loadChildren: './pages/superfam/superfam.module#SuperfamPageModule' },
   { path: 'reppylmes',       loadChildren: './pages/reppylmes/reppylmes.module#ReppylmesPageModule' },
   { path: 'eerr',            loadChildren: './pages/eerr/eerr.module#EerrPageModule'},
+  { path: 'ppto',            loadChildren: './pages/ppto/ppto.module#PptoPageModule' },
+  { path: 'mgxsf',           loadChildren: './pages/mgxsf/mgxsf.module#MgxsfPageModule' },
   { path: 'indicador/:dato', loadChildren: './pages/indicador/indicador.module#IndicadorPageModule' },
   { path: '**', redirectTo: 'inicio', pathMatch: 'full' },
 ];

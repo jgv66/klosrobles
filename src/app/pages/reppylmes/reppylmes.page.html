@@ -2,76 +2,117 @@
 <ion-header no-border translucent>
 
   <ion-toolbar color="dark">
-
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/menu"></ion-back-button>
     </ion-buttons>
-
     <ion-title text-center text-capitalize>Profit & Loss Statement Monthly : {{ cliente }} / {{ periodo }}</ion-title>
-
     <ion-buttons slot="end">
       <ion-button>
         <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>
         <ion-icon slot="icon-only" name="notifications"></ion-icon>
       </ion-button>
-      <ion-button (click)="vistas( $event )"    ><ion-icon slot="icon-only" name="eye">     </ion-icon></ion-button>
+      <ion-button (click)="periodos( $event )">  <ion-icon slot="icon-only" size="small" src="assets/icon/calendario.svg"></ion-icon></ion-button>
       <ion-button (click)="clientesGT( $event )"><ion-icon slot="icon-only" name="pie">     </ion-icon></ion-button>
     </ion-buttons>
-
   </ion-toolbar>
+
+  <ion-grid  style=" color: white; ">
+    <ion-row>
+      <ion-col size="2.5" class="izq"><ion-label class="titulo">Concepto</ion-label></ion-col >
+      <ion-col size="1.3" class="der" *ngFor="let mes of meses"><ion-label class="titulo">{{ mes }}</ion-label></ion-col >
+      <ion-col size="1.4" class="der"><ion-label class="titulo">Totales</ion-label></ion-col >
+    </ion-row>
+  </ion-grid>
 
 </ion-header>
 
-<ion-content padding>
+<ion-content no-padding color="dark">  
    
   <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
-  
-  <div padding class="chart-container">
-    <div id="line_curve_chart" class="chart"></div>
-  </div>
 
-  <div padding class="scroll-on">
-    <ion-row [ngClass]="(1 % 2 == 0) ? 'kodd' : 'keven' ">
-      <div class="izq"><ion-label class="titulo">Concepto</ion-label></div>
-      <div class="der" *ngFor="let mes of meses"><ion-label class="titulo">{{ mes }}</ion-label></div>
-      <div class="der"><ion-label class="titulo">Totales</ion-label></div>
+  <ion-list>
+    
+  <ion-grid >
+    <!-- <ion-row  *ngFor="let fila of filas; let i = index;" (click)="OnOff( fila )"  [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' "> -->
+    <ion-row  *ngFor="let fila of filas; let i = index;" (click)="OnOff( fila )">
+      <ion-col size="2.5" class="izq"><ion-label class="titulo">{{ fila.concepto }}</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  1 "><ion-label>{{ fila.ene | number:"1.0-0" }}<br>{{ 100 * (fila.ene/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  2 "><ion-label>{{ fila.feb | number:"1.0-0" }}<br>{{ 100 * (fila.feb/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  3 "><ion-label>{{ fila.mar | number:"1.0-0" }}<br>{{ 100 * (fila.mar/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  4 "><ion-label>{{ fila.abr | number:"1.0-0" }}<br>{{ 100 * (fila.abr/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  5 "><ion-label>{{ fila.may | number:"1.0-0" }}<br>{{ 100 * (fila.may/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  6 "><ion-label>{{ fila.jun | number:"1.0-0" }}<br>{{ 100 * (fila.jun/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  7 "><ion-label>{{ fila.jul | number:"1.0-0" }}<br>{{ 100 * (fila.jul/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  8 "><ion-label>{{ fila.ago | number:"1.0-0" }}<br>{{ 100 * (fila.ago/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  9 "><ion-label>{{ fila.sep | number:"1.0-0" }}<br>{{ 100 * (fila.sep/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >= 10 "><ion-label>{{ fila.oct | number:"1.0-0" }}<br>{{ 100 * (fila.oct/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >= 11 "><ion-label>{{ fila.nov | number:"1.0-0" }}<br>{{ 100 * (fila.nov/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >= 12 "><ion-label>{{ fila.dic | number:"1.0-0" }}<br>{{ 100 * (fila.dic/fila.total) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.4" class="der"><ion-label class="titulo">{{ fila.total | number:"1.0-0" }}</ion-label></ion-col>
+      <ion-col [size]=" 14-(2.5+(mes*1.3)) " class="der"><ion-label></ion-label></ion-col>
+      <!-- fila de marcas -->
+      <ion-grid *ngIf=" fila.show ">
+        <!-- <ion-row  *ngFor="let marca of fila.marcas" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' "> -->
+        <ion-row  *ngFor="let marca of fila.marcas" style=" color: yellow; ">
+          <ion-col size="2.5" class="zen"><ion-label class="titulo">{{ marca.nombre_marca }}</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  1 "><ion-label>{{ marca.ene | number:"1.0-0" }}<br>{{ 100 * (marca.ene/fila.ene) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  2 "><ion-label>{{ marca.feb | number:"1.0-0" }}<br>{{ 100 * (marca.feb/fila.feb) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  3 "><ion-label>{{ marca.mar | number:"1.0-0" }}<br>{{ 100 * (marca.mar/fila.mar) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  4 "><ion-label>{{ marca.abr | number:"1.0-0" }}<br>{{ 100 * (marca.abr/fila.abr) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  5 "><ion-label>{{ marca.may | number:"1.0-0" }}<br>{{ 100 * (marca.may/fila.may) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  6 "><ion-label>{{ marca.jun | number:"1.0-0" }}<br>{{ 100 * (marca.jun/fila.jun) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  7 "><ion-label>{{ marca.jul | number:"1.0-0" }}<br>{{ 100 * (marca.jul/fila.jul) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  8 "><ion-label>{{ marca.ago | number:"1.0-0" }}<br>{{ 100 * (marca.ago/fila.ago) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  9 "><ion-label>{{ marca.sep | number:"1.0-0" }}<br>{{ 100 * (marca.sep/fila.sep) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >= 10 "><ion-label>{{ marca.oct | number:"1.0-0" }}<br>{{ 100 * (marca.oct/fila.oct) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >= 11 "><ion-label>{{ marca.nov | number:"1.0-0" }}<br>{{ 100 * (marca.nov/fila.nov) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >= 12 "><ion-label>{{ marca.dic | number:"1.0-0" }}<br>{{ 100 * (marca.dic/fila.dic) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.4" class="der" ><ion-label class="titulo">    {{ marca.tot | number:"1.0-0" }}<br>{{ 100 * (marca.tot/fila.total)| number:"1.2-2" }}%</ion-label></ion-col>        
+        </ion-row>
+      </ion-grid>
     </ion-row>
+  </ion-grid>
+<!-- 
+  <ion-grid no-padding>
+    <ion-row  *ngFor="let total of totales; let i = index;" (click)="OnOff( total )" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+      <ion-col size="2.5" class="izq"><ion-label class="titulo">{{ total.concepto }}</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  1 "><ion-label class="titulo">{{ total.ene | number:"1.0-0" }}<br>{{ 100 * (total.ene/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  2 "><ion-label class="titulo">{{ total.feb | number:"1.0-0" }}<br>{{ 100 * (total.feb/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  3 "><ion-label class="titulo">{{ total.mar | number:"1.0-0" }}<br>{{ 100 * (total.mar/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  4 "><ion-label class="titulo">{{ total.abr | number:"1.0-0" }}<br>{{ 100 * (total.abr/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  5 "><ion-label class="titulo">{{ total.may | number:"1.0-0" }}<br>{{ 100 * (total.may/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  6 "><ion-label class="titulo">{{ total.jun | number:"1.0-0" }}<br>{{ 100 * (total.jun/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  7 "><ion-label class="titulo">{{ total.jul | number:"1.0-0" }}<br>{{ 100 * (total.jul/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  8 "><ion-label class="titulo">{{ total.ago | number:"1.0-0" }}<br>{{ 100 * (total.ago/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >=  9 "><ion-label class="titulo">{{ total.sep | number:"1.0-0" }}<br>{{ 100 * (total.sep/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >= 10 "><ion-label class="titulo">{{ total.oct | number:"1.0-0" }}<br>{{ 100 * (total.oct/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >= 11 "><ion-label class="titulo">{{ total.nov | number:"1.0-0" }}<br>{{ 100 * (total.nov/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.3" class="der" *ngIf=" mes >= 12 "><ion-label class="titulo">{{ total.dic | number:"1.0-0" }}<br>{{ 100 * (total.dic/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>
+      <ion-col size="1.4" class="der"><ion-label class="titulo">                    {{ total.tot | number:"1.0-0" }}</ion-label></ion-col>
+      <ion-col [size]=" 15-(2.5+(mes*1.3)) " class="der"><ion-label></ion-label></ion-col>
+      
+      <ion-grid no-padding *ngIf=" total.show ">
+        <ion-row  *ngFor="let marca of total.marcas" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+          <ion-col size="2.5" class="zen"><ion-label class="titulo">{{ marca.nombre_marca }}</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  1 "><ion-label>{{ marca.ene | number:"1.0-0" }}<br>{{ 100 * (marca.ene/total.ene) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  2 "><ion-label>{{ marca.feb | number:"1.0-0" }}<br>{{ 100 * (marca.feb/total.feb) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  3 "><ion-label>{{ marca.mar | number:"1.0-0" }}<br>{{ 100 * (marca.mar/total.mar) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  4 "><ion-label>{{ marca.abr | number:"1.0-0" }}<br>{{ 100 * (marca.abr/total.abr) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  5 "><ion-label>{{ marca.may | number:"1.0-0" }}<br>{{ 100 * (marca.may/total.may) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  6 "><ion-label>{{ marca.jun | number:"1.0-0" }}<br>{{ 100 * (marca.jun/total.jun) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  7 "><ion-label>{{ marca.jul | number:"1.0-0" }}<br>{{ 100 * (marca.jul/total.jul) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  8 "><ion-label>{{ marca.ago | number:"1.0-0" }}<br>{{ 100 * (marca.ago/total.ago) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >=  9 "><ion-label>{{ marca.sep | number:"1.0-0" }}<br>{{ 100 * (marca.sep/total.sep) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >= 10 "><ion-label>{{ marca.oct | number:"1.0-0" }}<br>{{ 100 * (marca.oct/total.oct) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >= 11 "><ion-label>{{ marca.nov | number:"1.0-0" }}<br>{{ 100 * (marca.nov/total.nov) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.3" class="der" *ngIf=" mes >= 12 "><ion-label>{{ marca.dic | number:"1.0-0" }}<br>{{ 100 * (marca.dic/total.dic) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.4" class="der" ><ion-label class="titulo">    {{ marca.tot | number:"1.0-0" }}<br>{{ 100 * (marca.tot/total.tot) | number:"1.2-2" }}%</ion-label></ion-col>        
+        </ion-row>
+      </ion-grid>
+    </ion-row>
+  </ion-grid>
+ -->
+  </ion-list>
 
-    <ion-row  *ngFor="let fila of filas; let i = index;" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
-      <div class="izq" ><ion-label>{{ fila.concepto }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  1 "><ion-label>{{ fila.ene | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  2 "><ion-label>{{ fila.feb | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  3 "><ion-label>{{ fila.mar | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  4 "><ion-label>{{ fila.abr | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  5 "><ion-label>{{ fila.may | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  6 "><ion-label>{{ fila.jun | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  7 "><ion-label>{{ fila.jul | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  8 "><ion-label>{{ fila.ago | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  9 "><ion-label>{{ fila.sep | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >= 10 "><ion-label>{{ fila.oct | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >= 11 "><ion-label>{{ fila.nov | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >= 12 "><ion-label>{{ fila.dic | number:"1.0-0" }}</ion-label></div>
-      <div class="dertot" ><ion-label>{{ fila.total | number:"1.0-0" }}</ion-label></div>
-    </ion-row>
-
-    <ion-row  *ngFor="let total of totales; let i = index;" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
-      <div class="izq" ><ion-label>{{ total.concepto }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  1 "><ion-label class="titulo">{{ total.ene | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  2 "><ion-label class="titulo">{{ total.feb | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  3 "><ion-label class="titulo">{{ total.mar | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  4 "><ion-label class="titulo">{{ total.abr | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  5 "><ion-label class="titulo">{{ total.may | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  6 "><ion-label class="titulo">{{ total.jun | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  7 "><ion-label class="titulo">{{ total.jul | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  8 "><ion-label class="titulo">{{ total.ago | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >=  9 "><ion-label class="titulo">{{ total.sep | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >= 10 "><ion-label class="titulo">{{ total.oct | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >= 11 "><ion-label class="titulo">{{ total.nov | number:"1.0-0" }}</ion-label></div>
-      <div class="der" *ngIf=" mes >= 12 "><ion-label class="titulo">{{ total.dic | number:"1.0-0" }}</ion-label></div>
-      <div class="dertot" ><ion-label>{{ total.total | number:"1.0-0" }}</ion-label></div>
-    </ion-row>
-  
-  </div>
-  
 </ion-content>
 

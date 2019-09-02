@@ -56,7 +56,6 @@ export class EerrPage implements OnInit {
 
   constructor(private datos: DatosService,
               private funciones: FuncionesService,
-              private router: Router,
               private popoverCtrl: PopoverController,
               private modalCtrl: ModalController ) {
     this.nombreMes = this.funciones.nombreMes( this.mes );
@@ -96,9 +95,8 @@ export class EerrPage implements OnInit {
                                     mes:     this.mes.toString() } )
       .subscribe( ( data: any ) => {
           // console.log(data);
-          // const rs = data.datos;
-          // this.cuentas = data.datos;
           this.cargaAcumulado();
+          //
           data.datos.forEach(element => {
             if ( [1, 2, 2.5 ].includes( element.orden ) ) {
               element.concolor = ( element.orden === 2.5 ) ? true : false ;
@@ -119,14 +117,14 @@ export class EerrPage implements OnInit {
               element.concolor = true;
               this.margbrut.push( element );
             }
-            if ( [14, 15, 16, 17, 18, 19, 20, 21.2 ].includes( element.orden ) ) {
+            if ( [14, 15, 16, 17, 18, 19, 20, 21, 21.2 ].includes( element.orden ) ) {
               element.concolor = ( element.orden === 21.2 ) ? true : false ;
               this.ogastoper.push( element );
             }
             if ( [22 ].includes( element.orden ) ) {
               this.gastadmin.push( element );
             }
-            if ( [23, 24, 25, 26, 27, 28, 29, 30, 32, 32, 33, 34, 35, 36, 36.2 ].includes( element.orden ) ) {
+            if ( [23, 24, 25, 26, 27, 28, 29, 30, 31, 31.2, 32, 33, 34, 35, 36, 36.2 ].includes( element.orden ) ) {
               element.concolor = ( element.orden === 36.2 ) ? true : false ;
               this.gastventa.push( element );
             }
@@ -134,6 +132,7 @@ export class EerrPage implements OnInit {
               this.convenios.push( element );
             }
             if ( [ 37.3, 37.31, 37.32, 37.34, 37.36, 37.38, 37.40 ].includes( element.orden ) ) {
+              element.concolor = ( element.orden === 37.3 ) ? true : false ;
               this.margopera.push( element );
             }
             if ( [38, 39, 40, 41, 42 ].includes( element.orden ) ) {
@@ -167,8 +166,6 @@ export class EerrPage implements OnInit {
                                     mes:     this.mes.toString() } )
       .subscribe( ( data: any ) => {
           // console.log(data);
-          // const rs = data.datos;
-          // this.acumulado = rs;
           data.datos.forEach(element => {
             if ( [1, 2, 2.5 ].includes( element.orden ) ) {
               element.concolor = ( element.orden === 2.5 ) ? true : false ;
@@ -181,7 +178,7 @@ export class EerrPage implements OnInit {
               element.concolor = true;
               this.acumingnetos.push( element );
             }
-            if ( [5, 6, 7, 8, 9, 10, 10.2, 11, 11.5 ].includes( element.orden ) ) {
+            if ( [5, 6, 7, 8, 9, 10, 10.1, 10.2, 11, 11.5 ].includes( element.orden ) ) {
               element.concolor = ( element.orden === 11.5 ) ? true : false ;
               this.acumgastoper.push( element );
             }
@@ -189,14 +186,14 @@ export class EerrPage implements OnInit {
               element.concolor = true;
               this.acummargbrut.push( element );
             }
-            if ( [14, 15, 16, 17, 18, 19, 20, 21.2 ].includes( element.orden ) ) {
+            if ( [14, 15, 16, 17, 18, 19, 20, 21, 21.2 ].includes( element.orden ) ) {
               element.concolor = ( element.orden === 21.2 ) ? true : false ;
               this.acumogastoper.push( element );
             }
             if ( [22 ].includes( element.orden ) ) {
               this.acumgastadmin.push( element );
             }
-            if ( [23, 24, 25, 26, 27, 28, 29, 30, 32, 32, 33, 34, 35, 36, 36.2 ].includes( element.orden ) ) {
+            if ( [23, 24, 25, 26, 27, 28, 29, 30, 31, 31.2, 32, 33, 34, 35, 36, 36.2 ].includes( element.orden ) ) {
               element.concolor = ( element.orden === 36.2 ) ? true : false ;
               this.acumgastventa.push( element );
             }
@@ -282,7 +279,7 @@ export class EerrPage implements OnInit {
   segmentChanged( event ) {
     this.valorSegmento = event.detail.value;
     this.ldelMes = ( this.valorSegmento === 'Del Mes' ? true : false );
-    if ( this.ldelMes === true ) { 
+    if ( this.ldelMes === true ) {
       this.textoAcumulado = '';
     } else {
       this.textoAcumulado = 'Acumulado al mes de';

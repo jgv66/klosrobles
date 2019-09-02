@@ -1,0 +1,45 @@
+
+<div class="cajon" [ngClass]="( fila % 2 == 0) ? 'kodd' : 'keven' ">
+
+    <!-- headers -->
+    <div class="caja-d" *ngIf=" fila < 1 ">
+        <ion-grid no-padding>
+          <ion-row>
+            <ion-col class="der" size="3.5">            {{ informacion[0] }}                       </ion-col>
+            <ion-col class="der" size="2.25"><ion-label>{{ informacion[1].toString() }}</ion-label></ion-col>
+            <ion-col class="der" size="2.25"><ion-label>{{ informacion[2].toString() }}</ion-label></ion-col>
+            <ion-col class="der" size="2.0"><ion-label>Presupuesto</ion-label></ion-col>
+            <ion-col class="zen" size="2.0"><ion-label> {{ informacion[2].toString() }}/Ppto</ion-label></ion-col>
+            <ion-col class="zen" size="2.0"><ion-label> {{ informacion[3].toString() }}</ion-label></ion-col>
+          </ion-row>
+        </ion-grid>
+    </div>
+  
+    <div class="caja-d" *ngIf=" fila > 0 ">
+        <ion-grid no-padding>
+          <ion-row  *ngFor="let dato of informacion">
+            <!-- dato de "Detalle" -->
+            <ion-col [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' " size="3.5">{{ dato.cuenta }}</ion-col>
+            <!-- si es numero -->
+            <ion-col *ngIf="dato.numero === true " size="2.25" [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' "><ion-label>{{ dato.real_anterior | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col *ngIf="dato.numero === true " size="2.25" [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' "><ion-label>{{ dato.real_actual   | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col *ngIf="dato.numero === true " size="2.0"  [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' "><ion-label>{{ dato.presupuesto | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col *ngIf="dato.numero === true " size="0.6"><ion-icon [class]=" dato.actsobreppto > 0 ? 'zen_green' : 'zen_red' " [name]=" dato.actsobreppto > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+            <ion-col *ngIf="dato.numero === true " size="1.4"  [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' "><ion-label>{{ dato.actsobreppto | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col *ngIf="dato.numero === true " size="0.6"><ion-icon [class]=" dato.actant > 0 ? 'zen_green' : 'zen_red' " [name]=" dato.actant > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+            <ion-col *ngIf="dato.numero === true " size="1.4"  class="zen_white"><ion-label>{{ dato.actant | number:"1.2-2" }}%</ion-label></ion-col>
+  
+            <!-- si es porcentaje -->
+            <ion-col *ngIf="dato.porcent === true " size="2.25" [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' "><ion-label>{{ dato.real_anterior | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col *ngIf="dato.porcent === true " size="2.25" [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' "><ion-label>{{ dato.real_actual   | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col *ngIf="dato.porcent === true " size="2.0"  [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' "><ion-label>{{ dato.presupuesto | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col *ngIf="dato.porcent === true " size="0.6"><ion-icon [class]=" dato.actsobreppto > 0 ? 'zen_green' : 'zen_red' " [name]=" dato.actsobreppto > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+            <ion-col *ngIf="dato.porcent === true " size="1.4"  [class]=" ( dato.concolor === false) ? 'der' : 'der_ama' "><ion-label>{{ dato.actsobreppto | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col *ngIf="dato.porcent === true " size="0.6"><ion-icon [class]=" dato.actant > 0 ? 'zen_green' : 'zen_red' " [name]=" dato.actant > 0 ? 'md-arrow-round-up' : 'md-arrow-round-down' "></ion-icon></ion-col>
+            <ion-col *ngIf="dato.porcent === true " size="1.4"  class="zen_white"><ion-label>{{ dato.actant | number:"1.2-2" }}%</ion-label></ion-col>
+          </ion-row>
+        </ion-grid>
+    </div>
+  
+  </div>
+  

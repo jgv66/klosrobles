@@ -1,0 +1,97 @@
+
+<ion-header no-border>
+
+  <ion-toolbar color="dark">
+
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/menu"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title text-center >Presupuesto de Venta {{ titu }} {{ nombreMes }}/{{ periodo }}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="notas()">
+        <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>
+        <ion-icon slot="icon-only" size="small" src="assets/icon/campanilla.svg"></ion-icon>
+      </ion-button>
+      <ion-button (click)="periodos( $event )">  <ion-icon slot="icon-only" size="small" src="assets/icon/calendario.svg"></ion-icon></ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+
+  <ion-toolbar color="dark">
+
+      <ion-segment  (ionChange)="segmentChanged($event)"
+                    [(ngModel)]="valorSegmento" 
+                    mode="ios"
+                    color="primary">
+    
+        <ion-segment-button value="Del Mes">   <ion-label>Del Mes   </ion-label></ion-segment-button>
+        <ion-segment-button value="Acumulado"> <ion-label>Acumulado </ion-label></ion-segment-button>
+        <ion-segment-button value="Proyeccion"><ion-label>Proyección</ion-label></ion-segment-button>
+      
+      </ion-segment>
+       
+  </ion-toolbar>
+     
+  <div padding class="chart-container">
+    <div id="gauge_chart" class="chartg"></div>
+    <div id="curve_chart" class="chartc"></div>
+  </div>
+
+  <app-itemppto [periodo]="periodo" fila=0 concepto="Cliente"> </app-itemppto> 
+  <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
+  
+</ion-header>    
+    
+<ion-content color="dark">
+
+  <!-- GT + OTROS -->
+  <app-itemppto *ngIf=" valorSegmento === 'Del Mes'    " [informacion]="filas"      [mes]="mes" fila=1 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Del Mes'    " [informacion]="tmesclisub" [mes]="mes" fila=3 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Acumulado'  " [informacion]="acumul"     [mes]="mes" fila=1 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Acumulado'  " [informacion]="tacuclisub" [mes]="mes" fila=3 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Proyeccion' " [informacion]="proyec"     [mes]="mes" fila=1 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Proyeccion' " [informacion]="tproclisub" [mes]="mes" fila=3 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+
+  <!-- temporada -->
+  <app-itemppto [periodo]="periodo" fila=0 concepto="Temporada"> </app-itemppto> 
+  <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
+
+  <app-itemppto *ngIf=" valorSegmento === 'Del Mes'    " [informacion]="tfilas"     [mes]="mes" fila=1 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Del Mes'    " [informacion]="tmestemsub" [mes]="mes" fila=3 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Acumulado'  " [informacion]="tacumul"    [mes]="mes" fila=1 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Acumulado'  " [informacion]="tacutemsub" [mes]="mes" fila=3 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Proyeccion' " [informacion]="tproyec"    [mes]="mes" fila=1 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Proyeccion' " [informacion]="tprotemsub" [mes]="mes" fila=3 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
+
+  <!-- ttotales -->
+  <app-itemppto [periodo]="periodo" fila=0 concepto="Resumen"> </app-itemppto> 
+  <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
+  
+  <app-itemppto *ngIf=" valorSegmento === 'Del Mes'    " [informacion]="tmestotsub" [mes]="mes" fila=3 ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Acumulado'  " [informacion]="tacutotsub" [mes]="mes" fila=3 ></app-itemppto><hr class="linea">
+  <app-itemppto *ngIf=" valorSegmento === 'Proyeccion' " [informacion]="tprototsub" [mes]="mes" fila=3 ></app-itemppto><hr class="linea">
+
+
+</ion-content>
+
+  
+  <!-- 
+  <div *ngIf=" dataGrafo.length === 8 " no-padding class="chart-container">
+    <ngx-charts-gauge
+        [view]="view"
+        [results]="dataGrafo"
+        animations="false" 
+        xAxis="true"
+        yAxis="true"
+        legend="true"
+        legendTitle="Clientes Top-7"
+        showXAxisLabel="true"
+        showYAxisLabel="true"
+        xAxisLabel="Cliente"
+        yAxisLabel="Venta">
+    </ngx-charts-gauge>    
+  </div>
+  -->
+    

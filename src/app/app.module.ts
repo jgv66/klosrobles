@@ -15,6 +15,10 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [AppComponent ],
   entryComponents: [],
@@ -24,6 +28,10 @@ import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
               HttpClientModule,
               IonicStorageModule.forRoot(),
               ComponentsModule,
+              NgxChartsModule,
+              // BrowserModule,
+              // BrowserAnimationsModule,
+              // NoopAnimationsModule,
               ServiceWorkerModule.register('ngsw-worker.js',
               { enabled: environment.production })
             ],
