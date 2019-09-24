@@ -35,6 +35,7 @@ export class SuperfamPage implements OnInit {
   hayNotas  = undefined;
   nNotas    = 0;
   vista     = 'M%';  // millon
+  cargando  = false;
 
   constructor( private modalCtrl: ModalController,
                private popoverCtrl: PopoverController,
@@ -68,14 +69,15 @@ export class SuperfamPage implements OnInit {
   }
 
   cargaFamilias( emp, per, mes, cli, mar ) {
-    return this.datos.postDataSP( { sp:      '/ws_pylmarcafam',
-                                    empresa: emp,
-                                    periodo: per.toString(),
-                                    mes:     mes.toString(),
-                                    cliente: cli,
-                                    marca:   mar })
+    this.cargando = true;
+    return this.datos.postDataSPSilent( { sp:      '/ws_pylmarcafam',
+                                          empresa: emp,
+                                          periodo: per.toString(),
+                                          mes:     mes.toString(),
+                                          cliente: cli,
+                                          marca:   mar })
       .subscribe( ( data: any ) => {
-        // console.log(data);
+          console.log('ws_pylmarcafam',data);
           const rs = data.datos;
           this.rows = rs;
           this.cargaDatos( emp, per, mes, cli, mar );
@@ -84,13 +86,14 @@ export class SuperfamPage implements OnInit {
 
   cargaDatos( emp, per, mes, cli, mar ) {
     //
-    this.datos.postDataSP( {  sp:      '/ws_pylmarfamcod',
-                              empresa: emp,
-                              periodo: per.toString(),
-                              mes:     mes.toString(),
-                              cliente: cli,
-                              marca:   mar })
+    this.datos.postDataSPSilent( {  sp:      '/ws_pylmarfamcod',
+                                    empresa: emp,
+                                    periodo: per.toString(),
+                                    mes:     mes.toString(),
+                                    cliente: cli,
+                                    marca:   mar })
         .subscribe( (data: any) => {
+            console.log('ws_pylmarfamcod',data);
             const rs  = data.datos;
             this.familias = rs;
             this.tranData();  /* cambia el formato de los datos */
@@ -120,15 +123,16 @@ export class SuperfamPage implements OnInit {
                               };
             PieVentas1.draw(PieVentas, optionsv );
             // -------------------------------------------------------------------------
+            this.cargando = false;
     });
     //
-    this.datos.postDataSP( {  sp:      '/ws_pylmarfamcod',
-                              empresa: emp,
-                              periodo: per.toString(),
-                              mes:     mes.toString(),
-                              cliente: cli,
-                              marca:   mar,
-                              top10:   'si' })
+    this.datos.postDataSPSilent( {sp:      '/ws_pylmarfamcod',
+                                  empresa: emp,
+                                  periodo: per.toString(),
+                                  mes:     mes.toString(),
+                                  cliente: cli,
+                                  marca:   mar,
+                                  top10:   'si' })
         .subscribe( (data: any) => {
             const rs  = data.datos;
             this.top10 = rs;

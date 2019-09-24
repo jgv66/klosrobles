@@ -6,7 +6,6 @@ import { PeriodosComponent } from 'src/app/components/periodos/periodos.componen
 import { NotasPage } from '../notas/notas.page';
 import { VistasPage } from 'src/app/components/vistas/vistas.page';
 import { Router } from '@angular/router';
-import { SuperfamPage } from '../superfam/superfam.page';
 
 declare var google;
 
@@ -53,11 +52,11 @@ export class ReppylPage implements OnInit {
 
   cargaMarcas() {
     this.cargando = true;
-    return this.datos.postDataSP( { sp:      '/ws_pylmarcas',
+    return this.datos.postDataSPSilent( { sp:      '/ws_pylmarcas',
                                     periodo: this.periodo.toString(),
                                     mes:     this.mes.toString() } )
       .subscribe( ( data: any ) => {
-        // console.log(data);
+          // console.log(data);
           const rs = data.datos;
           this.marcas = rs;
           this.cargaDatos();
@@ -66,10 +65,11 @@ export class ReppylPage implements OnInit {
 
   cargaDatos() {
     //
-    this.datos.postDataSP( {  sp:      '/ws_pyl',
+    this.datos.postDataSPSilent( {  sp:      '/ws_pyl',
                               periodo: this.periodo.toString(),
                               mes:     this.mes.toString() } )
       .subscribe( (data: any) => {
+            // console.log(data);
             const rs  = data.datos;
             this.rows = rs;
             this.tranData();  /* cambia el formato de los datos */
@@ -184,7 +184,7 @@ export class ReppylPage implements OnInit {
   }
 
   clickporMarcas( marca ) {
-    if ( this.inmerse ) {
+    // if ( this.inmerse ) {
       // guarda datos
       this.datos.setData( 1, { empresa:      this.empresa,
                                periodo:      this.periodo,
@@ -194,7 +194,7 @@ export class ReppylPage implements OnInit {
                                sigla:        marca.sigla.trim(),
                                cliente:      marca.cliente.trim() } );
       this.router.navigate( ['/superfam'] );
-    }
+    // }
   }
 
   async periodos( event ) {
@@ -324,7 +324,7 @@ export class ReppylPage implements OnInit {
         this.marcas[i].x_costo_operacional = this.marcas[i].costo_operacional  ;
         this.marcas[i].x_rebaja_de_precios = this.marcas[i].rebaja_de_precios  ;
         this.marcas[i].x_margen_bruto      = this.marcas[i].margen_bruto       ;
-        this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores   ; 
+        this.marcas[i].x_gasto_promotores  = this.marcas[i].gasto_promotores   ;
         this.marcas[i].x_cross_docking     = this.marcas[i].cross_docking      ;
         this.marcas[i].x_convenio_variable = this.marcas[i].convenio_variable  ;
         this.marcas[i].x_convenio_fijo     = this.marcas[i].convenio_fijo      ;

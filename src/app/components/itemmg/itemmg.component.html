@@ -3,31 +3,46 @@
 
   <!-- headers -->
   <div class="caja-d" *ngIf=" fila === 0 ">
-      <ion-grid no-padding>
-        <ion-row>
-          <ion-col class="der" size="3.0">           {{ informacion[0] }}            </ion-col>
-          <ion-col class="izq" size="2.0"><ion-label>{{ informacion[1] }}</ion-label></ion-col>
-          <ion-col class="izq" size="3.5"><ion-label>{{ informacion[2] }}</ion-label></ion-col>
-          <ion-col class="der" size="1.5"><ion-label>{{ informacion[3] }}</ion-label></ion-col>
-          <ion-col class="der" size="1.5"><ion-label>{{ informacion[4] }}</ion-label></ion-col>
-          <ion-col class="der" size="1.5"><ion-label>{{ informacion[5] }}</ion-label></ion-col>
-          <ion-col class="der" size="0.7"><ion-label>{{ informacion[6] }}</ion-label></ion-col>
-        </ion-row>
-      </ion-grid>
+    <ion-grid no-padding>
+      <ion-row>
+        <ion-col class="der" size="3.0">           {{ informacion[0] }}            </ion-col>
+        <ion-col class="zen" size="2.0"><ion-label>{{ informacion[1] }}</ion-label></ion-col>
+        <ion-col class="izq" size="3.5"><ion-label>{{ informacion[2] }}</ion-label></ion-col>
+        <ion-col class="der" size="1.5"><ion-label>{{ informacion[3] }}</ion-label></ion-col>
+        <ion-col class="der" size="1.5"><ion-label>{{ informacion[4] }}</ion-label></ion-col>
+        <ion-col class="der" size="1.5"><ion-label>{{ informacion[5] }}</ion-label></ion-col>
+        <ion-col class="der" size="0.7"><ion-label>{{ informacion[6] }}</ion-label></ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <div class="caja-d" *ngIf=" fila === -4 ">
+    <ion-grid no-padding>
+      <ion-row>
+        <ion-col class="der" size="1.5">           {{ informacion[0] }}            </ion-col>
+        <ion-col class="der" size="1.0">           {{ informacion[1] }}            </ion-col>
+        <ion-col class="zen" size="1.5"><ion-label>{{ informacion[2] }}</ion-label></ion-col>
+        <ion-col class="zen" size="1.5"><ion-label>{{ informacion[3] }}</ion-label></ion-col>
+        <ion-col class="izq" size="3.5"><ion-label>{{ informacion[4] }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ informacion[5] }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ informacion[6] }}</ion-label></ion-col>
+        <ion-col class="der" size="1.2"><ion-label>{{ informacion[7] }}</ion-label></ion-col>
+        <ion-col class="der" size="0.6"><ion-label>{{ informacion[8] }}</ion-label></ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
   <div class="caja-d" *ngIf=" fila === -1 ">
-      <ion-grid no-padding>
-        <ion-row>
-          <ion-col class="izq" size="2.0">           {{ informacion[0] }}            </ion-col>
-          <ion-col class="izq" size="4.0"><ion-label>{{ informacion[1] }}</ion-label></ion-col>
-          <ion-col class="der" size="1.5"><ion-label>{{ informacion[2] }}</ion-label></ion-col>
-          <ion-col class="der" size="1.5"><ion-label>{{ informacion[3] }}</ion-label></ion-col>
-          <ion-col class="der" size="1.5"><ion-label>{{ informacion[4] }}</ion-label></ion-col>
-          <ion-col class="der" size="1.5"><ion-label>{{ informacion[5] }}</ion-label></ion-col>
-          <ion-col class="der" size="0.7"><ion-label>{{ informacion[6] }}</ion-label></ion-col>
-          <ion-col class="der" size="0.7"><ion-label color='warning'>{{ informacion[7] }}</ion-label></ion-col>
-        </ion-row>
-      </ion-grid>
+    <ion-grid no-padding>
+      <ion-row>
+        <ion-col class="zen" size="2.0">           {{ informacion[0] }}            </ion-col>
+        <ion-col class="izq" size="4.0"><ion-label>{{ informacion[1] }}</ion-label></ion-col>
+        <ion-col class="der" size="1.5"><ion-label>{{ informacion[2] }}</ion-label></ion-col>
+        <ion-col class="der" size="1.5"><ion-label>{{ informacion[3] }}</ion-label></ion-col>
+        <ion-col class="der" size="1.5"><ion-label>{{ informacion[4] }}</ion-label></ion-col>
+        <ion-col class="der" size="1.5"><ion-label>{{ informacion[5] }}</ion-label></ion-col>
+        <ion-col class="der" size="0.7"><ion-label>{{ informacion[6] }}</ion-label></ion-col>
+        <ion-col class="der" size="0.7"><ion-label color='warning'>{{ informacion[7] }}</ion-label></ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 
   <div class="caja-d" *ngIf=" fila === 1 ">
@@ -70,11 +85,24 @@
               <ion-row *ngFor="let dato of dato.productos">
                 <ion-col size="3.0" class="der"></ion-col>
                 <ion-col size="1.0" class="izq"><ion-label></ion-label></ion-col>
-                <ion-col size="4.5" class="izq"><ion-label color="secondary">{{ dato.descripcion                    }}</ion-label></ion-col>
+                <ion-col size="4.5" class="izq">
+                    <ion-button (click)="inmersion( dato )"
+                                size="small" 
+                                fill="clear" 
+                                color="secondary">{{ dato.descripcion }}</ion-button>
+                </ion-col>
                 <ion-col size="1.5" class="der"><ion-label color="secondary">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
                 <ion-col size="1.5" class="der"><ion-label color="secondary">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
                 <ion-col size="1.5" class="der"><ion-label color="secondary">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
                 <ion-col size="0.7" class="der"><ion-label color="secondary">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+
+                <ion-grid no-padding *ngIf=" dato.show && documentos ">
+                  <ion-row *ngFor="let doc of documentos">
+                    <ion-col size="6"></ion-col>
+                    <ion-col size="6"></ion-col>
+                  </ion-row>
+                </ion-grid>
+
               </ion-row>
             </ion-grid>
 

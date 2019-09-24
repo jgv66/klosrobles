@@ -22,9 +22,11 @@ ion-list {
 }
 .keven {
     background-color: #e1f5fe;
+    padding-bottom: 5px;
 }
 .kodd {
     background-color: #e6ffff;
+    padding-bottom: 5px;
 }
 .zen {
     text-align: center;
@@ -63,6 +65,7 @@ ion-list {
     // margin-top: 10px;
     // margin-bottom: -20px;
     background-color: var(--ion-color-dark);
+    padding-bottom: 5px;
 
     .chartg {
         height: 200px;

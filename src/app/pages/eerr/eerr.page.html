@@ -6,12 +6,7 @@
     <ion-title text-center text-capitalize>Estado de Resultado {{ textoAcumulado }} {{ nombreMes }} / {{ periodo }}</ion-title>
 
     <ion-buttons slot="end">
-<!-- 
-        <ion-button (click)="drillDown()">
-          <ion-icon *ngIf=" !inmerse " size = "small" src="assets/icon/drilldown.svg"></ion-icon>
-          <ion-icon *ngIf="  inmerse " size = "small" name="ios-close-circle"></ion-icon>
-        </ion-button>
-   -->
+
         <ion-button (click)="notas()">
           <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>
           <ion-icon slot="icon-only" size="small" src="assets/icon/campanilla.svg"></ion-icon>

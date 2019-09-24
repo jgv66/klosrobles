@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "F:\\ionic\\losrobles-server_3080"
 		}
 	],
 	"settings": {}

@@ -11,17 +11,17 @@
 
     <ion-buttons slot="end">
 
-      <ion-button (click)="drillDown()">
-          <ion-icon *ngIf=" !inmerse " size = "small" src="assets/icon/drilldown.svg"></ion-icon>
-          <ion-icon *ngIf="  inmerse " size = "small" name="ios-close-circle"></ion-icon>
-        </ion-button>
+      <!-- <ion-button (click)="drillDown()">
+        <ion-icon *ngIf=" !inmerse " size = "small" src="assets/icon/drilldown.svg"></ion-icon>
+        <ion-icon *ngIf="  inmerse " size = "small" name="ios-close-circle"></ion-icon>
+      </ion-button> -->
 
       <ion-button (click)="notas()">
         <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>
         <ion-icon slot="icon-only" size="small" src="assets/icon/campanilla.svg"></ion-icon>
       </ion-button>
       <ion-button (click)="periodos( $event )"><ion-icon slot="icon-only" size="small" src="assets/icon/calendario.svg"></ion-icon></ion-button>
-      <ion-button (click)="vistas( $event )">  <ion-icon slot="icon-only" size="small" src="assets/icon/configurar.svg"></ion-icon></ion-button>
+      <!-- <ion-button (click)="vistas( $event )">  <ion-icon slot="icon-only" size="small" src="assets/icon/configurar.svg"></ion-icon></ion-button> -->
       
     </ion-buttons>
 
@@ -31,13 +31,13 @@
 
 <ion-content fullscreen>
   
-  <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
-  
   <div padding class="chart-container">
-      <div id="pieChart1" class="chart"></div>
-      <div id="pieChart2" class="chart"></div>
-      <div id="pieChart3" class="chart"></div>
+    <div id="pieChart1" class="chart"></div>
+    <div id="pieChart2" class="chart"></div>
+    <div id="pieChart3" class="chart"></div>
   </div>
+  
+  <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
 
   <ion-list>
 
@@ -57,9 +57,11 @@
     </ion-grid>
 
     <!-- numeros grandes -->
-    <ion-grid no-padding fixed style=" width: inherit;" *ngIf=" vista === 'M' || vista === 'F' " >
-      <ion-row  *ngFor="let dato of rows; let i = index;" (click)="OnOff( dato )" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
-        <ion-col             size="1.4"><ion-label>{{ dato.sigla                                }}</ion-label></ion-col>
+    <!-- <ion-grid no-padding fixed style=" width: inherit;" *ngIf=" vista === 'M' || vista === 'F' " >
+      <ion-row  *ngFor="let dato of rows; let i = index;" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+        <ion-col size="1.4">
+          <ion-button size="small" fill="clear" color="dark" class="boton_imnerse" (click)="OnOff( dato )" >{{ dato.sigla }}</ion-button>
+        </ion-col>
         <ion-col class="der" size="1.2"><ion-label *ngIf=" dato.x_vta_neta          != 0 " [ngClass]="( dato.x_vta_neta          < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_vta_neta          | number:"1.0-0" }}</ion-label></ion-col>
         <ion-col class="der" size="1.2"><ion-label *ngIf=" dato.x_costo_operacional != 0 " [ngClass]="( dato.x_costo_operacional < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_costo_operacional | number:"1.0-0" }}</ion-label></ion-col>
         <ion-col class="der" size="1.2"><ion-label *ngIf=" dato.x_rebaja_de_precios != 0 " [ngClass]="( dato.x_rebaja_de_precios < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_rebaja_de_precios | number:"1.0-0" }}</ion-label></ion-col>
@@ -69,15 +71,12 @@
         <ion-col class="der" size="1.1"><ion-label *ngIf=" dato.x_convenio_variable != 0 " [ngClass]="( dato.x_convenio_variable < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_convenio_variable | number:"1.0-0" }}</ion-label></ion-col>
         <ion-col class="der" size="1.1"><ion-label *ngIf=" dato.x_convenio_fijo     != 0 " [ngClass]="( dato.x_convenio_fijo     < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_convenio_fijo     | number:"1.0-0" }}</ion-label></ion-col>
         <ion-col class="der" size="1.2"><ion-label *ngIf=" dato.x_contribucion      != 0 " [ngClass]="( dato.x_contribucion      < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_contribucion      | number:"1.0-0" }}</ion-label></ion-col>
-        <!-- fila de marcas -->
         <ion-grid *ngIf=" dato.show " no-padding fixed class="header-in" style=" width: auto;">
           <ion-row  *ngFor="let marca of dato.marcas" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
-            <!--  -->
             <ion-col class="zen" size="1.4">
               <ion-button *ngIf=" inmerse " size="small" fill="clear" color="dark" class="boton_imnerse" (click)="clickporMarcas( marca )">{{ marca.nombre_marca }}</ion-button>
               <ion-label  *ngIf=" !inmerse ">{{ marca.nombre_marca }}</ion-label>
             </ion-col>
-            <!-- <ion-col class="zen" size="1.4"><ion-label>{{ marca.nombre_marca }} </ion-label></ion-col> -->
             <ion-col class="der" size="1.2"><ion-label *ngIf=" marca.x_vta_neta          != 0 " [ngClass]="( marca.x_vta_neta          < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_vta_neta          | number:"1.0-0" }}</ion-label></ion-col>
             <ion-col class="der" size="1.2"><ion-label *ngIf=" marca.x_costo_operacional != 0 " [ngClass]="( marca.x_costo_operacional < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_costo_operacional | number:"1.0-0" }}</ion-label></ion-col>
             <ion-col class="der" size="1.2"><ion-label *ngIf=" marca.x_rebaja_de_precios != 0 " [ngClass]="( marca.x_rebaja_de_precios < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_rebaja_de_precios | number:"1.0-0" }}</ion-label></ion-col>
@@ -104,10 +103,10 @@
             <ion-col class="det" size="1.1"><ion-label *ngIf=" sumas[7] != 0 " [ngClass]="( sumas[7] < 0) ? 'xrojo' : 'xnegro' ">{{ sumas[7] | number:"1.0-0" }}</ion-label></ion-col>
             <ion-col class="det" size="1.2"><ion-label *ngIf=" sumas[8] != 0 " [ngClass]="( sumas[8] < 0) ? 'xrojo' : 'xnegro' ">{{ sumas[8] | number:"1.0-0" }}</ion-label></ion-col>
           </ion-row>
-    </ion-grid>
+    </ion-grid> -->
 
     <!-- porcentajes -->
-    <ion-grid no-padding fixed style=" width: inherit;" *ngIf=" vista === '%' " >
+    <!-- <ion-grid no-padding fixed style=" width: inherit;" *ngIf=" vista === '%' " >
       <ion-row  *ngFor="let dato of rows; let i = index;" (click)="OnOff( dato )" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
         <ion-col             size="1.4"><ion-label >{{ dato.sigla }} </ion-label></ion-col>
         <ion-col class="der" size="1.2"><ion-label *ngIf=" dato.x_vta_neta          != 0 " [ngClass]="( dato.x_vta_neta          < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_vta_neta          | number:"1.0-0" }} </ion-label></ion-col>
@@ -119,7 +118,6 @@
         <ion-col class="der" size="1.1"><ion-label *ngIf=" dato.x_convenio_variable != 0 " [ngClass]="( dato.x_convenio_variable < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_convenio_variable | number:"1.2-2" }}%</ion-label></ion-col>
         <ion-col class="der" size="1.1"><ion-label *ngIf=" dato.x_convenio_fijo     != 0 " [ngClass]="( dato.x_convenio_fijo     < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_convenio_fijo     | number:"1.2-2" }}%</ion-label></ion-col>
         <ion-col class="der" size="1.2"><ion-label *ngIf=" dato.x_contribucion      != 0 " [ngClass]="( dato.x_contribucion      < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_contribucion      | number:"1.2-2" }}%</ion-label></ion-col>
-        <!-- fila de marcas -->
         <ion-grid *ngIf=" dato.show " no-padding fixed class="header-in" style=" width: auto;">
           <ion-row  *ngFor="let marca of dato.marcas" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
             <ion-col class="zen" size="1.4"><ion-label>{{ marca.nombre_marca                         }} </ion-label></ion-col>
@@ -136,7 +134,6 @@
         </ion-grid>
       </ion-row>
     </ion-grid>
-    <!-- totales -->
     <ion-grid no-padding fixed class="header" style=" width: auto;" *ngIf=" vista === '%' ">
         <ion-row>
             <ion-col class="det" size="1.4"><ion-label>Totales</ion-label></ion-col>
@@ -150,13 +147,15 @@
             <ion-col class="det" size="1.1"><ion-label *ngIf=" sumas[7] != 0 " [ngClass]="( sumas[7] < 0) ? 'xrojo' : 'xnegro' ">{{ sumas[7] | number:"1.2-2" }}%</ion-label></ion-col>
             <ion-col class="det" size="1.2"><ion-label *ngIf=" sumas[8] != 0 " [ngClass]="( sumas[8] < 0) ? 'xrojo' : 'xnegro' ">{{ sumas[8] | number:"1.2-2" }}%</ion-label></ion-col>
           </ion-row>
-    </ion-grid>
+    </ion-grid> -->
 
     <!-- numeros y porcentajes -->
     <ion-grid no-padding fixed style=" width: inherit;" *ngIf=" vista === 'F%' || vista === 'M%' " >
-      <ion-row *ngFor="let dato of rows; let i = index;" (click)="OnOff( dato )" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
+      <ion-row *ngFor="let dato of rows; let i = index;" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
         <!-- fila superior -->
-        <ion-col             size="1.4"><ion-label>{{ dato.sigla }}</ion-label></ion-col>
+        <ion-col size="1.4">
+          <ion-button size="small" fill="clear" color="dark" class="boton_imnerse" (click)="OnOff( dato )" >{{ dato.sigla }}</ion-button>
+        </ion-col>
         <ion-col class="der" size="1.2"><ion-label *ngIf=" dato.x_vta_neta          != 0 " [ngClass]="( dato.x_vta_neta          < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_vta_neta          | number:"1.0-0" }}</ion-label></ion-col>
         <ion-col class="der" size="1.2"><ion-label *ngIf=" dato.x_costo_operacional != 0 " [ngClass]="( dato.x_costo_operacional < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_costo_operacional | number:"1.0-0" }}</ion-label></ion-col>
         <ion-col class="der" size="1.2"><ion-label *ngIf=" dato.x_rebaja_de_precios != 0 " [ngClass]="( dato.x_rebaja_de_precios < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_rebaja_de_precios | number:"1.0-0" }}</ion-label></ion-col>
@@ -168,15 +167,15 @@
         <ion-col class="der" size="1.2"><ion-label *ngIf=" dato.x_contribucion      != 0 " [ngClass]="( dato.x_contribucion      < 0) ? 'xrojo' : 'xnegro' ">{{ dato.x_contribucion      | number:"1.0-0" }}</ion-label></ion-col>
         <!-- fila inferior -->
         <ion-col             size="1.4"><ion-label></ion-label></ion-col>
-        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_vta_neta          < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_vta_neta          != 0 ">{{ dato.p_vta_neta          | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_costo_operacional < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_costo_operacional != 0 ">{{ dato.p_costo_operacional | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_rebaja_de_precios < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_rebaja_de_precios != 0 ">{{ dato.p_rebaja_de_precios | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_margen_bruto      < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_margen_bruto      != 0 ">{{ dato.p_margen_bruto      | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_gasto_promotores  < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_gasto_promotores  != 0 ">{{ dato.p_gasto_promotores  | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.1" [ngClass]="( dato.p_cross_docking     < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_cross_docking     != 0 ">{{ dato.p_cross_docking     | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.1" [ngClass]="( dato.p_convenio_variable < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_convenio_variable != 0 ">{{ dato.p_convenio_variable | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.1" [ngClass]="( dato.p_convenio_fijo     < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_convenio_fijo     != 0 ">{{ dato.p_convenio_fijo     | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_contribucion      < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_contribucion      != 0 ">{{ dato.p_contribucion      | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_vta_neta          < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_vta_neta          != 0 ">{{ ((dato.p_vta_neta          < 0) ? (-1)*dato.p_vta_neta          : dato.p_vta_neta          ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_costo_operacional < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_costo_operacional != 0 ">{{ ((dato.p_costo_operacional < 0) ? (-1)*dato.p_costo_operacional : dato.p_costo_operacional ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_rebaja_de_precios < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_rebaja_de_precios != 0 ">{{ ((dato.p_rebaja_de_precios < 0) ? (-1)*dato.p_rebaja_de_precios : dato.p_rebaja_de_precios ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_margen_bruto      < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_margen_bruto      != 0 ">{{ ((dato.p_margen_bruto      < 0) ? (-1)*dato.p_margen_bruto      : dato.p_margen_bruto      ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_gasto_promotores  < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_gasto_promotores  != 0 ">{{ ((dato.p_gasto_promotores  < 0) ? (-1)*dato.p_gasto_promotores  : dato.p_gasto_promotores  ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.1" [ngClass]="( dato.p_cross_docking     < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_cross_docking     != 0 ">{{ ((dato.p_cross_docking     < 0) ? (-1)*dato.p_cross_docking     : dato.p_cross_docking     ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.1" [ngClass]="( dato.p_convenio_variable < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_convenio_variable != 0 ">{{ ((dato.p_convenio_variable < 0) ? (-1)*dato.p_convenio_variable : dato.p_convenio_variable ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.1" [ngClass]="( dato.p_convenio_fijo     < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_convenio_fijo     != 0 ">{{ ((dato.p_convenio_fijo     < 0) ? (-1)*dato.p_convenio_fijo     : dato.p_convenio_fijo     ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2" [ngClass]="( dato.p_contribucion      < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" dato.p_contribucion      != 0 ">{{ ((dato.p_contribucion      < 0) ? (-1)*dato.p_contribucion      : dato.p_contribucion      ) | number:"1.2-2" }}%</ion-label></ion-col>
         <!-- aqui iva lo extraido -->
 
         <!-- fila de marcas -->
@@ -184,8 +183,7 @@
           <ion-row  *ngFor="let marca of dato.marcas" [ngClass]="(i % 2 == 0) ? 'kodd' : 'keven' ">
             <!-- fila superior -->
             <ion-col class="zen" size="1.4">
-              <ion-button *ngIf=" inmerse " size="small" fill="clear" color="dark" class="boton_imnerse" (click)="clickporMarcas( marca )">{{ marca.nombre_marca }}</ion-button>
-              <ion-label  *ngIf=" !inmerse ">{{ marca.nombre_marca }}</ion-label>
+              <ion-button size="small" fill="clear" color="dark" class="boton_imnerse" (click)="clickporMarcas( marca )">{{ marca.nombre_marca }}</ion-button>
             </ion-col>
             <!-- <ion-col class="zen" size="1.4"><ion-label>{{ marca.nombre_marca }} </ion-label></ion-col> -->
             <ion-col class="der" size="1.2"><ion-label *ngIf=" marca.x_vta_neta          != 0 " [ngClass]="( marca.x_vta_neta          < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_vta_neta          | number:"1.0-0" }} </ion-label></ion-col>
@@ -199,15 +197,15 @@
             <ion-col class="der" size="1.2"><ion-label *ngIf=" marca.x_contribucion      != 0 " [ngClass]="( marca.x_contribucion      < 0) ? 'xrojo' : 'xnegro' ">{{ marca.x_contribucion      | number:"1.0-0" }} </ion-label></ion-col>
             <!-- fila inferior -->
             <ion-col             size="1.4"><ion-label></ion-label></ion-col>
-            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_vta_neta          < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_vta_neta          != 0 ">{{ marca.p_vta_neta          | number:"1.2-2" }}%</ion-label></ion-col>
-            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_costo_operacional < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_costo_operacional != 0 ">{{ marca.p_costo_operacional | number:"1.2-2" }}%</ion-label></ion-col>
-            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_rebaja_de_precios < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_rebaja_de_precios != 0 ">{{ marca.p_rebaja_de_precios | number:"1.2-2" }}%</ion-label></ion-col>
-            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_margen_bruto      < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_margen_bruto      != 0 ">{{ marca.p_margen_bruto      | number:"1.2-2" }}%</ion-label></ion-col>
-            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_gasto_promotores  < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_gasto_promotores  != 0 ">{{ marca.p_gasto_promotores  | number:"1.2-2" }}%</ion-label></ion-col>
-            <ion-col class="dex" size="1.1" [ngClass]="( marca.p_cross_docking     < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_cross_docking     != 0 ">{{ marca.p_cross_docking     | number:"1.2-2" }}%</ion-label></ion-col>
-            <ion-col class="dex" size="1.1" [ngClass]="( marca.p_convenio_variable < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_convenio_variable != 0 ">{{ marca.p_convenio_variable | number:"1.2-2" }}%</ion-label></ion-col>
-            <ion-col class="dex" size="1.1" [ngClass]="( marca.p_convenio_fijo     < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_convenio_fijo     != 0 ">{{ marca.p_convenio_fijo     | number:"1.2-2" }}%</ion-label></ion-col>
-            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_contribucion      < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_contribucion      != 0 ">{{ marca.p_contribucion      | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_vta_neta          < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_vta_neta          != 0 ">{{ ((marca.p_vta_neta          < 0) ? (-1)*dato.p_vta_neta          : dato.p_vta_neta         ) | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_costo_operacional < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_costo_operacional != 0 ">{{ ((marca.p_costo_operacional < 0) ? (-1)*dato.p_costo_operacional : dato.p_costo_operacional) | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_rebaja_de_precios < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_rebaja_de_precios != 0 ">{{ ((marca.p_rebaja_de_precios < 0) ? (-1)*dato.p_rebaja_de_precios : dato.p_rebaja_de_precios) | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_margen_bruto      < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_margen_bruto      != 0 ">{{ ((marca.p_margen_bruto      < 0) ? (-1)*dato.p_margen_bruto      : dato.p_margen_bruto     ) | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_gasto_promotores  < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_gasto_promotores  != 0 ">{{ ((marca.p_gasto_promotores  < 0) ? (-1)*dato.p_gasto_promotores  : dato.p_gasto_promotores ) | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="dex" size="1.1" [ngClass]="( marca.p_cross_docking     < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_cross_docking     != 0 ">{{ ((marca.p_cross_docking     < 0) ? (-1)*dato.p_cross_docking     : dato.p_cross_docking    ) | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="dex" size="1.1" [ngClass]="( marca.p_convenio_variable < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_convenio_variable != 0 ">{{ ((marca.p_convenio_variable < 0) ? (-1)*dato.p_convenio_variable : dato.p_convenio_variable) | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="dex" size="1.1" [ngClass]="( marca.p_convenio_fijo     < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_convenio_fijo     != 0 ">{{ ((marca.p_convenio_fijo     < 0) ? (-1)*dato.p_convenio_fijo     : dato.p_convenio_fijo    ) | number:"1.2-2" }}%</ion-label></ion-col>
+            <ion-col class="dex" size="1.2" [ngClass]="( marca.p_contribucion      < 0) ? 'srojo' : 'snegro' "><ion-label *ngIf=" marca.p_contribucion      != 0 ">{{ ((marca.p_contribucion      < 0) ? (-1)*dato.p_contribucion      : dato.p_contribucion     ) | number:"1.2-2" }}%</ion-label></ion-col>
             <!-- fin -->
           </ion-row>
         </ion-grid>
@@ -230,14 +228,14 @@
         <!-- segunda fila -->
         <ion-col             size="1.4"><ion-label> </ion-label></ion-col>
         <ion-col class="dex" size="1.2"><ion-label ></ion-label></ion-col>
-        <ion-col class="dex" size="1.2"><ion-label *ngIf=" sumasp[1] != 0 " [ngClass]="( sumasp[1] < 0) ? 'srojo' : 'snegro' ">{{ sumasp[1] | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.2"><ion-label *ngIf=" sumasp[2] != 0 " [ngClass]="( sumasp[2] < 0) ? 'srojo' : 'snegro' ">{{ sumasp[2] | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.2"><ion-label *ngIf=" sumasp[3] != 0 " [ngClass]="( sumasp[3] < 0) ? 'srojo' : 'snegro' ">{{ sumasp[3] | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.2"><ion-label *ngIf=" sumasp[4] != 0 " [ngClass]="( sumasp[4] < 0) ? 'srojo' : 'snegro' ">{{ sumasp[4] | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.1"><ion-label *ngIf=" sumasp[5] != 0 " [ngClass]="( sumasp[5] < 0) ? 'srojo' : 'snegro' ">{{ sumasp[5] | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.1"><ion-label *ngIf=" sumasp[6] != 0 " [ngClass]="( sumasp[6] < 0) ? 'srojo' : 'snegro' ">{{ sumasp[6] | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.1"><ion-label *ngIf=" sumasp[7] != 0 " [ngClass]="( sumasp[7] < 0) ? 'srojo' : 'snegro' ">{{ sumasp[7] | number:"1.2-2" }}%</ion-label></ion-col>
-        <ion-col class="dex" size="1.2"><ion-label *ngIf=" sumasp[8] != 0 " [ngClass]="( sumasp[8] < 0) ? 'srojo' : 'snegro' ">{{ sumasp[8] | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2"><ion-label *ngIf=" sumasp[1] != 0 " [ngClass]="( sumasp[1] < 0) ? 'srojo' : 'snegro' ">{{ ( ( sumasp[1] < 0 ) ? (-1)*sumasp[1] : sumasp[1] ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2"><ion-label *ngIf=" sumasp[2] != 0 " [ngClass]="( sumasp[2] < 0) ? 'srojo' : 'snegro' ">{{ ( ( sumasp[2] < 0 ) ? (-1)*sumasp[2] : sumasp[2] ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2"><ion-label *ngIf=" sumasp[3] != 0 " [ngClass]="( sumasp[3] < 0) ? 'srojo' : 'snegro' ">{{ ( ( sumasp[3] < 0 ) ? (-1)*sumasp[3] : sumasp[3] ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2"><ion-label *ngIf=" sumasp[4] != 0 " [ngClass]="( sumasp[4] < 0) ? 'srojo' : 'snegro' ">{{ ( ( sumasp[4] < 0 ) ? (-1)*sumasp[4] : sumasp[4] ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.1"><ion-label *ngIf=" sumasp[5] != 0 " [ngClass]="( sumasp[5] < 0) ? 'srojo' : 'snegro' ">{{ ( ( sumasp[5] < 0 ) ? (-1)*sumasp[5] : sumasp[5] ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.1"><ion-label *ngIf=" sumasp[6] != 0 " [ngClass]="( sumasp[6] < 0) ? 'srojo' : 'snegro' ">{{ ( ( sumasp[6] < 0 ) ? (-1)*sumasp[6] : sumasp[6] ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.1"><ion-label *ngIf=" sumasp[7] != 0 " [ngClass]="( sumasp[7] < 0) ? 'srojo' : 'snegro' ">{{ ( ( sumasp[7] < 0 ) ? (-1)*sumasp[7] : sumasp[7] ) | number:"1.2-2" }}%</ion-label></ion-col>
+        <ion-col class="dex" size="1.2"><ion-label *ngIf=" sumasp[8] != 0 " [ngClass]="( sumasp[8] < 0) ? 'srojo' : 'snegro' ">{{ ( ( sumasp[8] < 0 ) ? (-1)*sumasp[8] : sumasp[8] ) | number:"1.2-2" }}%</ion-label></ion-col>
       </ion-row>
     </ion-grid>
 

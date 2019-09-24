@@ -1,0 +1,73 @@
+
+ion-grid {
+    --ion-grid-columns: 14;
+}
+
+ion-button {
+    text-transform: none !important;
+    text-align: right !important;
+}   
+
+.montos {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+}
+
+.cajon {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    color: white;
+    font-size: 75%;
+
+    .caja-d {
+        width:      1200px;
+        max-width:  1200px;
+        text-align: center;
+        font-style: italic;     
+    }
+}
+
+.izq {
+    text-align: left;
+    font-style: italic;
+}
+.der {
+    text-align: right;
+    font-style: italic;
+}
+.der_ama {
+    text-align: right;
+    font-style: italic;
+    color: yellow;
+}
+.zen {
+    text-align: center;
+    vertical-align: middle;
+    font-style: italic;
+}
+.zen_ama {
+    text-align: center;
+    vertical-align: middle;
+    font-style: italic;
+    color: yellow;
+}
+.zen_green {
+    text-align: center;
+    font-style: italic;
+    color: greenyellow;
+}
+.zen_red {
+    text-align: center;
+    font-style: italic;
+    color: red;
+}
+
+.keven {
+    background-color: #3b3b3d;
+}
+.kodd {
+    background-color: #28292b;
+}
+

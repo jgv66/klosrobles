@@ -1,0 +1,58 @@
+<ion-header>
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="salir()">            
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ (caso === 'SF') ? 'Clientes' : 'Documentos' }} Ligados a {{ dato.producto }}</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar  *ngIf="caso === 'SF' ">
+    <ion-title>{{ dato.descripcion }}</ion-title>
+  </ion-toolbar>
+  
+  <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-grid fixed *ngIf="caso === 'DOC' ">
+    <ion-row>
+      <ion-col size="1.0" style="text-align: left;  ">TD</ion-col>
+      <ion-col size="2.5" style="text-align: right; ">Numero</ion-col>
+      <ion-col size="1.5" style="text-align: right; ">Cant.</ion-col>
+      <ion-col size="2.3" style="text-align: right; ">Venta</ion-col>
+      <ion-col size="2.3" style="text-align: right; ">Costo</ion-col>
+      <ion-col size="2.3" style="text-align: right; ">Margen</ion-col>
+    </ion-row>
+    <ion-row  *ngFor="let doc of documentos"  >
+      <ion-col size="1.0" style="text-align: left;  ">{{ doc.tipo_doc }}</ion-col>
+      <ion-col size="2.5" style="text-align: right; ">{{ doc.folio }}</ion-col>
+      <ion-col size="1.5" style="text-align: right; ">{{ doc.cantidad }}</ion-col>
+      <ion-col size="2.3" style="text-align: right; ">{{ doc.vta_neta | number:"1.0-0" }} </ion-col>
+      <ion-col size="2.3" style="text-align: right; ">{{ doc.costo | number:"1.0-0" }}</ion-col>
+      <ion-col size="2.3" style="text-align: right; ">{{ doc.contribucion | number:"1.0-0" }}</ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid fixed *ngIf="caso === 'SF' ">
+    <ion-row>
+      <ion-col            style="text-align: left ; font-size: 75%; ">Cliente</ion-col>
+      <ion-col size="1.3" style="text-align: right; font-size: 75%; ">Cant.</ion-col>
+      <ion-col size="1.7" style="text-align: right; font-size: 75%; ">Venta</ion-col>
+      <ion-col size="1.7" style="text-align: right; font-size: 75%; ">Costo</ion-col>
+      <ion-col size="1.7" style="text-align: right; font-size: 75%; ">Margen</ion-col>
+    </ion-row>
+    <ion-row  *ngFor="let doc of documentos"  >
+      <ion-col            style="text-align: left ; font-size: 75%;">{{ doc.razonsocial }} ({{ doc.cliente }})</ion-col>
+      <ion-col size="1.3" style="text-align: right; font-size: 75%;">{{ doc.cantidad }}</ion-col>
+      <ion-col size="1.7" style="text-align: right; font-size: 75%;">{{ doc.vta_neta | number:"1.0-0" }} </ion-col>
+      <ion-col size="1.7" style="text-align: right; font-size: 75%;">{{ doc.costo | number:"1.0-0" }}</ion-col>
+      <ion-col size="1.7" style="text-align: right; font-size: 75%;">{{ doc.contribucion | number:"1.0-0" }}</ion-col>
+    </ion-row>
+  </ion-grid>
+  
+</ion-content>

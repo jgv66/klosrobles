@@ -55,8 +55,8 @@
   <app-itemppto *ngIf=" valorSegmento === 'Proyeccion' " [informacion]="tproclisub" [mes]="mes" fila=3 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
 
   <!-- temporada -->
-  <app-itemppto [periodo]="periodo" fila=0 concepto="Temporada"> </app-itemppto> 
-  <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
+  <!-- <app-itemppto [periodo]="periodo" fila=0 concepto="Temporada"> </app-itemppto>  -->
+  <!-- <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar> -->
 
   <app-itemppto *ngIf=" valorSegmento === 'Del Mes'    " [informacion]="tfilas"     [mes]="mes" fila=1 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
   <app-itemppto *ngIf=" valorSegmento === 'Del Mes'    " [informacion]="tmestemsub" [mes]="mes" fila=3 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
@@ -66,8 +66,8 @@
   <app-itemppto *ngIf=" valorSegmento === 'Proyeccion' " [informacion]="tprotemsub" [mes]="mes" fila=3 [inmerse]="inmerse" ></app-itemppto><hr class="linea">
 
   <!-- ttotales -->
-  <app-itemppto [periodo]="periodo" fila=0 concepto="Resumen"> </app-itemppto> 
-  <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
+  <!-- <app-itemppto [periodo]="periodo" fila=0 concepto="Resumen"> </app-itemppto>  -->
+  <!-- <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar> -->
   
   <app-itemppto *ngIf=" valorSegmento === 'Del Mes'    " [informacion]="tmestotsub" [mes]="mes" fila=3 ></app-itemppto><hr class="linea">
   <app-itemppto *ngIf=" valorSegmento === 'Acumulado'  " [informacion]="tacutotsub" [mes]="mes" fila=3 ></app-itemppto><hr class="linea">

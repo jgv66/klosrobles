@@ -99,7 +99,6 @@ export class PptoPage implements OnInit {
       this.vista = data.vista ;
     }
   }
-
   cuantasNotas() {
     return this.datos.postDataSPSilent( { sp:      '/ws_pylnotascuenta',
                                           informe: this.informe,

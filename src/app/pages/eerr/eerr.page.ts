@@ -109,7 +109,7 @@ export class EerrPage implements OnInit {
               element.concolor = true;
               this.ingnetos.push( element );
             }
-            if ( [5, 6, 7, 8, 9, 10, 10.1, 10.2, 11, 11.5 ].includes( element.orden ) ) {
+            if ( [5, 6, 7, 8, 9, 10, 10.1, 10.2, 10.4, 11, 11.5 ].includes( element.orden ) ) {
               element.concolor = ( element.orden === 11.5 ) ? true : false ;
               this.gastoper.push( element );
             }
@@ -178,7 +178,7 @@ export class EerrPage implements OnInit {
               element.concolor = true;
               this.acumingnetos.push( element );
             }
-            if ( [5, 6, 7, 8, 9, 10, 10.1, 10.2, 11, 11.5 ].includes( element.orden ) ) {
+            if ( [5, 6, 7, 8, 9, 10, 10.1, 10.2, 10.4, 11, 11.5 ].includes( element.orden ) ) {
               element.concolor = ( element.orden === 11.5 ) ? true : false ;
               this.acumgastoper.push( element );
             }
@@ -255,12 +255,16 @@ export class EerrPage implements OnInit {
                                           mes:     this.mes.toString(),
                                           informe: this.informe } )
       .subscribe( ( data: any ) => {
+        try {
           const rs = data.datos;
           this.nNotas   = ( rs[0].notas ) ? rs[0].notas : 0 ;
           this.hayNotas = ( rs[0].notas ) ? true : undefined;
+        } catch (error) {
+          this.nNotas   = 0 ;
+          this.hayNotas = undefined;
+        }
       });
   }
-
   async notas() {
     const modal = await this.modalCtrl.create({
         component: NotasPage,
