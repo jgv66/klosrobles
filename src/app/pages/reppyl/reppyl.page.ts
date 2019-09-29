@@ -219,16 +219,20 @@ export class ReppylPage implements OnInit {
 
   cuantasNotas() {
     return this.datos.postDataSPSilent( { sp:      '/ws_pylnotascuenta',
-                                          periodo: this.periodo.toString(),
-                                          mes:     this.mes.toString(),
-                                          informe: this.informe } )
+                                          informe: this.informe,
+                                          empresa: this.empresa,
+                                          periodo: this.periodo.toString() } )
       .subscribe( ( data: any ) => {
           const rs = data.datos;
-          this.nNotas   = ( rs[0].notas ) ? rs[0].notas : 0 ;
-          this.hayNotas = ( rs[0].notas ) ? true : undefined;
+          try {
+            this.nNotas   = rs[0].notas;
+            this.hayNotas = true;
+          } catch (error) {
+            this.nNotas   = 0 ;
+            this.hayNotas = undefined;
+          }
       });
   }
-
   async notas() {
     const modal = await this.modalCtrl.create({
         component: NotasPage,

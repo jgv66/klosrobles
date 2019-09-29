@@ -15,4 +15,6 @@ export class ItemComponent implements OnInit {
 
   ngOnInit() {}
 
+  OnOff( dato ) {}
+
 }

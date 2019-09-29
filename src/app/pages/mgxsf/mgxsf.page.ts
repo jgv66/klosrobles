@@ -4,7 +4,6 @@ import { DatosService } from '../../services/datos.service';
 import { FuncionesService } from '../../services/funciones.service';
 import { NotasPage } from '../notas/notas.page';
 import { PeriodosComponent } from '../../components/periodos/periodos.component';
-import { calcBindingFlags } from '@angular/core/src/view/util';
 import { DocumentosPage } from '../documentos/documentos.page';
 
 @Component({
@@ -34,8 +33,9 @@ export class MgxsfPage implements OnInit {
   cargando  = false;
   marca     = '';
   //
-  rows       = [];
-  rowsCli    = [];
+  rows        = [];
+  rowsCli     = [];
+  rowsCliProd = [];
   //
   superfam   = [];
   sfTotal    = [];
@@ -51,8 +51,15 @@ export class MgxsfPage implements OnInit {
   filasCliTH = [];
   clithTotal = [];
   //
-  filasTOP10 = [];
-  totTop10   = [];
+  filasTOP20   = [];
+  Top20Total   = [];
+  TopOATotal   = [];
+  filasTTH20   = [];
+  TopTHTotal   = [];
+  TopTHOATotal = [];
+  filasTSG20   = [];
+  TopSGTotal   = [];
+  TopSGOATotal = [];
 
   constructor( private datos: DatosService,
                private funciones: FuncionesService,
@@ -103,10 +110,8 @@ export class MgxsfPage implements OnInit {
     const { data } = await modal.onWillDismiss();
     this.cuantasNotas();
   }
-
   segmentChanged( event ) {
     this.valorSegmento = event.detail.value;
-    // console.log(event.detail.value);
     switch ( this.valorSegmento ) {
       case 'SIEGEN':
         this.marca = '006';
@@ -128,7 +133,6 @@ export class MgxsfPage implements OnInit {
         break;
     }
   }
-
   async periodos( event ) {
     const popover = await this.popoverCtrl.create({
         component: PeriodosComponent,
@@ -157,7 +161,8 @@ export class MgxsfPage implements OnInit {
                                   periodo: this.periodo.toString(),
                                   empresa: this.empresa,
                                   mes:     this.mes.toString(),
-                                  nivel:   0 } )
+                                  nivel:   0 
+                                 })
           .subscribe( (data: any) => { this.rows = data.datos;
                                        this.distDataSF();
                                      });
@@ -166,13 +171,40 @@ export class MgxsfPage implements OnInit {
                                   periodo: this.periodo.toString(),
                                   empresa: this.empresa,
                                   mes:     this.mes.toString(),
-                                  nivel:   0 } )
+                                  nivel:   0 
+                                 })
           .subscribe( (data: any) => { this.rowsCli = data.datos;
                                        this.distDataCli();
                                      });
-
+    // top-20
+    this.datos.postDataSPSilent( {sp:       '/ws_mgxcli',
+                                  periodo:  this.periodo.toString(),
+                                  empresa:  this.empresa,
+                                  mes:      this.mes.toString(),
+                                  nivel:    2,
+                                  subnivel: ''
+                                 })
+          .subscribe( (data: any) => this.distDataTop20( data.datos ) );
+    // top-20-Thomas
+    this.datos.postDataSPSilent( {sp:       '/ws_mgxcli',
+                                  periodo:  this.periodo.toString(),
+                                  empresa:  this.empresa,
+                                  mes:      this.mes.toString(),
+                                  nivel:    2,
+                                  subnivel: '001'
+                                 })
+          .subscribe( (data: any) => this.distDataTopTH( data.datos ) );
+    // top-20-Siegen
+    this.datos.postDataSPSilent( {sp:       '/ws_mgxcli',
+                                  periodo:  this.periodo.toString(),
+                                  empresa:  this.empresa,
+                                  mes:      this.mes.toString(),
+                                  nivel:    2,
+                                  subnivel: '006'
+                                 })
+          .subscribe( (data: any) => this.distDataTopSG( data.datos ) );
   }
-
+  // --------------------------------------------------------------------------------- FAMILIAS
   distDataSF() {
     //
     let x = [];
@@ -206,7 +238,7 @@ export class MgxsfPage implements OnInit {
     nPos = -1;
     this.superfam.forEach( sfam => {
       ++nPos;
-      x = this.rows.filter( row => row.key1 === sfam.key1  );
+      x = this.rows.filter( row => row.key1 === sfam.key1 );
       // console.log(x);
       x.forEach( row => {
         if ( row.familia !== null && row.nombre_familia !== null ) {
@@ -296,40 +328,30 @@ export class MgxsfPage implements OnInit {
     }
     //
   }
-
-  async inmersion( dato, caso) {
-    console.log( dato );
-    const modal = await this.modalCtrl.create({
-      component: DocumentosPage,
-      componentProps: { dato, caso, mes: this.mes },
-      mode: 'ios'
-    });
-    await modal.present();
-  }
-
+  // --------------------------------------------------------------------------------- CLIENTES
   distDataCli() {
     //
     let x = [];
-    let nPos = 0;
-    let nPox = 0;
+    let nPos = 0; let nPox = 0; let nPom = 0; let nPosf = 0;
     this.clientes = [];
-    this.cliTotal  = [{vta_neta: 0, costo: 0, contribucion: 0}];
+    this.cliTotal = [{vta_neta: 0, costo: 0, contribucion: 0}];
     //
-    this.rowsCli.forEach( cli => {
+    this.rowsCli.forEach( row => {
       // --------------------clientes
-      nPos = this.clientes.findIndex( cliente => cliente.cliente === cli.cliente );
+      nPos = this.clientes.findIndex( cli => cli.cliente === row.cliente );
       if ( nPos < 0 ) {
-        cli = Object.assign( cli, { marcas: [], show: false, key1: cli.key1 });
-        this.clientes.push( cli );
-      } else {
-        this.clientes[nPos].vta_neta     += cli.vta_neta;
-        this.clientes[nPos].costo        += cli.costo;
-        this.clientes[nPos].contribucion += cli.contribucion;
+        this.clientes.push( { cliente: row.cliente, sigla: row.sigla,
+                              vta_neta: 0, costo: 0, contribucion: 0,
+                              marcas: [], show: false } );
       }
+      nPos = this.clientes.findIndex( cli => cli.cliente === row.cliente );
+      this.clientes[nPos].vta_neta     += row.vta_neta;
+      this.clientes[nPos].costo        += row.costo;
+      this.clientes[nPos].contribucion += row.contribucion;
       // totales
-      this.cliTotal[0].vta_neta     += cli.vta_neta;
-      this.cliTotal[0].costo        += cli.costo;
-      this.cliTotal[0].contribucion += cli.contribucion;
+      this.cliTotal[0].vta_neta     += row.vta_neta;
+      this.cliTotal[0].costo        += row.costo;
+      this.cliTotal[0].contribucion += row.contribucion;
       //
     });
     // ordenar por contribucion
@@ -342,117 +364,69 @@ export class MgxsfPage implements OnInit {
       }
       return 0;
     });
-    // clientes + marcas
-    // nPos = -1;
-    // this.clientes.forEach( cli => {
-    //   ++nPos;
-    //   this.rowsCli.forEach( row => {
-    //     // --------------------clientes
-    //     nPox = this.clientes[nPos].marcas.findIndex( mar => row.cliente === mar.cliente && row.marca === mar.marca );
-    //     if ( nPox < 0 ) {
-    //       row = Object.assign( row, { superfamilias: [], show: false, key2: cli.key2 });
-    //       this.clientes[nPos].marcas.push( row );
-    //     } else {
-    //       this.clientes[nPos].marcas[nPox].vta_neta     += row.vta_neta;
-    //       this.clientes[nPos].marcas[nPox].costo        += row.costo;
-    //       this.clientes[nPos].marcas[nPox].contribucion += row.contribucion;
-    //     }
-    //     //
-    //   });
-    // });
-    // tslint:disable-next-line: prefer-for-of
-    // for ( let index = 0; index < this.clientes.length; index++ ) {
-    //   //
-    //   this.clientes[index].marcas.sort( (a, b) => {
-    //     if (a.contribucion < b.contribucion) {
-    //       return 1;
-    //     }
-    //     if (a.contribucion > b.contribucion) {
-    //       return -1;
-    //     }
-    //     return 0;
-    //   });
-    // }
-    // // --------------------SUPERFAMILIAS+FAMILIAS
-    // nPos = -1;
-    // this.superfam.forEach( sfam => {
-    //   ++nPos;
-    //   x = this.rows.filter( row => row.key1 === sfam.key1  );
-    //   // console.log(x);
-    //   x.forEach( row => {
-    //     if ( row.familia !== null && row.nombre_familia !== null ) {
-    //       row = Object.assign( row, { productos: [], show: false, key2: row.key2 });
-    //       this.superfam[nPos].familias.push( row );
-    //     }
-    //   });
-    // });
-    // // tslint:disable-next-line: prefer-for-of
-    // for ( let index = 0; index < this.superfam.length; index++ ) {
-    //   //
-    //   this.superfam[index].familias.sort( (a, b) => {
-    //     if (a.contribucion < b.contribucion) {
-    //       return 1;
-    //     }
-    //     if (a.contribucion > b.contribucion) {
-    //       return -1;
-    //     }
-    //     return 0;
-    //   });
-    //
-    // }
-    //
-    this.cargando = false;
-    //
-    this.clisgTotal = [{vta_neta: 0, costo: 0, contribucion: 0}];
-    this.filasCliSG   = this.clientes.filter( sfam => sfam.marca === '006' );
-    this.filasCliSG.forEach( clisg => {
-      this.clisgTotal[0].vta_neta     += clisg.vta_neta;
-      this.clisgTotal[0].costo        += clisg.costo;
-      this.clisgTotal[0].contribucion += clisg.contribucion;
-    });
-    //
-    this.clithTotal = [{vta_neta: 0, costo: 0, contribucion: 0}];
-    this.filasCliTH = this.clientes.filter( sfam => sfam.marca === '001' );
-    this.filasCliTH.forEach( clith => {
-      this.clithTotal[0].vta_neta     += clith.vta_neta;
-      this.clithTotal[0].costo        += clith.costo;
-      this.clithTotal[0].contribucion += clith.contribucion;
-    });
-    //
-    // this.cargaProductosCLI();
-  }
-  cargaProductosCLI() {
-    this.datos.postDataSPSilent( {sp:      '/ws_mgxsf',
-                                  periodo: this.periodo.toString(),
-                                  empresa: this.empresa,
-                                  mes:     this.mes.toString(),
-                                  nivel:   1 } )
-          .subscribe( (data: any) => { this.rows = data.datos;
-                                       this.distDataCliProd();
-                                     });
-  }
-  distDataCliProd() {
-    let x = [];
-    let y = [];
-    let nPos = -1;
-    let xPos = -1;
-    //
-    this.superfam.forEach( sfam => {
+    // console.log(this.clientes);
+    // ------------------------- clientes + marcas
+    nPos = -1;
+    this.clientes.forEach( cli => {
       ++nPos;
-      x = this.rows.filter( row => row.key1 === sfam.key1  );
+      x = this.rowsCli.filter( row => row.cliente === cli.cliente && row.marca !== '' );
       x.forEach( row => {
-        if ( row.familia !== null && row.nombre_familia !== null ) {
-          xPos = this.superfam[nPos].familias.findIndex( fam => fam.key1 === row.key1 && fam.key2 === row.key2 );
-          this.superfam[nPos].familias[xPos].productos.push( row );
+        // --------------------clientes
+        nPox = this.clientes[nPos].marcas.findIndex( mar => row.marca === mar.marca );
+        if ( nPox < 0 ) {
+          this.clientes[nPos].marcas.push( { marca: row.marca, nombre_marca: row.nombre_marca,
+                                             vta_neta: 0, costo: 0, contribucion: 0,
+                                             superfamilias: [], show: false } );
         }
+        nPox = this.clientes[nPos].marcas.findIndex( mar => row.marca === mar.marca );
+        this.clientes[nPos].marcas[nPox].vta_neta     += row.vta_neta;
+        this.clientes[nPos].marcas[nPox].costo        += row.costo;
+        this.clientes[nPos].marcas[nPox].contribucion += row.contribucion;
+        //
       });
     });
     // tslint:disable-next-line: prefer-for-of
-    for ( let index = 0; index < this.superfam.length; index++ ) {
-      // tslint:disable-next-line: prefer-for-of
-      for ( let indexF = 0; indexF < this.superfam[index].familias.length; indexF++ ) {
+    for ( let index = 0; index < this.clientes.length; index++ ) {
+      //
+      this.clientes[index].marcas.sort( (a, b) => {
+        if (a.contribucion < b.contribucion) {
+          return 1;
+        }
+        if (a.contribucion > b.contribucion) {
+          return -1;
+        }
+        return 0;
+      });
+    }
+    // ------------------------- clientes + marcas + superfamilias
+    nPos = -1;
+    this.clientes.forEach( cli => {
+      ++nPos; nPom = -1;
+      this.clientes[nPos].marcas.forEach( climar => {
+        ++nPom;
+        x = this.rowsCli.filter( (row) => row.cliente === cli.cliente && row.marca === climar.marca );
+        x.forEach( row => {
+          nPox = this.clientes[nPos].marcas[nPom].superfamilias.findIndex( sfam => row.super_familia === sfam.super_familia );
+          if ( nPox < 0 ) {
+            this.clientes[nPos].marcas[nPom].superfamilias.push( { super_familia: row.super_familia, nombre_superfam: row.nombre_superfam,
+                                                                   vta_neta: 0, costo: 0, contribucion: 0,
+                                                                   familias: [], show: false } );
+          }
+          nPox = this.clientes[nPos].marcas[nPom].superfamilias.findIndex( sfam => row.super_familia === sfam.super_familia );
+          this.clientes[nPos].marcas[nPom].superfamilias[nPox].vta_neta     += row.vta_neta;
+          this.clientes[nPos].marcas[nPom].superfamilias[nPox].costo        += row.costo;
+          this.clientes[nPos].marcas[nPom].superfamilias[nPox].contribucion += row.contribucion;
+          //
+        });
         //
-        this.superfam[index].familias[indexF].productos.sort( (a, b) => {
+      });
+    });
+    // tslint:disable-next-line: prefer-for-of
+    for ( let index = 0; index < this.clientes.length; index++ ) {
+      // tslint:disable-next-line: prefer-for-of
+      for ( let index2 = 0; index2 < this.clientes[index].marcas.length; index2++ ) {
+        //
+        this.clientes[index].marcas[index2].superfamilias.sort( (a, b) => {
           if (a.contribucion < b.contribucion) {
             return 1;
           }
@@ -461,11 +435,298 @@ export class MgxsfPage implements OnInit {
           }
           return 0;
         });
-        //
       }
-      //
+    }
+    // ------------------------- clientes + marcas + superfamilias + familias
+    nPos = -1;
+    this.clientes.forEach( cli => {
+      ++nPos; nPom = -1;
+      this.clientes[nPos].marcas.forEach( climar => {
+        ++nPom; nPosf = -1;
+        this.clientes[nPos].marcas[nPom].superfamilias.forEach( climarsfam => {
+          ++nPosf;
+          x = this.rowsCli.filter( (row) => row.cliente === cli.cliente && row.marca === climar.marca && row.super_familia === climarsfam.super_familia );
+          x.forEach( row => {
+            nPox = this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias.findIndex( fam => row.familia === fam.familia );
+            if ( nPox < 0 ) {
+              this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias.push( { familia: row.familia, nombre_familia: row.nombre_familia,
+                                                                                     vta_neta: 0, costo: 0, contribucion: 0,
+                                                                                     productos: [], show: false } );
+            }
+            nPox = this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias.findIndex( fam => row.familia === fam.familia );
+            this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias[nPox].vta_neta     += row.vta_neta;
+            this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias[nPox].costo        += row.costo;
+            this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias[nPox].contribucion += row.contribucion;
+            //
+          });
+        });
+      });
+    });
+    // tslint:disable-next-line: prefer-for-of
+    for ( let index = 0; index < this.clientes.length; index++ ) {
+      // tslint:disable-next-line: prefer-for-of
+      for ( let index2 = 0; index2 < this.clientes[index].marcas.length; index2++ ) {
+        // tslint:disable-next-line: prefer-for-of
+        for ( let index3 = 0; index3 < this.clientes[index].marcas[index2].superfamilias.length; index3++ ) {
+          //
+          this.clientes[index].marcas[index2].superfamilias[index3].familias.sort( (a, b) => {
+            if (a.contribucion < b.contribucion) {
+              return 1;
+            }
+            if (a.contribucion > b.contribucion) {
+              return -1;
+            }
+            return 0;
+          });
+        }
+      }
     }
     //
+    this.cargando = false;
+    //
+    this.filasCliTH = []; this.filasCliSG = [];
+    this.clisgTotal = [{vta_neta: 0, costo: 0, contribucion: 0}];
+    this.clientes.forEach( cli => {
+      cli.marcas.forEach( mar => {
+        if ( mar.marca === '006' ) {
+          this.filasCliSG.push( { cliente: cli.cliente, sigla: cli.sigla,
+                                  vta_neta: mar.vta_neta, costo: mar.costo, contribucion: mar.contribucion,
+                                  superfamilias: mar.superfamilias, show: false } );
+        } else {
+          this.filasCliTH.push( { cliente: cli.cliente, sigla: cli.cliente,
+                                  vta_neta: mar.vta_neta, costo: mar.costo, contribucion: mar.contribucion,
+                                  superfamilias: mar.superfamilias, show: false } );
+        }
+      });
+    });
+    this.filasCliSG.forEach( clisg => {
+      this.clisgTotal[0].vta_neta     += clisg.vta_neta;
+      this.clisgTotal[0].costo        += clisg.costo;
+      this.clisgTotal[0].contribucion += clisg.contribucion;
+    });
+    // SG - ordenar por contribucion
+    this.filasCliSG.sort( (a, b) => {
+      if (a.contribucion < b.contribucion) {
+        return 1;
+      }
+      if (a.contribucion > b.contribucion) {
+        return -1;
+      }
+      return 0;
+    });
+    // tslint:disable-next-line: prefer-for-of
+    for ( let index = 0; index < this.filasCliSG.length; index++ ) {
+      //
+      this.filasCliSG[index].superfamilias.sort( (a, b) => {
+        if (a.contribucion < b.contribucion) {
+          return 1;
+        }
+        if (a.contribucion > b.contribucion) {
+          return -1;
+        }
+        return 0;
+      });
+    }
+    // tslint:disable-next-line: prefer-for-of
+    for ( let index = 0; index < this.filasCliSG.length; index++ ) {
+      // tslint:disable-next-line: prefer-for-of
+      for ( let index2 = 0; index2 < this.filasCliSG[index].superfamilias.length; index2++ ) {
+        //
+        this.filasCliSG[index].superfamilias[index2].familias.sort( (a, b) => {
+          if (a.contribucion < b.contribucion) {
+            return 1;
+          }
+          if (a.contribucion > b.contribucion) {
+            return -1;
+          }
+          return 0;
+        });
+      }
+    }
+    // tslint:disable-next-line: prefer-for-of
+    for ( let index = 0; index < this.filasCliSG.length; index++ ) {
+      // tslint:disable-next-line: prefer-for-of
+      for ( let index2 = 0; index2 < this.filasCliSG[index].superfamilias.length; index2++ ) {
+        //
+        this.filasCliSG[index].superfamilias[index2].familias.sort( (a, b) => {
+          if (a.contribucion < b.contribucion) {
+            return 1;
+          }
+          if (a.contribucion > b.contribucion) {
+            return -1;
+          }
+          return 0;
+        });
+      }
+    }
+    //
+    this.clithTotal = [{vta_neta: 0, costo: 0, contribucion: 0}];
+    this.filasCliTH.forEach( clith => {
+      this.clithTotal[0].vta_neta     += clith.vta_neta;
+      this.clithTotal[0].costo        += clith.costo;
+      this.clithTotal[0].contribucion += clith.contribucion;
+    });
+    // SG - ordenar por contribucion
+    this.filasCliTH.sort( (a, b) => {
+      if (a.contribucion < b.contribucion) {
+        return 1;
+      }
+      if (a.contribucion > b.contribucion) {
+        return -1;
+      }
+      return 0;
+    });
+    // tslint:disable-next-line: prefer-for-of
+    for ( let index = 0; index < this.filasCliTH.length; index++ ) {
+      //
+      this.filasCliTH[index].superfamilias.sort( (a, b) => {
+        if (a.contribucion < b.contribucion) {
+          return 1;
+        }
+        if (a.contribucion > b.contribucion) {
+          return -1;
+        }
+        return 0;
+      });
+    }
+    // tslint:disable-next-line: prefer-for-of
+    for ( let index = 0; index < this.filasCliTH.length; index++ ) {
+      // tslint:disable-next-line: prefer-for-of
+      for ( let index2 = 0; index2 < this.filasCliTH[index].superfamilias.length; index2++ ) {
+        //
+        this.filasCliTH[index].superfamilias[index2].familias.sort( (a, b) => {
+          if (a.contribucion < b.contribucion) {
+            return 1;
+          }
+          if (a.contribucion > b.contribucion) {
+            return -1;
+          }
+          return 0;
+        });
+      }
+    }
+    // tslint:disable-next-line: prefer-for-of
+    for ( let index = 0; index < this.filasCliTH.length; index++ ) {
+      // tslint:disable-next-line: prefer-for-of
+      for ( let index2 = 0; index2 < this.filasCliTH[index].superfamilias.length; index2++ ) {
+        //
+        this.filasCliTH[index].superfamilias[index2].familias.sort( (a, b) => {
+          if (a.contribucion < b.contribucion) {
+            return 1;
+          }
+          if (a.contribucion > b.contribucion) {
+            return -1;
+          }
+          return 0;
+        });
+      }
+    }
+    //
+    this.cargaProductosCLI();
+  }
+  cargaProductosCLI() {
+    this.datos.postDataSPSilent( {sp:      '/ws_mgxcli',
+                                  periodo: this.periodo.toString(),
+                                  empresa: this.empresa,
+                                  mes:     this.mes.toString(),
+                                  nivel:   1 } )
+          .subscribe( (data: any) => { this.rowsCliProd = data.datos;
+                                       this.distDataCliProd();
+                                     });
+  }
+  distDataCliProd() {
+    let x = [];
+    let nPos = 0; let nPox = 0; let nPom = 0; let nPosf = 0; let nPofa = 0;
+    // ------------------------- clientes + marcas + superfamilias + familias + productos
+    nPos = -1;
+    this.clientes.forEach( cli => {
+      ++nPos; nPom = -1;
+      this.clientes[nPos].marcas.forEach( climar => {
+        ++nPom; nPosf = -1;
+        this.clientes[nPos].marcas[nPom].superfamilias.forEach( climarsfam => {
+          ++nPosf; nPofa = -1;
+          this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias.forEach( climarsfamfam => {
+            ++nPofa;
+            x = this.rowsCliProd.filter( (row) => row.cliente === cli.cliente
+                                               && row.marca === climar.marca
+                                               && row.super_familia === climarsfam.super_familia
+                                               && row.familia === climarsfamfam.familia );
+            x.forEach( row => {
+              nPox = this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias[nPofa].productos.findIndex( pro => row.producto === pro.producto );
+              if ( nPox < 0 ) {
+                this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias[nPofa].productos.push( { producto: row.producto, descripcion: row.descripcion,
+                                                                                                        vta_neta: 0, costo: 0, contribucion: 0 } );
+              }
+              nPox = this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias[nPofa].productos.findIndex( pro => row.producto === pro.producto );
+              this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias[nPofa].productos[nPox].vta_neta     += row.vta_neta;
+              this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias[nPofa].productos[nPox].costo        += row.costo;
+              this.clientes[nPos].marcas[nPom].superfamilias[nPosf].familias[nPofa].productos[nPox].contribucion += row.contribucion;
+              //
+            });
+          });
+        });
+      });
+    });
+    // tslint:disable-next-line: prefer-for-of
+    for ( let index = 0; index < this.clientes.length; index++ ) {
+      // tslint:disable-next-line: prefer-for-of
+      for ( let index2 = 0; index2 < this.clientes[index].marcas.length; index2++ ) {
+        // tslint:disable-next-line: prefer-for-of
+        for ( let index3 = 0; index3 < this.clientes[index].marcas[index2].superfamilias.length; index3++ ) {
+          // tslint:disable-next-line: prefer-for-of
+          for ( let index4 = 0; index4 < this.clientes[index].marcas[index2].superfamilias[index3].familias.length; index4++ ) {
+            this.clientes[index].marcas[index2].superfamilias[index3].familias[index4].productos.sort( (a, b) => {
+              if (a.contribucion < b.contribucion) {
+                return 1;
+              }
+              if (a.contribucion > b.contribucion) {
+                return -1;
+              }
+              return 0;
+            });
+          }
+        }
+      }
+    }
+
+  }
+  // ---------------------------------------------------------------------------------- suma de totales por TOP-20
+  distDataTop20( data ) {
+    this.filasTOP20 = data;
+    this.Top20Total = [{vta_neta: 0, costo: 0, contribucion: 0}];
+    data.forEach( clisg => {
+      this.Top20Total[0].vta_neta     += clisg.vta_neta;
+      this.Top20Total[0].costo        += clisg.costo;
+      this.Top20Total[0].contribucion += clisg.contribucion;
+    });
+  }
+  distDataTopTH( data ) {
+    this.filasTTH20 = data;
+    this.TopTHTotal = [{vta_neta: 0, costo: 0, contribucion: 0}];
+    data.forEach( clisg => {
+      this.TopTHTotal[0].vta_neta     += clisg.vta_neta;
+      this.TopTHTotal[0].costo        += clisg.costo;
+      this.TopTHTotal[0].contribucion += clisg.contribucion;
+    });
+  }
+  distDataTopSG( data ) {
+    this.filasTSG20 = data;
+    this.TopSGTotal = [{vta_neta: 0, costo: 0, contribucion: 0}];
+    data.forEach( clisg => {
+      this.TopSGTotal[0].vta_neta     += clisg.vta_neta;
+      this.TopSGTotal[0].costo        += clisg.costo;
+      this.TopSGTotal[0].contribucion += clisg.contribucion;
+    });
+  }
+
+  // ---------------------------------------------------------------------------------- inmersion
+  async inmersion( dato, caso ) {
+    const modal = await this.modalCtrl.create({
+      component: DocumentosPage,
+      componentProps: { dato, caso, mes: this.mes },
+      mode: 'ios'
+    });
+    await modal.present();
   }
 
 }

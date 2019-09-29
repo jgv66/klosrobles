@@ -16,7 +16,7 @@ export class MenuPage implements OnInit {
     { icono: 'pie',     redirectTo: '/reppylmes', nombre: 'Profit & Loss Statement Monthly' },
     { icono: 'trophy',  redirectTo: '/eerr',      nombre: 'Estados de Resultado' },
     { icono: 'compass', redirectTo: '/ppto',      nombre: 'Presupuesto de Venta Comercial' },
-    { icono: 'cash',    redirectTo: '/mgxsf',     nombre: 'Márgen de Contribución' },
+    { icono: 'cash',    redirectTo: '/mgxsf',     nombre: 'Márgen de Contribución Familias/Clientes' },
   ];
 
   indicadores = [

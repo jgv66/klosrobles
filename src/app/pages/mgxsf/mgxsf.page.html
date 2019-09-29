@@ -4,7 +4,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/menu"></ion-back-button>
     </ion-buttons>
-    <ion-title text-center >Márgen de Contribución {{ nombreMes }}/{{ periodo }}</ion-title>
+    <ion-title text-center >Márgen de Contribución Familias/Clientes {{ nombreMes }}/{{ periodo }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="notas()">
         <ion-badge *ngIf=" hayNotas ">{{ nNotas }}</ion-badge>
@@ -22,14 +22,16 @@
       <ion-segment-button value="CLIENTE"> <ion-label>x Clientes  </ion-label></ion-segment-button>
       <ion-segment-button value="CLTHOMAS"><ion-label>Thomas      </ion-label></ion-segment-button>
       <ion-segment-button value="CLSIEGEN"><ion-label>Siegen      </ion-label></ion-segment-button>
-      <ion-segment-button value="T-TOP10"> <ion-label>TH-10       </ion-label></ion-segment-button>
-      <ion-segment-button value="S-TOP10"> <ion-label>SG-10       </ion-label></ion-segment-button>
+      <ion-segment-button value="TOP20">   <ion-label>Top-20      </ion-label></ion-segment-button>
+      <ion-segment-button value="THTOP20"> <ion-label>TH-20       </ion-label></ion-segment-button>
+      <ion-segment-button value="SGTOP20"> <ion-label>SG-20       </ion-label></ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 
   <app-itemmg *ngIf=" valorSegmento === 'FAMILIA' || valorSegmento === 'SFTHOMAS'  || valorSegmento === 'SFSIEGEN' " [periodo]="periodo" [fila]=0   [informacion]="['Super Familia','Familia','Descripción','Vta.Comercial','Costo','Contribución','%']"> </app-itemmg> 
-  <app-itemmg *ngIf=" valorSegmento === 'CLIENTE' || valorSegmento === 'CLTHOMAS'  || valorSegmento === 'CLSIEGEN' " [periodo]="periodo" [fila]=-4  [informacion]="['Cliente','Marca','Super Familia','Familia','Descripción','Vta.Comercial','Costo','Contribución','%']"> </app-itemmg> 
-  <app-itemmg *ngIf=" valorSegmento === 'TOP20'  " [periodo]="periodo" [fila]=-1 [informacion]="['Código','Descripción','Cantidad','Vta.Comercial','Costo','Contribución','%','%']"> </app-itemmg> 
+  <app-itemmg *ngIf=" valorSegmento === 'CLIENTE' " [periodo]="periodo" [fila]=-4  [informacion]="['Cliente','Marca','Super Familia','Familia','Descripción','Vta.Comercial','Costo','Contribución','%']"> </app-itemmg> 
+  <app-itemmg *ngIf=" valorSegmento === 'CLTHOMAS' || valorSegmento === 'CLSIEGEN' " [periodo]="periodo" [fila]=-5  [informacion]="['Cliente','Super Familia','Familia','Descripción','Vta.Comercial','Costo','Contribución','%']"> </app-itemmg> 
+  <app-itemmg *ngIf=" valorSegmento === 'TOP20' || valorSegmento === 'THTOP20' || valorSegmento === 'SGTOP20' " [periodo]="periodo" [fila]=-1 [informacion]="['Código','Descripción','','Cantidad','Vta.Comercial','Costo','Contribución','%','%']"> </app-itemmg> 
 
   <ion-progress-bar *ngIf=" cargando " type="indeterminate"></ion-progress-bar>
   
@@ -38,7 +40,7 @@
 <ion-content color="dark" >
 
   <div class="cajon">
-
+    <!-- despliegue a nivel de superfamilias -->
     <div class="caja-d" *ngIf=" valorSegmento === 'FAMILIA' ">
       <ion-grid no-padding>
         <ion-row *ngFor="let dato of superfam; let fila = index;" [ngClass]="( fila % 2 == 0) ? 'kodd' : 'keven' ">
@@ -254,7 +256,7 @@
 
         </ion-grid>
     </div>
-
+    <!-- despliegue a nivel de clientes -->
     <div class="caja-d" *ngIf=" valorSegmento === 'CLIENTE' ">
       <ion-grid no-padding>
         <ion-row *ngFor="let dato of clientes; let fila = index;" [ngClass]="( fila % 2 == 0) ? 'kodd' : 'keven' ">
@@ -285,7 +287,7 @@
                   <ion-button (click)="OnOff( dato )"
                               size="small" 
                               fill="clear" 
-                              color="light">{{ dato.marca }}</ion-button>
+                              color="light">{{ dato.nombre_marca }}</ion-button>
               </ion-col>
               <ion-col size="1.5" class="izq"></ion-col>
               <ion-col size="1.5" class="izq"></ion-col>
@@ -295,21 +297,70 @@
               <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
               <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
   
-              <!-- datos de productos -->
+              <!-- datos de superfamilias -->
               <ion-grid no-padding *ngIf=" dato.show ">
-                <ion-row *ngFor="let dato of dato.productos">
-                  <ion-col size="2.5" class="der"></ion-col>
-                  <ion-col size="1.0" class="izq"><ion-label></ion-label></ion-col>
-                  <ion-col size="5.0" class="izq">
-                      <ion-button (click)="inmersion( dato, 'SF' )"
-                                  size="small" 
-                                  fill="clear" 
-                                  color="secondary">{{ dato.descripcion }}</ion-button>
+                <ion-row *ngFor="let dato of dato.superfamilias">
+                  <ion-col size="1.0" class="der"></ion-col>
+                  <ion-col size="1.0" class="izq"></ion-col>
+                  <ion-col size="1.5" class="izq">
+                    <ion-button (click)="OnOff( dato )"
+                                size="small" 
+                                fill="clear" 
+                                color="light">{{ dato.nombre_superfam }}
+                    </ion-button>
                   </ion-col>
-                  <ion-col size="1.5" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
-                  <ion-col size="1.5" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
-                  <ion-col size="1.5" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
-                  <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+                  <ion-col size="2.0" class="izq"></ion-col>
+                  <ion-col size="3.5" class="izq"></ion-col>
+                  <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+                  <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+                  <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+                  <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+
+                  <!-- datos de superfamilias -->
+                  <ion-grid no-padding *ngIf=" dato.show ">
+                    <ion-row *ngFor="let dato of dato.familias">
+                      <ion-col size="1.0" class="der"></ion-col>
+                      <ion-col size="1.0" class="izq"></ion-col>
+                      <ion-col size="1.0" class="izq"></ion-col>
+                      <ion-col size="1.5" class="izq">
+                        <ion-button (click)="OnOff( dato )"
+                                    size="small" 
+                                    fill="clear" 
+                                    color="light">{{ ( dato.nombre_familia === '' ) ? dato.familia : dato.nombre_familia }}
+                        </ion-button>
+                      </ion-col>
+                      <ion-col size="4.5" class="izq"></ion-col>
+                      <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+                      <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+                      <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+                      <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+
+                      <!-- datos de superfamilias -->
+                      <ion-grid no-padding *ngIf=" dato.show ">
+                        <ion-row *ngFor="let dato of dato.productos">
+                          <ion-col size="1.5" class="der"></ion-col>
+                          <ion-col size="1.0" class="izq"></ion-col>
+                          <ion-col size="1.0" class="izq"></ion-col>
+                          <ion-col size="1.0" class="izq"></ion-col>
+                          <ion-col size="4.5" class="izq">
+                              <ion-button (click)="inmersion( dato, 'SF' )"
+                                          size="small" 
+                                          fill="clear" 
+                                          color="secondary">{{ (dato.descripcion==='') ? dato.producto : dato.descripcion }}
+                              </ion-button>
+                          </ion-col>
+                          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+                          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+                          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+                          <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+                        </ion-row>
+        
+                      </ion-grid>
+  
+                    </ion-row>
+    
+                  </ion-grid>
+  
                 </ion-row>
 
               </ion-grid>
@@ -321,18 +372,379 @@
         </ion-row>
 
         <ion-row *ngFor="let dato of cliTotal">
-          <ion-col size="3.0" class="der"><ion-label color="warning">Totales</ion-label></ion-col>
-          <ion-col size="2.0" class="izq"><ion-label></ion-label></ion-col>
-          <ion-col size="3.5" class="der"><ion-label></ion-label></ion-col>
-          <ion-col size="1.5" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
-          <ion-col size="1.5" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
-          <ion-col size="1.5" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
-          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+          <ion-col size="1.5" class="der"><ion-label color="warning">Totales</ion-label></ion-col>
+          <ion-col size="7.5" class="izq"></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
         </ion-row>
         
       </ion-grid>
     </div>
-     
+    <div class="caja-d" *ngIf=" valorSegmento === 'CLTHOMAS' ">
+      <ion-grid no-padding>
+        <ion-row *ngFor="let dato of filasCliTH; let fila = index;" [ngClass]="( fila % 2 == 0) ? 'kodd' : 'keven' ">
+          <!-- dato de superfamilia -->
+          
+          <ion-col size="1.5" style="text-transform: none !important; text-align: right !important;">
+            <ion-button (click)="OnOff( dato )" 
+                        size="small"
+                        fill="clear" 
+                        color="light">
+                        <ion-label>{{ dato.sigla }}</ion-label>
+            </ion-button>
+          </ion-col>
+          <ion-col size="1.0" class="izq"></ion-col>
+          <ion-col size="1.5" class="izq"></ion-col>
+          <ion-col size="1.5" class="izq"></ion-col>
+          <ion-col size="3.5" class="izq"></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+  
+          <!-- datos de superfamilias -->
+          <ion-grid no-padding *ngIf=" dato.show ">
+            <ion-row *ngFor="let dato of dato.superfamilias">
+              <ion-col size="1.0" class="der"></ion-col>
+              <ion-col size="2.5" class="izq">
+                <ion-button (click)="OnOff( dato )"
+                            size="small" 
+                            fill="clear" 
+                            color="light">{{ dato.nombre_superfam }}
+                </ion-button>
+              </ion-col>
+              <ion-col size="2.0" class="izq"></ion-col>
+              <ion-col size="3.5" class="izq"></ion-col>
+              <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+              <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+              <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+              <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+
+              <!-- datos de superfamilias -->
+              <ion-grid no-padding *ngIf=" dato.show ">
+                <ion-row *ngFor="let dato of dato.familias">
+                  <ion-col size="1.0" class="der"></ion-col>
+                  <ion-col size="2.0" class="izq"></ion-col>
+                  <ion-col size="2.5" class="izq">
+                    <ion-button (click)="OnOff( dato )"
+                                size="small" 
+                                fill="clear" 
+                                color="light">{{ ( dato.nombre_familia === '' ) ? dato.familia : dato.nombre_familia }}
+                    </ion-button>
+                  </ion-col>
+                  <ion-col size="3.5" class="izq"></ion-col>
+                  <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+                  <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+                  <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+                  <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+
+                  <!-- datos de superfamilias -->
+                  <ion-grid no-padding *ngIf=" dato.show ">
+                    <ion-row *ngFor="let dato of dato.productos">
+                      <ion-col size="1.5" class="der"></ion-col>
+                      <ion-col size="1.0" class="izq"></ion-col>
+                      <ion-col size="2.0" class="izq"></ion-col>
+                      <ion-col size="4.5" class="izq">
+                          <ion-button (click)="inmersion( dato, 'SF' )"
+                                      size="small" 
+                                      fill="clear" 
+                                      color="secondary">{{ (dato.descripcion==='') ? dato.producto : dato.descripcion }}
+                          </ion-button>
+                      </ion-col>
+                      <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+                      <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+                      <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+                      <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+                    </ion-row>
+    
+                  </ion-grid>
+
+                </ion-row>
+
+              </ion-grid>
+
+            </ion-row>
+
+          </ion-grid>
+  
+        </ion-row>
+
+        <ion-row *ngFor="let dato of clithTotal">
+          <ion-col size="1.5" class="der"><ion-label color="warning">Totales</ion-label></ion-col>
+          <ion-col size="7.5" class="izq"></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+        </ion-row>
+        
+      </ion-grid>
+    </div>
+    <div class="caja-d" *ngIf=" valorSegmento === 'CLSIEGEN' ">
+        <ion-grid no-padding>
+          <ion-row *ngFor="let dato of filasCliSG; let fila = index;" [ngClass]="( fila % 2 == 0) ? 'kodd' : 'keven' ">
+            <!-- dato de superfamilia -->
+            
+            <ion-col size="1.5" style="text-transform: none !important; text-align: right !important;">
+              <ion-button (click)="OnOff( dato )" 
+                          size="small"
+                          fill="clear" 
+                          color="light">
+                          <ion-label>{{ dato.sigla }}</ion-label>
+              </ion-button>
+            </ion-col>
+            <ion-col size="1.0" class="izq"></ion-col>
+            <ion-col size="1.5" class="izq"></ion-col>
+            <ion-col size="1.5" class="izq"></ion-col>
+            <ion-col size="3.5" class="izq"></ion-col>
+            <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+    
+            <!-- datos de superfamilias -->
+            <ion-grid no-padding *ngIf=" dato.show ">
+              <ion-row *ngFor="let dato of dato.superfamilias">
+                <ion-col size="1.0" class="der"></ion-col>
+                <ion-col size="2.5" class="izq">
+                  <ion-button (click)="OnOff( dato )"
+                              size="small" 
+                              fill="clear" 
+                              color="light">{{ dato.nombre_superfam }}
+                  </ion-button>
+                </ion-col>
+                <ion-col size="2.0" class="izq"></ion-col>
+                <ion-col size="3.5" class="izq"></ion-col>
+                <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+                <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+  
+                <!-- datos de superfamilias -->
+                <ion-grid no-padding *ngIf=" dato.show ">
+                  <ion-row *ngFor="let dato of dato.familias">
+                    <ion-col size="1.0" class="der"></ion-col>
+                    <ion-col size="2.0" class="izq"></ion-col>
+                    <ion-col size="2.5" class="izq">
+                      <ion-button (click)="OnOff( dato )"
+                                  size="small" 
+                                  fill="clear" 
+                                  color="light">{{ ( dato.nombre_familia === '' ) ? dato.familia : dato.nombre_familia }}
+                      </ion-button>
+                    </ion-col>
+                    <ion-col size="3.5" class="izq"></ion-col>
+                    <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+                    <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+                    <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+                    <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+  
+                    <!-- datos de superfamilias -->
+                    <ion-grid no-padding *ngIf=" dato.show ">
+                      <ion-row *ngFor="let dato of dato.productos">
+                        <ion-col size="1.5" class="der"></ion-col>
+                        <ion-col size="1.0" class="izq"></ion-col>
+                        <ion-col size="2.0" class="izq"></ion-col>
+                        <ion-col size="4.5" class="izq">
+                            <ion-button (click)="inmersion( dato, 'SF' )"
+                                        size="small" 
+                                        fill="clear" 
+                                        color="secondary">{{ (dato.descripcion==='') ? dato.producto : dato.descripcion }}
+                            </ion-button>
+                        </ion-col>
+                        <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+                        <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+                        <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+                        <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+                      </ion-row>
+      
+                    </ion-grid>
+  
+                  </ion-row>
+  
+                </ion-grid>
+  
+              </ion-row>
+  
+            </ion-grid>
+    
+          </ion-row>
+  
+          <ion-row *ngFor="let dato of clisgTotal">
+            <ion-col size="1.5" class="der"><ion-label color="warning">Totales</ion-label></ion-col>
+            <ion-col size="7.5" class="izq"></ion-col>
+            <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+            <ion-col size="0.6" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+          </ion-row>
+          
+        </ion-grid>
+    </div>
+    <div class="caja-d" *ngIf=" valorSegmento === 'TOP20' ">
+      <ion-grid no-padding>
+        <ion-row *ngFor="let dato of filasTOP20; let fila = index;" [ngClass]="( fila % 2 == 0) ? 'kodd' : 'keven' ">
+          <!-- dato de superfamilia -->
+          
+          <ion-col size="2.0" style="text-transform: none !important; text-align: right !important;">
+            <ion-button (click)="inmersion( dato, 'SF' )" 
+                        size="small"
+                        fill="clear" 
+                        color="light">
+                        <ion-label>{{ dato.producto }}</ion-label>
+            </ion-button>
+          </ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label>{{ dato.descripcion }}</ion-label></ion-col>
+          <ion-col size="1.4" class="izq"></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.cantidad      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ (dato.contribucion*100/sfTotal[0].contribucion) | number:"1.2-2" }}%</ion-label></ion-col>
+        </ion-row>
+        <!-- totales -->
+        <ion-row *ngFor="let dato of Top20Total">
+          <ion-col size="2.0" class="der"></ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label color="warning">Totales Top-20</ion-label></ion-col>
+          <ion-col size="2.6" class="izq"></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+        </ion-row>
+        <ion-row *ngFor="let dato of sfTotal">
+          <ion-col size="2.0" class="der"></ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label color="secondary">Totales x Familias </ion-label></ion-col>
+          <ion-col size="2.6" class="izq"><ion-label></ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+        </ion-row>        
+        <ion-row>
+          <ion-col size="2.0" class="der"></ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label color="warning">Top-20 / Familias</ion-label></ion-col>
+          <ion-col size="2.6" class="izq"><ion-label></ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ ((Top20Total[0].vta_neta*100)/sfTotal[0].vta_neta)         | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ ((Top20Total[0].costo*100)/sfTotal[0].costo)               | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ ((Top20Total[0].contribucion*100)/sfTotal[0].contribucion) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"></ion-col>
+        </ion-row>        
+        <!-- fin totales -->
+
+      </ion-grid>
+    </div>
+    <div class="caja-d" *ngIf=" valorSegmento === 'THTOP20' ">
+      <ion-grid no-padding>
+        <ion-row *ngFor="let dato of filasTTH20; let fila = index;" [ngClass]="( fila % 2 == 0) ? 'kodd' : 'keven' ">
+          <!-- dato de superfamilia -->
+          
+          <ion-col size="2.0" style="text-transform: none !important; text-align: right !important;">
+            <ion-button (click)="inmersion( dato, 'SF' )" 
+                        size="small"
+                        fill="clear" 
+                        color="light">
+                        <ion-label>{{ dato.producto }}</ion-label>
+            </ion-button>
+          </ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label>{{ dato.descripcion }}</ion-label></ion-col>
+          <ion-col size="1.4" class="izq"></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.cantidad      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ (dato.contribucion*100/sfthTotal[0].contribucion) | number:"1.2-2" }}%</ion-label></ion-col>
+        </ion-row>
+        <!-- totales Thomas -->
+        <ion-row *ngFor="let dato of TopTHTotal">
+          <ion-col size="2.0" class="der"></ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label color="warning">Totales TH-20</ion-label></ion-col>
+          <ion-col size="2.6" class="izq"></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+        </ion-row>        
+        <ion-row *ngFor="let dato of sfthTotal">
+          <ion-col size="2.0" class="der"></ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label color="secondary">Totales Familia Thomas </ion-label></ion-col>
+          <ion-col size="2.6" class="izq"><ion-label></ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+        </ion-row>        
+        <ion-row>
+          <ion-col size="2.0" class="der"></ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label color="warning">TH-20 / Familia Thomas</ion-label></ion-col>
+          <ion-col size="2.6" class="izq"><ion-label></ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ ((TopTHTotal[0].vta_neta*100)/sfthTotal[0].vta_neta)         | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ ((TopTHTotal[0].costo*100)/sfthTotal[0].costo)               | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ ((TopTHTotal[0].contribucion*100)/sfthTotal[0].contribucion) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"></ion-col>
+        </ion-row>        
+        <!-- fin totales -->
+
+      </ion-grid>
+    </div>
+    <div class="caja-d" *ngIf=" valorSegmento === 'SGTOP20' ">
+      <ion-grid no-padding>
+        <ion-row *ngFor="let dato of filasTSG20; let fila = index;" [ngClass]="( fila % 2 == 0) ? 'kodd' : 'keven' ">
+          <!-- dato de superfamilia -->
+          
+          <ion-col size="2.0" style="text-transform: none !important; text-align: right !important;">
+            <ion-button (click)="inmersion( dato, 'SF' )" 
+                        size="small"
+                        fill="clear" 
+                        color="light">
+                        <ion-label>{{ dato.producto }}</ion-label>
+            </ion-button>
+          </ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label>{{ dato.descripcion }}</ion-label></ion-col>
+          <ion-col size="1.4" class="izq"></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.cantidad      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label>{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label>{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ (dato.contribucion*100/sfsgTotal[0].contribucion) | number:"1.2-2" }}%</ion-label></ion-col>
+        </ion-row>
+
+        <!-- totales Thomas -->
+        <ion-row *ngFor="let dato of TopSGTotal">
+          <ion-col size="2.0" class="der"></ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label color="warning">Totales SG-20</ion-label></ion-col>
+          <ion-col size="2.6" class="izq"></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="warning"  >{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+        </ion-row>        
+        <ion-row *ngFor="let dato of sfsgTotal">
+          <ion-col size="2.0" class="der"></ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label color="secondary">Totales Familia Siegen </ion-label></ion-col>
+          <ion-col size="2.6" class="izq"><ion-label></ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.vta_neta      | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.costo         | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ dato.contribucion  | number:"1.0-0" }}</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"><ion-label color="secondary">{{ (1 - (dato.costo/dato.vta_neta) )*100 | number:"1.1-1" }}%</ion-label></ion-col>
+        </ion-row>        
+        <ion-row>
+          <ion-col size="2.0" class="der"></ion-col>
+          <ion-col size="4.0" class="izq" style="padding-top: 15px;"><ion-label color="warning">SG-20 / Familia Siegen</ion-label></ion-col>
+          <ion-col size="2.6" class="izq"><ion-label></ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ ((TopSGTotal[0].vta_neta*100)/sfsgTotal[0].vta_neta)         | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ ((TopSGTotal[0].costo*100)/sfsgTotal[0].costo)               | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="1.2" class="der" style="padding-top: 15px;"><ion-label color="warning">{{ ((TopSGTotal[0].contribucion*100)/sfsgTotal[0].contribucion) | number:"1.2-2" }}%</ion-label></ion-col>
+          <ion-col size="0.7" class="der" style="padding-top: 15px;"></ion-col>
+        </ion-row>        
+        <!-- fin totales -->
+
+      </ion-grid>
+    </div>
 
   </div>
 
